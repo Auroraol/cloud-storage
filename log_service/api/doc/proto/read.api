@@ -1,0 +1,22 @@
+syntax = "v1"
+
+type (
+	GetLogInfoReq {
+		Logfile string `form:"logfile"`
+		Path string `form:"path"`
+		Host string `form:"host"`
+		Match string `form:"match"`
+		Clean string `form:"clean"`
+		Posit string `form:"posit"`
+		Page int `form:"page"`
+	}
+	GetLogInfoRes {
+		Contents []string `json:"contents"`
+		Page int `json:"page"`
+		TotalPages int `json:"total_pages"`
+		TotalLines int `json:"total_lines"`
+		MatchLines int `json:"match_lines"`
+		Lines int `json:"lines"`
+	}
+)
+
