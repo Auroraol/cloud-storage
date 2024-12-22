@@ -1,0 +1,21 @@
+syntax = "v1"
+
+type (
+	GetLogfileReq {
+		ID            int       `json:"id"`
+		Name          string    `json:"name"`
+		Host          string    `json:"host"`
+		Path          string    `json:"path"`
+		CreateTime    int `json:"create_time"`
+		Comment       string    `json:"comment"`
+		MonitorChoice int       `json:"monitor_choice"`
+	}
+	GetLogfileRes {
+		Name          string   `json:"name"`
+		Path          string   `json:"path"`
+		Comment       string   `json:"comment"`
+		Host          string   `json:"host"`
+		Hosts         []string `json:"hosts"`
+		MonitorChoice int      `json:"monitor_choice"`
+	}
+)

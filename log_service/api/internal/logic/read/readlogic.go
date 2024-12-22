@@ -4,7 +4,6 @@ import (
 	"api/internal/svc"
 	"api/internal/types"
 	"context"
-	"database/sql"
 	"fmt"
 	"os/exec"
 	"regexp"
@@ -16,7 +15,6 @@ import (
 )
 
 var (
-	db         *sql.DB
 	logfile    string
 	page       int
 	match      string
@@ -30,7 +28,7 @@ var (
 	totalPages int
 	tasks      []func()
 	taskErrors []string
-	sshClient  *ssh.Client
+	//sshClient  *ssh.Client
 )
 
 type ReadLogic struct {
@@ -77,6 +75,7 @@ func (l *ReadLogic) Read(req *types.GetLogInfoReq) (resp *types.GetLogInfoRes, e
 	return
 }
 
+// 负责执行所有读取日志的任务
 func readLogfile() error {
 	tasks = []func(){
 		makeTotalLines,
@@ -102,6 +101,7 @@ func readLogfile() error {
 	return nil
 }
 
+// 获取日志内容
 func makeContents() {
 	var readCmd string
 	if match != "" && clean == "true" {
@@ -122,6 +122,7 @@ func makeContents() {
 	}
 }
 
+// 计算日志文件的总行数
 func makeTotalLines() {
 	output, err := command(fmt.Sprintf("wc -l %s", path))
 	if err != nil {
@@ -131,6 +132,7 @@ func makeTotalLines() {
 	}
 }
 
+// 计算匹配的行数
 func makeMatchLines() {
 	if page == 1 && match == "" {
 		matchLines = totalLines
@@ -144,6 +146,7 @@ func makeMatchLines() {
 	}
 }
 
+// 计算总页数
 func makeTotalPages() {
 	if page == 1 && clean == "true" {
 		totalPages = (matchLines / 1000) + 1
@@ -158,18 +161,21 @@ func makeTotalPages() {
 	}
 }
 
+// command 执行命令并返回输出
 func command(cmd string) (string, error) {
 	var output []byte
 	var err error
+	// 如果是本地执行，则直接执行命令
 	if host == "localhost" || host == "127.0.0.1" {
 		output, err = exec.Command("sh", "-c", cmd).CombinedOutput()
 	} else {
-		session, err := sshClient.NewSession()
-		if err != nil {
-			return "", err
-		}
-		defer session.Close()
-		output, err = session.CombinedOutput(cmd)
+		//session, err := sshClient.NewSession()
+		//if err != nil {
+		//	return "", err
+		//}
+		//defer session.Close()
+		//output, err = session.CombinedOutput(cmd)
+		//shh 连接
 	}
 	return string(output), err
 }
