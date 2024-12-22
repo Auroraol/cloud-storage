@@ -1,16 +1,16 @@
 syntax = "v1"
 
 info (
-	title:   "用户中心服务"
-	desc:    "用户中心服务"
+	title:   "日志服务"
+	desc:    "日志服务"
 	author:  "Mikael"
 	email:   "13247629622@163.com"
 	version: "v1"
 )
 
 import (
-	"user/user.api"
 	"proto/read.api"
+	"proto/logfiles.api"
 )
 
 //============================> log_service v1 <============================
@@ -39,11 +39,24 @@ import (
 	jwt:    JwtAuth
 )
 service log_service {
-	@doc "get log info"
+	@doc "日志阅读"
 	@handler read
-	post /red/log (GetLogInfoReq) returns (GetLogInfoRes)
-// @doc "wechat mini auth"
-// @handler wxMiniAuth
-// post /user/wxMiniAuth (WXMiniAuthReq) returns (WXMiniAuthResp)
+	post /read (GetLogInfoReq) returns (GetLogInfoRes)
+
+	@doc "日志文件"
+	@handler logfile
+	post /logfiles (GetLogfileReq) returns (GetLogfileRes)
+
+//	@doc "日志监控"
+//	@handler monitor
+//	post /monitor (GetMonitorReq) returns (GetMonitorRes)
+//
+//	@doc "日志上报"
+//	@handler Reported
+//	post /Reported (GetReportedReq) returns (GetReportedRes)
+//
+//	@doc "日志图表 "
+//	@handler charts
+//	post /charts (GetChartsReq) returns (GetChartsRes)
 }
 
