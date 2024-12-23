@@ -1,0 +1,72 @@
+syntax = "v1"
+
+info(
+	title: "用户中心服务"
+	desc: "用户中心服务"
+	author: "lfj"
+	email: "1665834268@qq.com"
+	version: "v1"
+)
+
+import (
+	"user/user.api"
+)
+
+//============================> usercenter v1 <============================
+//no need login
+@server(
+	prefix: user_center/v1
+	group: user
+)
+service user_center {
+	
+	@doc "用户注册"
+	@handler register
+	post /user/register (RegisterReq) returns (RegisterResp)
+	
+	@doc "用户登录"
+	@handler login
+	post /user/login (LoginReq) returns (LoginResp)
+
+	@doc "验证码发送"
+	@handler codeSend
+	post /code/send (CodeSendRequest) returns (CodeSendResponse)
+	
+}
+
+//need login
+@server(
+	prefix: user_center/v1
+	group: user
+	jwt: JwtAuth
+)
+service user_center {
+	
+	@doc "用户详情"
+	@handler detail
+	post /user/detail (UserInfoReq) returns (UserInfoResp)
+	
+	@doc "刷新Authorization"
+	@handler RefreshAuthorization
+	post /refresh/authorization (RefreshAuthRequest) returns (RefreshAuthResponse)
+
+}
+
+
+//need login
+@server(
+	prefix: user_center/v1
+	group: file
+	jwt: JwtAuth
+)
+service user_center {
+	
+//	@doc "用户详情"
+//	@handler file
+//	post /user/detail (UserInfoReq) returns (UserInfoResp)
+	
+//	@doc "刷新Authorization"
+//	@handler RefreshAuthorization
+//  post /refresh/authorization (RefreshAuthRequest) returns (RefreshAuthResponse)
+
+}
