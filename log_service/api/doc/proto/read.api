@@ -2,9 +2,10 @@ syntax = "v1"
 
 type (
 	GetLogInfoReq {
-		Logfile string `form:"logfile"`
-		Path string `form:"path"`
-		Host string `form:"host"`
+		Logfile string `form:"logfile"` //log name
+		Path string `form:"path"`       // log path
+		Host string `form:"host"`       // host address
+		Password string `form:"password"`
 		Match string `form:"match"`
 		Clean string `form:"clean"`
 		Posit string `form:"posit"`

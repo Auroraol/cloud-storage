@@ -6,8 +6,7 @@ package handler
 import (
 	"net/http"
 
-	read "api/internal/handler/read"
-	"api/internal/svc"
+	"cloud-storage/log_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -16,10 +15,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// get log info
+				// 日志文件
 				Method:  http.MethodPost,
-				Path:    "/red/log",
-				Handler: read.ReadHandler(serverCtx),
+				Path:    "/logfiles",
+				Handler: logfileHandler(serverCtx),
+			},
+			{
+				// 路径文件
+				Method:  http.MethodPost,
+				Path:    "/path",
+				Handler: pathHandler(serverCtx),
+			},
+			{
+				// 日志阅读
+				Method:  http.MethodPost,
+				Path:    "/read",
+				Handler: readHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

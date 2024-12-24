@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"api/internal/config"
+	"cloud-storage/log_service/api/internal/config"
 )
 
 type ServiceContext struct {
