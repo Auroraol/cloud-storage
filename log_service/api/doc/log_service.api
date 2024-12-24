@@ -10,6 +10,7 @@ info (
 
 import (
 	"proto/read.api"
+	"proto/path.api"
 	"proto/logfiles.api"
 )
 
@@ -35,28 +36,31 @@ import (
 //need login
 @server (
 	prefix: log_service/v1
-	group:  read
-	jwt:    JwtAuth
+	//      group:  read
+	jwt: JwtAuth
 )
 service log_service {
 	@doc "日志阅读"
 	@handler read
 	post /read (GetLogInfoReq) returns (GetLogInfoRes)
 
+	@doc "路径文件"
+	@handler path
+	post /path (GetPathsFileReq) returns (GetPathsFileRes)
+
 	@doc "日志文件"
 	@handler logfile
 	post /logfiles (GetLogfileReq) returns (GetLogfileRes)
-
-//	@doc "日志监控"
-//	@handler monitor
-//	post /monitor (GetMonitorReq) returns (GetMonitorRes)
+// @doc "日志监控"
+// @handler monitor
+// post /monitor (GetMonitorReq) returns (GetMonitorRes)
 //
-//	@doc "日志上报"
-//	@handler Reported
-//	post /Reported (GetReportedReq) returns (GetReportedRes)
+// @doc "日志上报"
+// @handler Reported
+// post /Reported (GetReportedReq) returns (GetReportedRes)
 //
-//	@doc "日志图表 "
-//	@handler charts
-//	post /charts (GetChartsReq) returns (GetChartsRes)
+// @doc "日志图表 "
+// @handler charts
+// post /charts (GetChartsReq) returns (GetChartsRes)
 }
 

@@ -4,13 +4,14 @@
 package types
 
 type GetLogInfoReq struct {
-	Logfile string `form:"logfile"`
-	Path    string `form:"path"`
-	Host    string `form:"host"`
-	Match   string `form:"match"`
-	Clean   string `form:"clean"`
-	Posit   string `form:"posit"`
-	Page    int    `form:"page"`
+	Logfile  string `form:"logfile"` //log name
+	Path     string `form:"path"`    // log path
+	Host     string `form:"host"`    // host address
+	Password string `form:"password"`
+	Match    string `form:"match"`
+	Clean    string `form:"clean"`
+	Posit    string `form:"posit"`
+	Page     int    `form:"page"`
 }
 
 type GetLogInfoRes struct {
@@ -20,4 +21,33 @@ type GetLogInfoRes struct {
 	TotalLines int      `json:"total_lines"`
 	MatchLines int      `json:"match_lines"`
 	Lines      int      `json:"lines"`
+}
+
+type GetLogfileReq struct {
+	ID            int    `json:"id"`
+	Name          string `json:"name"`
+	Host          string `json:"host"`
+	Path          string `json:"path"`
+	CreateTime    int    `json:"create_time"`
+	Comment       string `json:"comment"`
+	MonitorChoice int    `json:"monitor_choice"`
+}
+
+type GetLogfileRes struct {
+	Name          string   `json:"name"`
+	Path          string   `json:"path"`
+	Comment       string   `json:"comment"`
+	Host          string   `json:"host"`
+	Hosts         []string `json:"hosts"`
+	MonitorChoice int      `json:"monitor_choice"`
+}
+
+type GetPathsFileReq struct {
+	LogFileName string `form:"path"` // log path
+	Path        string `form:"path"` // log path
+	Host        string `form:"host"` // host address
+}
+
+type GetPathsFileRes struct {
+	PathsFile []string `json:"contents"`
 }
