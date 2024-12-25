@@ -3,8 +3,8 @@ syntax = "v1"
 info (
 	title:   "日志服务"
 	desc:    "日志服务"
-	author:  "Mikael"
-	email:   "13247629622@163.com"
+	author: "lfj"
+	email: "1665834268@qq.com"
 	version: "v1"
 )
 
@@ -18,20 +18,9 @@ import (
 //no need login
 //@server (
 // //路由前缀
-// prefix: log_service/v1
-// //代表当前service的代码会放在account目录下
-// //这里注意 冒汗要紧贴着key
-// group: user
 //)
 ////影响配置文件名称和主文件名称
 //service log_service {
-// @doc "register"
-// @handler register //handler中的函数名称
-// post /user/register (RegisterReq) returns (RegisterResp)
-//
-// @doc "login"
-// @handler login
-// post /user/login (LoginReq) returns (LoginResp)
 //}
 //need login
 @server (
