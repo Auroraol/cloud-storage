@@ -9,7 +9,11 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+
+	//db := init_gorm.InitGorm(c.Mysql.DataSource) // init自定义的
+	//db.AutoMigrate(&models.UserModel{})
 	return &ServiceContext{
 		Config: c,
+		//DB:     db,
 	}
 }
