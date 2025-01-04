@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"cloud-storage/common/errs"
+	"github.com/Auroraol/cloud-storage/common/errs"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"

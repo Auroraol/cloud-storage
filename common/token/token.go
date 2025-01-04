@@ -2,6 +2,7 @@ package token
 
 import (
 	"context"
+	"github.com/Auroraol/cloud-storage/common/time"
 
 	"encoding/json"
 	"github.com/golang-jwt/jwt/v4"
@@ -16,8 +17,35 @@ import (
 // 从任务上下文获取JWT(token)中的uid, 用户信息优先使用上下文获取
 var CtxKeyJwtUserId = "jwtUserId"
 
+type GenerateTokenReq struct {
+	UserId       int64
+	AccessSecret string
+	AccessExpire int64
+}
+
+type GenerateTokenResp struct {
+	AccessToken  string
+	AccessExpire int64
+	RefreshAfter int64
+}
+
 // 生成JWTToken
-func GenerateJwtToken(secretKey string, iat, seconds, userId int64) (string, error) {
+func GenerateToken(in *GenerateTokenReq) (*GenerateTokenResp, error) {
+	now := time.LocalTimeNow().Unix()
+	accessExpire := in.AccessExpire
+	accessToken, err := generateJwtToken(in.AccessSecret, now, accessExpire, in.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &GenerateTokenResp{
+		AccessToken:  "Bearer " + accessToken,
+		AccessExpire: now + accessExpire,
+		RefreshAfter: now + accessExpire/2,
+	}, nil
+}
+
+func generateJwtToken(secretKey string, iat, seconds, userId int64) (string, error) {
 	claims := make(jwt.MapClaims)
 	claims["exp"] = iat + seconds
 	claims["iat"] = iat

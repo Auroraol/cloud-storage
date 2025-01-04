@@ -1,7 +1,7 @@
 package errs
 
 // 成功返回
-const OK uint32 = 200
+const OK uint32 = 200000
 
 /**(前3位代表业务,后三位代表具体功能)**/
 

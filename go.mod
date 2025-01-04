@@ -1,6 +1,6 @@
-module cloud-storage
+module github.com/Auroraol/cloud-storage
 
-go 1.23.4
+go 1.23.1
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
@@ -9,7 +9,7 @@ require (
 	github.com/kr/fs v0.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.7
-	github.com/sirupsen/logrus v1.9.3
+	github.com/shopspring/decimal v1.4.0
 	github.com/zeromicro/go-zero v1.7.4
 	golang.org/x/crypto v0.29.0
 	google.golang.org/grpc v1.65.0
