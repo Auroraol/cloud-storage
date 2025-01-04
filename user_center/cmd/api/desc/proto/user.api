@@ -18,17 +18,12 @@ type User {
 
 type (
 	RegisterReq {
-	
-	Name string `json:"name"`
-	Code string `json:"code"`
-	Password string `json:"password"`
-		Mobile   string `json:"mobile"`
-		Password string `json:"password"`
+		Name string `json:"name"`         // 用户名称
+		Password string `json:"password"` // 用户密码
+		Mobile string `json:"mobile"`     // 手机号
+		Code string `json:"code"`         // 验证码
 	}
 	RegisterResp {
-		AccessToken  string `json:"accessToken"`
-		AccessExpire int64  `json:"accessExpire"`
-		RefreshAfter int64  `json:"refreshAfter"`
 	}
 )
 
