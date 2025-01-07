@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -12,4 +13,5 @@ type Config struct {
 		AccessExpire int64
 	}
 	UsercenterRpcConf zrpc.RpcClientConf
+	Options           orm.Options
 }
