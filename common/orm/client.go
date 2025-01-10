@@ -1,7 +1,6 @@
 package orm
 
 import (
-	"context"
 	"gorm.io/driver/clickhouse"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -14,7 +13,7 @@ import (
 
 // 接口
 type Client interface {
-	GetGormDB(ctx context.Context) *gorm.DB
+	GetGormDB() *gorm.DB
 }
 
 // 实现
@@ -22,6 +21,7 @@ type clientImpl struct {
 	db *gorm.DB
 }
 
+// 初始化
 func NewClient(options Options) (Client, error) {
 	config := &gorm.Config{
 		SkipDefaultTransaction:                   options.SkipDefaultTransaction,
@@ -88,6 +88,6 @@ func GetDialector(option Options) gorm.Dialector {
 	return dialector
 }
 
-func (c *clientImpl) GetGormDB(ctx context.Context) *gorm.DB {
+func (c *clientImpl) GetGormDB() *gorm.DB {
 	return c.db
 }

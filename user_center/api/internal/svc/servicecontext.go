@@ -1,24 +1,20 @@
 package svc
 
 import (
-	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/config"
-	"gorm.io/gorm"
+	"github.com/Auroraol/cloud-storage/user_center/model"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {
-	Config   config.Config
-	DB       *gorm.DB
-	DbClient orm.Client
+	Config    config.Config
+	UserModel model.UserModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	client, err := orm.NewClient(c.Options)
-	if err != nil {
-		panic(err)
-	}
+	mysqlConn := sqlx.NewMysql(c.Options.Dsn)
 	return &ServiceContext{
-		Config:   c,
-		DbClient: client,
+		Config:    c,
+		UserModel: model.NewUserModel(mysqlConn),
 	}
 }
