@@ -2,6 +2,10 @@ package user
 
 import (
 	"context"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -25,7 +29,18 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 }
 
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	userId := token.GetUidFromCtx(l.ctx)
+	if userId == 0 {
+		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
+	}
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.Wrapf(response.NewErrCode(response.ACCOUNT_NOT_FOUND), "id:%d", userId)
+	}
+	resp = &types.UserInfoResp{}
+	_ = copier.Copy(&resp.UserInfo, user)
+	return resp, nil
 }

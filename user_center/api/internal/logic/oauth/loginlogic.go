@@ -2,10 +2,12 @@ package oauth
 
 import (
 	"context"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/tool"
+
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,8 +27,12 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.AccountLoginReq) (resp *types.AccountLoginResp, err error) {
-	var userId int64
 	// 1、从数据库中查询当前用户
+	md5ByString := tool.Md5ByString(req.Password)
+	userId, err := l.svcCtx.UserModel.FindUserIdByUsernameAndPassword(l.ctx, req.Name, md5ByString)
+	if err != nil || userId == -1 {
+		return nil, response.NewErrCode(response.ACCOUNT_NOT_FOUND)
+	}
 
 	// 2、生成token
 	tokenResp, _ := token.GenerateToken(&token.GenerateTokenReq{

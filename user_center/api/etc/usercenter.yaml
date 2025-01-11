@@ -1,4 +1,4 @@
-Name: usercenter-api
+Name: user_center-api
 Host: 0.0.0.0
 Port: 1004
 Mode: dev
@@ -12,6 +12,8 @@ JwtAuth:
 Options:
   DBType: mysql
   Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
+
+
 ##监控
 #Prometheus:
 #  Host: 0.0.0.0

@@ -1,4 +1,4 @@
-package errs
+package response
 
 import (
 	"fmt"
@@ -30,10 +30,13 @@ func (e *CodeError) Error() string {
 func NewErrCodeMsg(errCode uint32, errMsg string) *CodeError {
 	return &CodeError{errCode: errCode, errMsg: errMsg}
 }
+
+// 生成 {code, 对应code的错误信息}
 func NewErrCode(errCode uint32) *CodeError {
 	return &CodeError{errCode: errCode, errMsg: MapErrMsg(errCode)}
 }
 
+// 生成 {100001, 自定义错误信息}
 func NewErrMsg(errMsg string) *CodeError {
-	return &CodeError{errCode: SERVER_COMMON_ERROR, errMsg: errMsg}
+	return &CodeError{errCode: SYSTEM_ERROR, errMsg: errMsg}
 }

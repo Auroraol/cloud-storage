@@ -39,7 +39,7 @@ func GenerateToken(in *GenerateTokenReq) (*GenerateTokenResp, error) {
 	}
 
 	return &GenerateTokenResp{
-		AccessToken:  "Bearer " + accessToken,
+		AccessToken:  accessToken,
 		AccessExpire: now + accessExpire,
 		RefreshAfter: now + accessExpire/2,
 	}, nil

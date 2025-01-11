@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"github.com/Auroraol/cloud-storage/common/result"
+	"github.com/Auroraol/cloud-storage/common/response"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/logic/oauth"
@@ -15,12 +15,12 @@ func RegisterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.AccountRegisterReq
 		if err := httpx.Parse(r, &req); err != nil {
-			result.ParamErrorResult(r, w, err)
+			response.ParamErrorResult(r, w, err)
 			return
 		}
 
 		l := oauth.NewRegisterLogic(r.Context(), svcCtx)
 		resp, err := l.Register(&req)
-		result.HttpResult(r, w, resp, err)
+		response.HttpResult(r, w, resp, err)
 	}
 }

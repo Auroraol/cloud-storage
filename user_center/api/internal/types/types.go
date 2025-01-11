@@ -9,9 +9,9 @@ type AccountLoginReq struct {
 }
 
 type AccountLoginResp struct {
-	AccessToken  string `json:"accesssToken"`
-	AccessExpire int64  `json:"accessExpire"`
-	RefreshAfter int64  `json:"refreshAfter"`
+	AccessToken  string `json:"accesssToken"` // access_token
+	AccessExpire int64  `json:"accessExpire"` // access_token的过期时间
+	RefreshAfter int64  `json:"refreshAfter"` // 刷新token之前剩余的时间
 }
 
 type AccountRegisterReq struct {
@@ -44,7 +44,7 @@ type RefreshAuthRequest struct {
 }
 
 type RefreshAuthResponse struct {
-	AccesssToken string `json:"accesssToken"`
+	AccessToken  string `json:"accesssToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
 }
@@ -61,11 +61,15 @@ type RegisterResp struct {
 
 type User struct {
 	Id       int64  `json:"id"`
-	Mobile   string `json:"mobile"`
-	Nickname string `json:"nickname"`
-	Sex      int64  `json:"sex"`
-	Avatar   string `json:"avatar"`
-	Info     string `json:"info"`
+	Username string `db:"username"` // 用户名
+	Mobile   string `db:"mobile"`   // 手机号
+	Nickname string `db:"nickname"` // 昵称
+	Gender   int64  `db:"gender"`   // 性别，1：男，0：女，默认为1
+	Avatar   string `db:"avatar"`   // 用户头像
+	Birthday string `db:"birthday"` // 生日
+	Email    string `db:"email"`    // 电子邮箱
+	Brief    string `db:"brief"`    // 简介|个性签名
+	Info     string `db:"info"`
 }
 
 type UserInfoReq struct {

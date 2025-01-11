@@ -1,0 +1,26 @@
+syntax = "v1"
+
+info (
+	title:   ""
+	desc:    ""
+	author:  "lfj"
+	email:   "1665834268@qq.com"
+)
+
+type FileUploadRequest {
+	//传递form值
+	//file file
+}
+
+type FileUploadResponse {
+	Id int64 `json:"id"`
+}
+
+type FileUploadByChunkRequest {
+	//传递form值
+	//file file
+}
+
+type FileUploadByChunkResponse {
+	Id int64 `json:"id"`
+}

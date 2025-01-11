@@ -4,88 +4,35 @@ option go_package = "./pb";
 
 package pb;
 
-
-//model
-message User {
+message DecreaseVolumeReq {
   int64 id = 1;
-  string mobile = 2;
-  string nickname =3;
-  int64  sex = 4;
-  string avatar = 5;
-  string info = 6;
+  int64 size = 2;
 }
 
-message UserAuth {
-  int64  id = 1;
-  int64  userId = 2;
-  string authType = 3;
-  string authKey = 4;
+message DecreaseVolumeResp {
 }
 
-
-//req 、resp
-message RegisterReq {
-  string mobile = 1;
-  string nickname = 2;
-  string password = 3;
-  string authKey = 4;
-  string authType = 5;
-}
-message RegisterResp {
-  string accessToken = 1;
-  int64  accessExpire = 2;
-  int64  refreshAfter = 3;
+message FindVolumeReq {
+  int64 id = 1;
 }
 
-message LoginReq {
-  string  authType = 1;
-  string authKey = 2;
-  string  password = 3;
-}
-message LoginResp {
-  string accessToken = 1;
-  int64  accessExpire = 2;
-  int64  refreshAfter = 3;
+message FindVolumeResp {
+  int64 nowVolume = 1;
+  int64 totalVolume = 2;
 }
 
-message GetUserInfoReq {
-  int64  id = 1;
-}
-message GetUserInfoResp {
-   User user = 1;
+message AddVolumeReq {
+  int64 id = 1;
+  int64 size = 2;
 }
 
-message GetUserAuthByAuthKeyReq {
-  string  authKey = 1;
-  string  authType = 2;
-}
-message GetUserAuthByAuthKeyResp {
-   UserAuth userAuth = 1;
+message AddVolumeResp {
 }
 
-message GetUserAuthByUserIdReq {
-  int64  userId = 1;
-  string  authType = 2;
-}
-message GetUserAuthyUserIdResp {
-   UserAuth userAuth = 1;
+service userCenter {
+  rpc decreaseVolume(DecreaseVolumeReq) returns (DecreaseVolumeResp);
+  rpc findVolumeById(FindVolumeReq) returns (FindVolumeResp);
+  rpc addVolume(AddVolumeReq) returns (AddVolumeResp);
 }
 
-message GenerateTokenReq {
-  int64 userId = 1;
-}
-message GenerateTokenResp {
-  string accessToken = 1;
-  int64  accessExpire = 2;
-  int64  refreshAfter = 3;
-}
-
-//service
-service usercenter {
-  rpc login(LoginReq) returns(LoginResp);
-  rpc register(RegisterReq) returns(RegisterResp);
-  rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
-  rpc getUserAuthByAuthKey(GetUserAuthByAuthKeyReq) returns(GetUserAuthByAuthKeyResp);
-  rpc getUserAuthByUserId(GetUserAuthByUserIdReq) returns(GetUserAuthyUserIdResp);
-  rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
-}
+//  goctl rpc protoc usercenter.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m  //-m 分组

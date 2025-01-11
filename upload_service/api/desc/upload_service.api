@@ -1,0 +1,58 @@
+syntax = "v1"
+
+info (
+	title:   "上传服务"
+	desc:    "上传服务"
+	author:  "lfj"
+	email:   "1665834268@qq.com"
+	version: "v1"
+)
+
+import (
+	"proto/upload.api"
+)
+
+//============================> uploadservice v1 <============================
+////no need login
+//@server (
+// prefix: user_center/v1
+// group:  oauth
+//)
+//service user_center {
+// @doc "账号密码注册"
+// @handler register
+// post /oauth/register (AccountRegisterReq) returns (AccountRegisterResp)
+//
+// @doc "账号密码登录"
+// @handler login
+// post /oauth/login (AccountLoginReq) returns (AccountLoginResp)
+//
+// @doc "手机号登陆/注册"
+// @handler loginByMobileCode
+// post /oauth/login/mobile (LoginReq) returns (LoginResp)
+//
+// @doc "验证码发送"
+// @handler codeSend
+// post /oauth/send (CodeSendRequest) returns (CodeSendResponse)
+////github 登录
+//}
+//need login
+@server (
+	prefix: upload_service/v1
+	jwt:    JwtAuth
+)
+service upload_service {
+	@doc (
+		summary: "文件上传"
+	)
+	@handler FileUpload
+	post /file/upload (FileUploadRequest) returns (FileUploadResponse)
+
+	@doc (
+		summary: "文件分片上传"
+	)
+	@handler FileUploadByChunk
+	post /file/chunk/upload (FileUploadByChunkRequest) returns (FileUploadByChunkResponse)
+}
+
+// goctl api go --api *.api --dir ./..

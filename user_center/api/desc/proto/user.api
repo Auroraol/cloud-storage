@@ -1,19 +1,23 @@
 syntax = "v1"
 
-info(
-	title: "用户实例"
-	desc: "用户实例"
-	author: "Mikael"
-	email: "13247629622@163.com"
+info (
+	title:   "用户实例"
+	desc:    "用户实例"
+	author:  "lfj"
+	email:   "1665834268@qq.com"
 )
 
 type User {
-	Id       int64  `json:"id"`
-	Mobile   string `json:"mobile"`
-	Nickname string `json:"nickname"`
-	Sex      int64  `json:"sex"`
-	Avatar   string `json:"avatar"`
-	Info     string `json:"info"`
+	Id int64 `json:"id"`
+	Username string `db:"username"` // 用户名
+	Mobile string `db:"mobile"`     // 手机号
+	Nickname string `db:"nickname"` // 昵称
+	Gender int64 `db:"gender"`      // 性别，1：男，0：女，默认为1
+	Avatar string `db:"avatar"`     // 用户头像
+	Birthday string `db:"birthday"` // 生日
+	Email string `db:"email"`       // 电子邮箱
+	Brief string `db:"brief"`       // 简介|个性签名
+	Info string `db:"info"`
 }
 
 type (
@@ -40,10 +44,33 @@ type (
 )
 
 type (
-	UserInfoReq {
+	CodeSendRequest {
+		Email string `json:"email"`
 	}
-	UserInfoResp {
-		UserInfo User `json:"userInfo"`
+
+	CodeSendResponse {
+	}
+)
+
+//
+type (
+	AccountRegisterReq {
+		Name string `json:"name"`         // 用户名称
+		Password string `json:"password"` // 用户密码
+	}
+	AccountRegisterResp{
+	}
+)
+
+type (
+	AccountLoginReq {
+		Name string `json:"name"`
+		Password string `json:"password"`
+	}
+	AccountLoginResp {
+		AccessToken string `json:"accesssToken"`  // access_token
+		AccessExpire int64 `json:"accessExpire"`  // access_token的过期时间
+		RefreshAfter int64 `json:"refreshAfter"`  // 刷新token之前剩余的时间
 	}
 )
 
@@ -51,38 +78,16 @@ type (
 	RefreshAuthRequest {
 	}
 	RefreshAuthResponse {
-		AccesssToken string `json:"accesssToken"`
-		AccessExpire int64  `json:"accessExpire"`
-		RefreshAfter int64  `json:"refreshAfter"`
+		AccessToken string `json:"accesssToken"`
+		AccessExpire int64 `json:"accessExpire"`
+		RefreshAfter int64 `json:"refreshAfter"`
 	}
 )
 
 type (
-	 CodeSendRequest {
-	Email string `json:"email"`
-}
-
- CodeSendResponse {
-}
-)
-
-//
-type  (
-	AccountRegisterReq  {
-		Name     string `json:"name"`     // 用户名称
-		Password string `json:"password"` // 用户密码
+	UserInfoReq {
 	}
-	AccountRegisterResp{}
-)
-
-type (
-AccountLoginReq{
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
-AccountLoginResp{
-	AccessToken string `json:"accesssToken"`
-	AccessExpire int64  `json:"accessExpire"`
-	RefreshAfter int64  `json:"refreshAfter"`
-}
+	UserInfoResp {
+		UserInfo User `json:"userInfo"`
+	}
 )
