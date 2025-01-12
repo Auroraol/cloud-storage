@@ -317,6 +317,7 @@ github.com/zeromicro/go-zero/core/stat/internal
 github.com/zeromicro/go-zero/core/stores/builder
 github.com/zeromicro/go-zero/core/stores/cache
 github.com/zeromicro/go-zero/core/stores/redis
+github.com/zeromicro/go-zero/core/stores/sqlc
 github.com/zeromicro/go-zero/core/stores/sqlx
 github.com/zeromicro/go-zero/core/stringx
 github.com/zeromicro/go-zero/core/syncx

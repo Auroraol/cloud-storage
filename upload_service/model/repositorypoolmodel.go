@@ -2,8 +2,8 @@ package model
 
 import (
 	"context"
-	"database/sql"
 	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
@@ -14,9 +14,9 @@ type (
 	// and implement the added methods in customRepositoryPoolModel.
 	RepositoryPoolModel interface {
 		repositoryPoolModel
-		InsertWithId(ctx context.Context, data *RepositoryPool) (sql.Result, error)
+		//InsertWithId(ctx context.Context, data *RepositoryPool) (sql.Result, error)
 		CountByHash(ctx context.Context, hash string) (int64, error)
-		FindRepositoryPoolByHash(ctx context.Context, hash string) (*RepositoryPool, error)
+		//FindRepositoryPoolByHash(ctx context.Context, hash string) (*RepositoryPool, error)
 	}
 
 	customRepositoryPoolModel struct {
@@ -31,34 +31,33 @@ func NewRepositoryPoolModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.
 	}
 }
 
-//
-//func (m *defaultRepositoryPoolModel) InsertWithId(ctx context.Context, data *RepositoryPool) (sql.Result, error) {
-//	repositoryPoolHashKey := fmt.Sprintf("%s%v", cacheRepositoryPoolHashPrefix, data.Hash)
-//	repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
-//	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-//		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, repositoryPoolRowsExpectAutoSetButId)
-//		return conn.ExecCtx(ctx, query, data.Id, data.Hash, data.Ext, data.Size, data.Path, data.Name)
-//	}, repositoryPoolHashKey, repositoryPoolIdKey)
-//	return ret, err
-//}
-//
-//func (m *defaultRepositoryPoolModel) CountByHash(ctx context.Context, hash string) (int64, error) {
-//	countBuilder := m.CountBuilder("id")
-//	query, values, err := countBuilder.Where("hash = ?", hash).ToSql()
-//	if err != nil {
-//		return 0, err
+//	func (m *defaultRepositoryPoolModel) InsertWithId(ctx context.Context, data *RepositoryPool) (sql.Result, error) {
+//		repositoryPoolHashKey := fmt.Sprintf("%s%v", cacheRepositoryPoolHashPrefix, data.Hash)
+//		repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
+//		ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+//			query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, repositoryPoolRowsExpectAutoSetButId)
+//			return conn.ExecCtx(ctx, query, data.Id, data.Hash, data.Ext, data.Size, data.Path, data.Name)
+//		}, repositoryPoolHashKey, repositoryPoolIdKey)
+//		return ret, err
 //	}
-//	var resp int64
-//	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
-//	switch err {
-//	case nil:
-//		return resp, nil
-//	case sqlc.ErrNotFound:
-//		return 0, ErrNotFound
-//	default:
-//		return 0, err
-//	}
-//}
+func (m *defaultRepositoryPoolModel) CountByHash(ctx context.Context, hash string) (int64, error) {
+	countBuilder := m.CountBuilder("id")
+	query, values, err := countBuilder.Where("hash = ?", hash).ToSql()
+	if err != nil {
+		return 0, err
+	}
+	var resp int64
+	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
+}
+
 //
 //func (m *defaultRepositoryPoolModel) FindRepositoryPoolByHash(ctx context.Context, hash string) (*RepositoryPool, error) {
 //	rowBuilder := m.RowBuilder()
