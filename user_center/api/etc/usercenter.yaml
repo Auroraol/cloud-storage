@@ -13,6 +13,31 @@ Options:
   DBType: mysql
   Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
 
+CacheRedis:
+  - Host: redis:6379
+    Pass:
+
+RepositoryRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: repository.rpc
+
+#rpc service
+UploadServiceRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: upload_service.rpc
+
+#rpc service
+UserCenterRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user_center.rpc
+
+
 
 ##监控
 #Prometheus:

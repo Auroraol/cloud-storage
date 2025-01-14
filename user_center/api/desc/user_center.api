@@ -10,6 +10,7 @@ info (
 
 import (
 	"proto/user.api"
+	"proto/user_repository.api"
 )
 
 //============================> usercenter v1 <============================
@@ -51,6 +52,55 @@ service user_center {
 	@doc "刷新Authorization"
 	@handler RefreshAuthorization
 	post /refresh/authorization (RefreshAuthRequest) returns (RefreshAuthResponse)
+}
+
+@server (
+	prefix: user_center/v1
+	group:  repository
+	jwt:    JwtAuth
+)
+service user_center {
+	@doc (
+		summary: "用户文件的关联存储"
+	)
+	@handler UserRepositorySave
+	post /user/repository/save (UserRepositorySaveRequest) returns (UserRepositorySaveResponse)
+
+	@doc (
+		summary: "用户文件列表"
+	)
+	@handler UserFileList
+	post /user/file/list (UserFileListRequest) returns (UserFileListResponse)
+
+	@doc (
+		summary: "用户文件夹列表"
+	)
+	@handler UserFolderList
+	post /user/folder/list (UserFolderListRequest) returns (UserFolderListResponse)
+
+	@doc (
+		summary: "用户文件名称修改"
+	)
+	@handler UserFileNameUpdate
+	post /user/file/name/update (UserFileNameUpdateRequest) returns (UserFileNameUpdateResponse)
+
+	@doc (
+		summary: "用户文件夹创建"
+	)
+	@handler UserFolderCreate
+	post /user/folder/create (UserFolderCreateRequest) returns (UserFolderCreateResponse)
+
+	@doc (
+		summary: "用户文件删除"
+	)
+	@handler UserFileDelete
+	post /user/file/delete (UserFileDeleteRequest) returns (UserFileDeleteResponse)
+
+	@doc (
+		summary: "用户文件移动"
+	)
+	@handler UserFileMove
+	post /user/file/move (UserFileMoveRequest) returns (UserFileMoveResponse)
 }
 
 // goctl api go --api *.api --dir ./..

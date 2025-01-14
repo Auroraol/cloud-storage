@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	oauth "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/oauth"
+	repository "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/repository"
 	user "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/user"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 
@@ -41,6 +42,55 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: oauth.CodeSendHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/user_center/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 用户文件删除
+				Method:  http.MethodPost,
+				Path:    "/user/file/delete",
+				Handler: repository.UserFileDeleteHandler(serverCtx),
+			},
+			{
+				// 用户文件列表
+				Method:  http.MethodPost,
+				Path:    "/user/file/list",
+				Handler: repository.UserFileListHandler(serverCtx),
+			},
+			{
+				// 用户文件移动
+				Method:  http.MethodPost,
+				Path:    "/user/file/move",
+				Handler: repository.UserFileMoveHandler(serverCtx),
+			},
+			{
+				// 用户文件名称修改
+				Method:  http.MethodPost,
+				Path:    "/user/file/name/update",
+				Handler: repository.UserFileNameUpdateHandler(serverCtx),
+			},
+			{
+				// 用户文件夹创建
+				Method:  http.MethodPost,
+				Path:    "/user/folder/create",
+				Handler: repository.UserFolderCreateHandler(serverCtx),
+			},
+			{
+				// 用户文件夹列表
+				Method:  http.MethodPost,
+				Path:    "/user/folder/list",
+				Handler: repository.UserFolderListHandler(serverCtx),
+			},
+			{
+				// 用户文件的关联存储
+				Method:  http.MethodPost,
+				Path:    "/user/repository/save",
+				Handler: repository.UserRepositorySaveHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/user_center/v1"),
 	)
 

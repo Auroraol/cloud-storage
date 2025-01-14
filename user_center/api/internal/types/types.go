@@ -72,9 +72,83 @@ type User struct {
 	Info     string `db:"info"`
 }
 
+type UserFile struct {
+	Id           int64  `json:"id"`
+	RepositoryId int64  `json:"repositoryId"`
+	Name         string `json:"name"`
+	Ext          string `json:"ext"`
+	Path         string `json:"path"`
+	Size         int64  `json:"size"`
+}
+
+type UserFileDeleteRequest struct {
+	Id int64 `json:"id"`
+}
+
+type UserFileDeleteResponse struct {
+}
+
+type UserFileListRequest struct {
+	Id   int64 `json:"id"`            //查询的文件夹id
+	Page int64 `json:"page,optional"` //查询的第几页
+	Size int64 `json:"size,optional"` //每页页数
+}
+
+type UserFileListResponse struct {
+	List  []*UserFile `json:"list"`
+	Count int64       `json:"count"`
+}
+
+type UserFileMoveRequest struct {
+	Id       int64 `json:"id"`
+	ParentId int64 `json:"parentId"`
+}
+
+type UserFileMoveResponse struct {
+}
+
+type UserFileNameUpdateRequest struct {
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
+type UserFileNameUpdateResponse struct {
+}
+
+type UserFolder struct {
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
+type UserFolderCreateRequest struct {
+	ParentId int64  `json:"parentId"`
+	Name     string `json:"name"`
+}
+
+type UserFolderCreateResponse struct {
+	Id int64 `json:"id"`
+}
+
+type UserFolderListRequest struct {
+	Id int64 `json:"id"`
+}
+
+type UserFolderListResponse struct {
+	List []*UserFolder `json:"list"`
+}
+
 type UserInfoReq struct {
 }
 
 type UserInfoResp struct {
 	UserInfo User `json:"userInfo"`
+}
+
+type UserRepositorySaveRequest struct {
+	ParentId     int64  `json:"parentId"`
+	RepositoryId int64  `json:"repositoryId"`
+	Name         string `json:"name"`
+}
+
+type UserRepositorySaveResponse struct {
 }

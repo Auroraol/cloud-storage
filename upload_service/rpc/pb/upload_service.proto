@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+message RepositoryReq {
+  int64 repositoryId = 1;
+}
+
+message RepositoryResp {
+  string ext = 1;
+  int64 size = 2;
+  string path = 3;
+  string name = 4;
+}
+
+message DeleteByIdReq {
+  int64 repositoryId = 1;
+}
+
+message DeleteByIdResp {
+  int64 size = 1;
+}
+
+service UploadService {
+  rpc getRepositoryPoolByRepositoryId(RepositoryReq) returns (RepositoryResp);
+  rpc deleteById(DeleteByIdReq) returns (DeleteByIdResp);
+}
+
+//  goctl rpc protoc usercenter.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m  //-m 分组

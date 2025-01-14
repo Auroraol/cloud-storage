@@ -13,7 +13,7 @@ type FileUploadRequest {
 }
 
 type FileUploadResponse {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 }
 
 type FileUploadByChunkRequest {
@@ -22,5 +22,5 @@ type FileUploadByChunkRequest {
 }
 
 type FileUploadByChunkResponse {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 }

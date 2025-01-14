@@ -14,16 +14,12 @@ func pathHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.GetPathsFileReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			response.ParamErrorResult(r, w, err)
 			return
 		}
 
 		l := logic.NewPathLogic(r.Context(), svcCtx)
 		resp, err := l.Path(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		response.HttpResult(r, w, resp, err)
 	}
 }

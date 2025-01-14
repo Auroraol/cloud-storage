@@ -1,0 +1,47 @@
+syntax = "v1"
+
+info (
+	title:   "分享服务"
+	desc:    "分享服务"
+	author:  "lfj"
+	email:   "1665834268@qq.com"
+	version: "v1"
+)
+
+import (
+	"proto/share.api"
+)
+
+//============================> shareservice v1 <============================
+//no need login
+@server (
+	prefix: share_service/v1
+)
+service upload_service {
+	@doc (
+		summary: "获取资源详情"
+	)
+	@handler ShareBasicDetail
+	post /share/basic/detail (DetailRequest) returns (DetailResponse)
+}
+
+//need login
+@server (
+	prefix: share_service/v1
+	jwt:    JwtAuth
+)
+service upload_service {
+	@doc (
+		summary: "创建分享记录"
+	)
+	@handler ShareBasicCreate
+	post /share/basic/create (ShareBasicCreateRequest) returns (ShareBasicCreateResponse)
+
+	@doc (
+		summary: "资源保存"
+	)
+	@handler ShareBasicSave
+	post /share/basic/save (ShareBasicSaveRequest) returns (ShareBasicSaveResponse)
+}
+
+// goctl api go --api *.api --dir ./..

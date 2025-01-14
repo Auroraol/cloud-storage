@@ -29,7 +29,7 @@ message AddVolumeReq {
 message AddVolumeResp {
 }
 
-service userCenter {
+service UserCenter {
   rpc decreaseVolume(DecreaseVolumeReq) returns (DecreaseVolumeResp);
   rpc findVolumeById(FindVolumeReq) returns (FindVolumeResp);
   rpc addVolume(AddVolumeReq) returns (AddVolumeResp);

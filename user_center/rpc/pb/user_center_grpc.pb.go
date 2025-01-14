@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v5.29.0--rc2
-// source: usercenter.proto
+// source: user_center.proto
 
 package pb
 
@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserCenter_DecreaseVolume_FullMethodName = "/pb.userCenter/decreaseVolume"
-	UserCenter_FindVolumeById_FullMethodName = "/pb.userCenter/findVolumeById"
-	UserCenter_AddVolume_FullMethodName      = "/pb.userCenter/addVolume"
+	UserCenter_DecreaseVolume_FullMethodName = "/pb.UserCenter/decreaseVolume"
+	UserCenter_FindVolumeById_FullMethodName = "/pb.UserCenter/findVolumeById"
+	UserCenter_AddVolume_FullMethodName      = "/pb.UserCenter/addVolume"
 )
 
 // UserCenterClient is the client API for UserCenter service.
@@ -162,7 +162,7 @@ func _UserCenter_AddVolume_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserCenter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.userCenter",
+	ServiceName: "pb.UserCenter",
 	HandlerType: (*UserCenterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -179,5 +179,5 @@ var UserCenter_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "usercenter.proto",
+	Metadata: "user_center.proto",
 }

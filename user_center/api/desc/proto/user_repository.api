@@ -1,0 +1,88 @@
+syntax = "v1"
+
+info (
+    title:   "用户文件管理实例"
+    desc:    "用户文件管理实例"
+    author:  "lfj"
+    email:   "1665834268@qq.com"
+)
+
+// user_repository.api
+type UserRepositorySaveRequest {
+    // ParentId 表示父仓库的唯一标识符，类型为 int64。 如果新仓库没有父仓库，设置为 0 或其他默认值。
+    ParentId     int64  `json:"parentId"`
+
+    // RepositoryId 表示仓库的唯一标识符，类型为 int64。
+    RepositoryId int64  `json:"repositoryId"`
+
+    // Name 表示仓库的名称，类型为 string。
+    Name         string `json:"name"`
+}
+
+type UserRepositorySaveResponse {
+}
+
+type UserFileListRequest {
+    Id   int64 `json:"id"`            //查询的文件夹id
+    Page int64 `json:"page,optional"` //查询的第几页
+    Size int64 `json:"size,optional"` //每页页数
+}
+
+type UserFileListResponse {
+    List  []*UserFile `json:"list"`
+    Count int64       `json:"count"`
+}
+
+type UserFile {
+    Id           int64  `json:"id"`
+    RepositoryId int64  `json:"repositoryId"`
+    Name         string `json:"name"`
+    Ext          string `json:"ext"`
+    Path         string `json:"path"`
+    Size         int64  `json:"size"`
+}
+
+type UserFolderListRequest {
+    Id int64 `json:"id"`
+}
+
+type UserFolderListResponse {
+    List []*UserFolder `json:"list"`
+}
+
+type UserFolder {
+    Id   int64  `json:"id"`
+    Name string `json:"name"`
+}
+
+type UserFileNameUpdateRequest {
+    Id   int64  `json:"id"`
+    Name string `json:"name"`
+}
+
+type UserFileNameUpdateResponse {
+}
+
+type UserFolderCreateRequest {
+    ParentId int64  `json:"parentId"`
+    Name     string `json:"name"`
+}
+
+type UserFolderCreateResponse {
+    Id int64 `json:"id"`
+}
+
+type UserFileDeleteRequest {
+    Id int64 `json:"id"`
+}
+
+type UserFileDeleteResponse {
+}
+
+type UserFileMoveRequest {
+    Id       int64 `json:"id"`
+    ParentId int64 `json:"parentId"`
+}
+
+type UserFileMoveResponse {
+}

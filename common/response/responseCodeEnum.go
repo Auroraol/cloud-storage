@@ -30,6 +30,7 @@ const (
 	DB_UPDATE_AFFECTED_ZERO_ERROR uint32 = 400017 // 更新数据受影响行数为0
 
 	FILE_TOO_LARGE_ERROR uint32 = 400018 // 文件过大
+	FILE_UPLOAD_ERROR    uint32 = 400019 // 上传失败
 )
 
 // 定义错误消息映射
@@ -56,6 +57,7 @@ var message = map[uint32]string{
 	DB_ERROR:                      "数据库错误",
 	DB_UPDATE_AFFECTED_ZERO_ERROR: "更新数据受影响行数为0",
 	FILE_TOO_LARGE_ERROR:          "文件过大",
+	FILE_UPLOAD_ERROR:             "上传失败",
 }
 
 func MapErrMsg(errCode uint32) string {

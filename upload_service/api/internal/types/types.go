@@ -7,12 +7,12 @@ type FileUploadByChunkRequest struct {
 }
 
 type FileUploadByChunkResponse struct {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 }
 
 type FileUploadRequest struct {
 }
 
 type FileUploadResponse struct {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 }
