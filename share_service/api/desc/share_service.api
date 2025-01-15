@@ -17,7 +17,7 @@ import (
 @server (
 	prefix: share_service/v1
 )
-service upload_service {
+service share_service {
 	@doc (
 		summary: "获取资源详情"
 	)
@@ -30,7 +30,7 @@ service upload_service {
 	prefix: share_service/v1
 	jwt:    JwtAuth
 )
-service upload_service {
+service share_service {
 	@doc (
 		summary: "创建分享记录"
 	)

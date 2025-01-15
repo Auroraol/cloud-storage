@@ -19,163 +19,327 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserCenter_DecreaseVolume_FullMethodName = "/pb.UserCenter/decreaseVolume"
-	UserCenter_FindVolumeById_FullMethodName = "/pb.UserCenter/findVolumeById"
-	UserCenter_AddVolume_FullMethodName      = "/pb.UserCenter/addVolume"
+	User_DecreaseVolume_FullMethodName = "/pb.User/decreaseVolume"
+	User_FindVolumeById_FullMethodName = "/pb.User/findVolumeById"
+	User_AddVolume_FullMethodName      = "/pb.User/addVolume"
 )
 
-// UserCenterClient is the client API for UserCenter service.
+// UserClient is the client API for User service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserCenterClient interface {
+type UserClient interface {
 	DecreaseVolume(ctx context.Context, in *DecreaseVolumeReq, opts ...grpc.CallOption) (*DecreaseVolumeResp, error)
 	FindVolumeById(ctx context.Context, in *FindVolumeReq, opts ...grpc.CallOption) (*FindVolumeResp, error)
 	AddVolume(ctx context.Context, in *AddVolumeReq, opts ...grpc.CallOption) (*AddVolumeResp, error)
 }
 
-type userCenterClient struct {
+type userClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUserCenterClient(cc grpc.ClientConnInterface) UserCenterClient {
-	return &userCenterClient{cc}
+func NewUserClient(cc grpc.ClientConnInterface) UserClient {
+	return &userClient{cc}
 }
 
-func (c *userCenterClient) DecreaseVolume(ctx context.Context, in *DecreaseVolumeReq, opts ...grpc.CallOption) (*DecreaseVolumeResp, error) {
+func (c *userClient) DecreaseVolume(ctx context.Context, in *DecreaseVolumeReq, opts ...grpc.CallOption) (*DecreaseVolumeResp, error) {
 	out := new(DecreaseVolumeResp)
-	err := c.cc.Invoke(ctx, UserCenter_DecreaseVolume_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, User_DecreaseVolume_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userCenterClient) FindVolumeById(ctx context.Context, in *FindVolumeReq, opts ...grpc.CallOption) (*FindVolumeResp, error) {
+func (c *userClient) FindVolumeById(ctx context.Context, in *FindVolumeReq, opts ...grpc.CallOption) (*FindVolumeResp, error) {
 	out := new(FindVolumeResp)
-	err := c.cc.Invoke(ctx, UserCenter_FindVolumeById_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, User_FindVolumeById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userCenterClient) AddVolume(ctx context.Context, in *AddVolumeReq, opts ...grpc.CallOption) (*AddVolumeResp, error) {
+func (c *userClient) AddVolume(ctx context.Context, in *AddVolumeReq, opts ...grpc.CallOption) (*AddVolumeResp, error) {
 	out := new(AddVolumeResp)
-	err := c.cc.Invoke(ctx, UserCenter_AddVolume_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, User_AddVolume_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserCenterServer is the server API for UserCenter service.
-// All implementations must embed UnimplementedUserCenterServer
+// UserServer is the server API for User service.
+// All implementations must embed UnimplementedUserServer
 // for forward compatibility
-type UserCenterServer interface {
+type UserServer interface {
 	DecreaseVolume(context.Context, *DecreaseVolumeReq) (*DecreaseVolumeResp, error)
 	FindVolumeById(context.Context, *FindVolumeReq) (*FindVolumeResp, error)
 	AddVolume(context.Context, *AddVolumeReq) (*AddVolumeResp, error)
-	mustEmbedUnimplementedUserCenterServer()
+	mustEmbedUnimplementedUserServer()
 }
 
-// UnimplementedUserCenterServer must be embedded to have forward compatible implementations.
-type UnimplementedUserCenterServer struct {
+// UnimplementedUserServer must be embedded to have forward compatible implementations.
+type UnimplementedUserServer struct {
 }
 
-func (UnimplementedUserCenterServer) DecreaseVolume(context.Context, *DecreaseVolumeReq) (*DecreaseVolumeResp, error) {
+func (UnimplementedUserServer) DecreaseVolume(context.Context, *DecreaseVolumeReq) (*DecreaseVolumeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DecreaseVolume not implemented")
 }
-func (UnimplementedUserCenterServer) FindVolumeById(context.Context, *FindVolumeReq) (*FindVolumeResp, error) {
+func (UnimplementedUserServer) FindVolumeById(context.Context, *FindVolumeReq) (*FindVolumeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindVolumeById not implemented")
 }
-func (UnimplementedUserCenterServer) AddVolume(context.Context, *AddVolumeReq) (*AddVolumeResp, error) {
+func (UnimplementedUserServer) AddVolume(context.Context, *AddVolumeReq) (*AddVolumeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddVolume not implemented")
 }
-func (UnimplementedUserCenterServer) mustEmbedUnimplementedUserCenterServer() {}
+func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
-// UnsafeUserCenterServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserCenterServer will
+// UnsafeUserServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserServer will
 // result in compilation errors.
-type UnsafeUserCenterServer interface {
-	mustEmbedUnimplementedUserCenterServer()
+type UnsafeUserServer interface {
+	mustEmbedUnimplementedUserServer()
 }
 
-func RegisterUserCenterServer(s grpc.ServiceRegistrar, srv UserCenterServer) {
-	s.RegisterService(&UserCenter_ServiceDesc, srv)
+func RegisterUserServer(s grpc.ServiceRegistrar, srv UserServer) {
+	s.RegisterService(&User_ServiceDesc, srv)
 }
 
-func _UserCenter_DecreaseVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_DecreaseVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DecreaseVolumeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserCenterServer).DecreaseVolume(ctx, in)
+		return srv.(UserServer).DecreaseVolume(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserCenter_DecreaseVolume_FullMethodName,
+		FullMethod: User_DecreaseVolume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserCenterServer).DecreaseVolume(ctx, req.(*DecreaseVolumeReq))
+		return srv.(UserServer).DecreaseVolume(ctx, req.(*DecreaseVolumeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserCenter_FindVolumeById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_FindVolumeById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FindVolumeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserCenterServer).FindVolumeById(ctx, in)
+		return srv.(UserServer).FindVolumeById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserCenter_FindVolumeById_FullMethodName,
+		FullMethod: User_FindVolumeById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserCenterServer).FindVolumeById(ctx, req.(*FindVolumeReq))
+		return srv.(UserServer).FindVolumeById(ctx, req.(*FindVolumeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserCenter_AddVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_AddVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddVolumeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserCenterServer).AddVolume(ctx, in)
+		return srv.(UserServer).AddVolume(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserCenter_AddVolume_FullMethodName,
+		FullMethod: User_AddVolume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserCenterServer).AddVolume(ctx, req.(*AddVolumeReq))
+		return srv.(UserServer).AddVolume(ctx, req.(*AddVolumeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UserCenter_ServiceDesc is the grpc.ServiceDesc for UserCenter service.
+// User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UserCenter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.UserCenter",
-	HandlerType: (*UserCenterServer)(nil),
+var User_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.User",
+	HandlerType: (*UserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "decreaseVolume",
-			Handler:    _UserCenter_DecreaseVolume_Handler,
+			Handler:    _User_DecreaseVolume_Handler,
 		},
 		{
 			MethodName: "findVolumeById",
-			Handler:    _UserCenter_FindVolumeById_Handler,
+			Handler:    _User_FindVolumeById_Handler,
 		},
 		{
 			MethodName: "addVolume",
-			Handler:    _UserCenter_AddVolume_Handler,
+			Handler:    _User_AddVolume_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "user_center.proto",
+}
+
+const (
+	UserRepository_GetUserRepositoryNameByRepositoryId_FullMethodName = "/pb.userRepository/getUserRepositoryNameByRepositoryId"
+	UserRepository_FindRepositoryIdById_FullMethodName                = "/pb.userRepository/findRepositoryIdById"
+	UserRepository_CreateByShare_FullMethodName                       = "/pb.userRepository/createByShare"
+)
+
+// UserRepositoryClient is the client API for UserRepository service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type UserRepositoryClient interface {
+	GetUserRepositoryNameByRepositoryId(ctx context.Context, in *RepositoryIdReq, opts ...grpc.CallOption) (*UserRepositoryNameReply, error)
+	FindRepositoryIdById(ctx context.Context, in *FindRepositoryIdReq, opts ...grpc.CallOption) (*FindRepositoryIdReply, error)
+	CreateByShare(ctx context.Context, in *CreateByShareReq, opts ...grpc.CallOption) (*CreateByShareReply, error)
+}
+
+type userRepositoryClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUserRepositoryClient(cc grpc.ClientConnInterface) UserRepositoryClient {
+	return &userRepositoryClient{cc}
+}
+
+func (c *userRepositoryClient) GetUserRepositoryNameByRepositoryId(ctx context.Context, in *RepositoryIdReq, opts ...grpc.CallOption) (*UserRepositoryNameReply, error) {
+	out := new(UserRepositoryNameReply)
+	err := c.cc.Invoke(ctx, UserRepository_GetUserRepositoryNameByRepositoryId_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userRepositoryClient) FindRepositoryIdById(ctx context.Context, in *FindRepositoryIdReq, opts ...grpc.CallOption) (*FindRepositoryIdReply, error) {
+	out := new(FindRepositoryIdReply)
+	err := c.cc.Invoke(ctx, UserRepository_FindRepositoryIdById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userRepositoryClient) CreateByShare(ctx context.Context, in *CreateByShareReq, opts ...grpc.CallOption) (*CreateByShareReply, error) {
+	out := new(CreateByShareReply)
+	err := c.cc.Invoke(ctx, UserRepository_CreateByShare_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UserRepositoryServer is the server API for UserRepository service.
+// All implementations must embed UnimplementedUserRepositoryServer
+// for forward compatibility
+type UserRepositoryServer interface {
+	GetUserRepositoryNameByRepositoryId(context.Context, *RepositoryIdReq) (*UserRepositoryNameReply, error)
+	FindRepositoryIdById(context.Context, *FindRepositoryIdReq) (*FindRepositoryIdReply, error)
+	CreateByShare(context.Context, *CreateByShareReq) (*CreateByShareReply, error)
+	mustEmbedUnimplementedUserRepositoryServer()
+}
+
+// UnimplementedUserRepositoryServer must be embedded to have forward compatible implementations.
+type UnimplementedUserRepositoryServer struct {
+}
+
+func (UnimplementedUserRepositoryServer) GetUserRepositoryNameByRepositoryId(context.Context, *RepositoryIdReq) (*UserRepositoryNameReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserRepositoryNameByRepositoryId not implemented")
+}
+func (UnimplementedUserRepositoryServer) FindRepositoryIdById(context.Context, *FindRepositoryIdReq) (*FindRepositoryIdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindRepositoryIdById not implemented")
+}
+func (UnimplementedUserRepositoryServer) CreateByShare(context.Context, *CreateByShareReq) (*CreateByShareReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateByShare not implemented")
+}
+func (UnimplementedUserRepositoryServer) mustEmbedUnimplementedUserRepositoryServer() {}
+
+// UnsafeUserRepositoryServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserRepositoryServer will
+// result in compilation errors.
+type UnsafeUserRepositoryServer interface {
+	mustEmbedUnimplementedUserRepositoryServer()
+}
+
+func RegisterUserRepositoryServer(s grpc.ServiceRegistrar, srv UserRepositoryServer) {
+	s.RegisterService(&UserRepository_ServiceDesc, srv)
+}
+
+func _UserRepository_GetUserRepositoryNameByRepositoryId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RepositoryIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserRepositoryServer).GetUserRepositoryNameByRepositoryId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserRepository_GetUserRepositoryNameByRepositoryId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserRepositoryServer).GetUserRepositoryNameByRepositoryId(ctx, req.(*RepositoryIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserRepository_FindRepositoryIdById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindRepositoryIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserRepositoryServer).FindRepositoryIdById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserRepository_FindRepositoryIdById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserRepositoryServer).FindRepositoryIdById(ctx, req.(*FindRepositoryIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserRepository_CreateByShare_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateByShareReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserRepositoryServer).CreateByShare(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserRepository_CreateByShare_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserRepositoryServer).CreateByShare(ctx, req.(*CreateByShareReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UserRepository_ServiceDesc is the grpc.ServiceDesc for UserRepository service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UserRepository_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.userRepository",
+	HandlerType: (*UserRepositoryServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "getUserRepositoryNameByRepositoryId",
+			Handler:    _UserRepository_GetUserRepositoryNameByRepositoryId_Handler,
+		},
+		{
+			MethodName: "findRepositoryIdById",
+			Handler:    _UserRepository_FindRepositoryIdById_Handler,
+		},
+		{
+			MethodName: "createByShare",
+			Handler:    _UserRepository_CreateByShare_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

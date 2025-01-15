@@ -2,6 +2,12 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/share_service/model"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/client/user"
+	"github.com/bwmarrin/snowflake"
 
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
@@ -25,7 +31,28 @@ func NewShareBasicCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequest) (resp *types.ShareBasicCreateResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	RepositoryIdInfo, err := l.svcCtx.UserCenterRepositoryRpc.FindRepositoryIdById(l.ctx, &user.FindRepositoryIdReq{Id: req.UserRepositoryId})
+	if err != nil {
+		return nil, err
+	}
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create snowflake node: %w", err)
+	}
+	newId := node.Generate().Int64()
+	userId := token.GetUidFromCtx(l.ctx)
+	if userId == 0 {
+		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
+	}
+	_, err = l.svcCtx.ShareBasicModel.InsertWithId(l.ctx, &model.ShareBasic{
+		Id:               uint64(newId),
+		UserId:           uint64(userId),
+		RepositoryId:     uint64(RepositoryIdInfo.RepositoryId),
+		UserRepositoryId: uint64(req.UserRepositoryId),
+		ExpiredTime:      req.ExpiredTime,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &types.ShareBasicCreateResponse{Id: newId}, nil
 }

@@ -13,15 +13,16 @@ Options:
   DBType: mysql
   Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
 
+# 缓存
 CacheRedis:
-  - Host: redis:6379
-    Pass:
+  - Host: "101.37.165.220:6379"
+    Type: node
+    Pass: "741106"
 
-RepositoryRpc:
-  Etcd:
-    Hosts:
-      - etcd:2379
-    Key: repository.rpc
+#CacheRedis:
+#  - Host: 192.168.200.134:6379
+#    Type: node
+#    Pass: 741106
 
 #rpc service
 UploadServiceRpcConf:

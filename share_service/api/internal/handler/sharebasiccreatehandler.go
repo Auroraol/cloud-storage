@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/Auroraol/cloud-storage/common/response"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/logic"
@@ -14,16 +15,12 @@ func ShareBasicCreateHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.ShareBasicCreateRequest
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			response.ParamErrorResult(r, w, err)
 			return
 		}
 
 		l := logic.NewShareBasicCreateLogic(r.Context(), svcCtx)
 		resp, err := l.ShareBasicCreate(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		response.HttpResult(r, w, resp, err)
 	}
 }

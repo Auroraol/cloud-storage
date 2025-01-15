@@ -5,7 +5,8 @@ import (
 	"fmt"
 
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/config"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/server"
+	userServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/user"
+	userrepositoryServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/userrepository"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 
@@ -26,7 +27,8 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		pb.RegisterUserCenterServer(grpcServer, server.NewUserCenterServer(ctx))
+		pb.RegisterUserServer(grpcServer, userServer.NewUserServer(ctx))
+		pb.RegisterUserRepositoryServer(grpcServer, userrepositoryServer.NewUserRepositoryServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

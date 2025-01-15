@@ -29,10 +29,44 @@ message AddVolumeReq {
 message AddVolumeResp {
 }
 
-service UserCenter {
+message RepositoryIdReq{
+  int64 repositoryId = 1;
+}
+
+message UserRepositoryNameReply{
+  string repositoryName = 1;
+}
+
+message FindRepositoryIdReq{
+  int64 id = 1;
+}
+
+message FindRepositoryIdReply{
+  int64 repositoryId = 1;
+}
+
+message CreateByShareReq{
+  int64 userId = 1;
+  int64 parentId = 2;
+  int64 repositoryId = 3;
+  string name = 4;
+}
+
+message CreateByShareReply{
+  int64 id = 1;
+}
+
+
+service User {
   rpc decreaseVolume(DecreaseVolumeReq) returns (DecreaseVolumeResp);
   rpc findVolumeById(FindVolumeReq) returns (FindVolumeResp);
   rpc addVolume(AddVolumeReq) returns (AddVolumeResp);
+}
+
+service userRepository {
+  rpc getUserRepositoryNameByRepositoryId(RepositoryIdReq) returns(UserRepositoryNameReply);
+  rpc findRepositoryIdById(FindRepositoryIdReq) returns(FindRepositoryIdReply);
+  rpc createByShare(CreateByShareReq) returns(CreateByShareReply);
 }
 
 //  goctl rpc protoc usercenter.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m  //-m 分组

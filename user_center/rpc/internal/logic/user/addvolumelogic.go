@@ -1,8 +1,9 @@
-package logic
+package userlogic
 
 import (
 	"context"
-	"errors"
+	"github.com/Auroraol/cloud-storage/common/response"
+
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 
@@ -33,7 +34,7 @@ func (l *AddVolumeLogic) AddVolume(in *pb.AddVolumeReq) (*pb.AddVolumeResp, erro
 		return nil, err
 	}
 	if num == 0 {
-		return nil, errors.New("更新失败")
+		return nil, response.NewErrMsg("更新失败")
 	}
 	return &pb.AddVolumeResp{}, nil
 }

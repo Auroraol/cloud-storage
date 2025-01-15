@@ -8,7 +8,7 @@ import (
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
 	"github.com/Auroraol/cloud-storage/upload_service/model"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/usercenter"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/client/user"
 	uuid "github.com/satori/go.uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 	"mime/multipart"
@@ -37,7 +37,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, file multipar
 	if userId == 0 {
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
-	volumeInfo, err := l.svcCtx.UserCenterRpc.FindVolumeById(l.ctx, &usercenter.FindVolumeReq{Id: userId})
+	volumeInfo, err := l.svcCtx.UserCenterRpc.FindVolumeById(l.ctx, &user.FindVolumeReq{Id: userId})
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, file multipar
 		return nil, response.NewErrCode(response.FILE_TOO_LARGE_ERROR)
 	}
 	// 增加用户当前已存储容量
-	_, err = l.svcCtx.UserCenterRpc.AddVolume(l.ctx, &usercenter.AddVolumeReq{
+	_, err = l.svcCtx.UserCenterRpc.AddVolume(l.ctx, &user.AddVolumeReq{
 		Id:   userId,
 		Size: fileHeader.Size,
 	})

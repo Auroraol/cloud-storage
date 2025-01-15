@@ -1,7 +1,8 @@
-package logic
+package userlogic
 
 import (
 	"context"
+
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 

@@ -1,7 +1,8 @@
-package logic
+package userlogic
 
 import (
 	"context"
+	"github.com/Auroraol/cloud-storage/common/response"
 
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
@@ -24,17 +25,16 @@ func NewDecreaseVolumeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *De
 }
 
 func (l *DecreaseVolumeLogic) DecreaseVolume(in *pb.DecreaseVolumeReq) (*pb.DecreaseVolumeResp, error) {
-	// todo: add your logic here and delete this line
-	//res, err := l.svcCtx.UserBasicModel.UpdateVolume(l.ctx, in.Id, -in.Size)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//num, err := res.RowsAffected()
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if num == 0 {
-	//	return nil, errorx.NewDefaultError("删除失败！")
-	//}
+	res, err := l.svcCtx.UserModel.UpdateVolume(l.ctx, in.Id, in.Size)
+	if err != nil {
+		return nil, err
+	}
+	num, err := res.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if num == 0 {
+		return nil, response.NewErrMsg("删除失败！")
+	}
 	return &pb.DecreaseVolumeResp{}, nil
 }

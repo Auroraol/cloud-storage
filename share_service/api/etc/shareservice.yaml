@@ -1,6 +1,6 @@
-Name: upload_service-api
+Name: share_service
 Host: 0.0.0.0
-Port: 1005
+Port: 1006
 
 # jwtAuth
 JwtAuth:
@@ -25,3 +25,14 @@ UserCenterRpcConf:
       - 127.0.0.1:2379
     Key: user_center.rpc
 
+#rpc service
+UploadServiceRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: upload_service.rpc
+
+Redis:
+  Host: "101.37.165.220:6379"
+  Type: node
+  Pass: "741106"
