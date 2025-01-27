@@ -35,7 +35,7 @@
 
 <script setup>
 import { nextTick, reactive, ref } from "vue"
-import Dialog from "@/components/FileAction/components/Dialog.vue"
+import Dialog from "@/components/FileDialog/index.vue"
 import Icon from "@/components/SvgIcon/index.vue"
 import { isArray } from "@/utils/is"
 // import Navigation from "@/components/Navigation.vue"

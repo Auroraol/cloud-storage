@@ -61,15 +61,15 @@ type RegisterResp struct {
 
 type User struct {
 	Id       int64  `json:"id"`
-	Username string `db:"username"` // 用户名
-	Mobile   string `db:"mobile"`   // 手机号
-	Nickname string `db:"nickname"` // 昵称
-	Gender   int64  `db:"gender"`   // 性别，1：男，0：女，默认为1
-	Avatar   string `db:"avatar"`   // 用户头像
-	Birthday string `db:"birthday"` // 生日
-	Email    string `db:"email"`    // 电子邮箱
-	Brief    string `db:"brief"`    // 简介|个性签名
-	Info     string `db:"info"`
+	Username string `json:"username"` // 用户名
+	Mobile   string `json:"mobile"`   // 手机号
+	Nickname string `json:"nickname"` // 昵称
+	Gender   int64  `json:"gender"`   // 性别，1：男，0：女，默认为1
+	Avatar   string `json:"avatar"`   // 用户头像
+	Birthday string `json:"birthday"` // 生日
+	Email    string `json:"email"`    // 电子邮箱
+	Brief    string `json:"brief"`    // 简介|个性签名
+	Info     string `json:"info"`
 }
 
 type UserFile struct {
@@ -141,7 +141,8 @@ type UserInfoReq struct {
 }
 
 type UserInfoResp struct {
-	UserInfo User `json:"userInfo"`
+	User
+	Roles []string `json:"roles"`
 }
 
 type UserRepositorySaveRequest struct {

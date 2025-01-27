@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="action-text" v-if="mode == 'row'">
+    <div class="action-text" v-if="mode === 'row'">
       <p :class="['text', value.showEdit ? 'show' : 'hover-hidden']">{{ value[field] }}</p>
-      <div :class="['actions', value.showEdit ? '' : 'hover-show']" :style="{ left: offset + 'px' }">
+      <div :class="['actions', value.showEdit ? '' : 'hover-show']" :style="{ left: `${offset}px` }">
         <div class="flex">
           <div class="action-group">
-            <template v-for="action in fileTypeActions.slice(0, 4)">
+            <template v-for="(action, index) in fileTypeActions.slice(0, 4)" :key="index">
               <div
                 class="action-item"
                 @click.stop="action.onClick(value)"
@@ -25,7 +25,7 @@
               :hide-after="0"
               width="auto"
               :teleported="false"
-              popper-style="padding: 4px 10px;min-width:auto"
+              popper-style="padding: 4px 10px; min-width: auto"
             >
               <template #reference>
                 <div class="action-item">
@@ -34,10 +34,10 @@
               </template>
               <template #default>
                 <div class="pop-action-group">
-                  <template v-for="action in fileTypeActions.slice(4, fileTypeActions.length)">
+                  <template v-for="(action, index) in fileTypeActions.slice(4)" :key="index">
                     <div class="pop-action-item" @click.stop="action.onClick(value)">
                       <el-tooltip :content="action.title" placement="top">
-                        <i :class="['iconfont', 'icon-' + action.icon]" />
+                        <SvgIcon :name="action.icon" />
                       </el-tooltip>
                     </div>
                   </template>
@@ -48,9 +48,9 @@
         </div>
       </div>
     </div>
-    <div class="action-btn" v-else-if="mode == 'btns'">
+    <div class="action-btn" v-else-if="mode === 'btns'">
       <el-button-group>
-        <template v-for="action in fileTypeActions">
+        <template v-for="(action, index) in fileTypeActions" :key="index">
           <el-button
             text
             round
@@ -59,17 +59,17 @@
             v-if="action.isShow ? action.isShow(value) : true"
             @click="action.onClick(value)"
           >
-            <i :class="['iconfont', 'icon-' + action.icon]" />{{ action.title }}
+            <SvgIcon :name="action.icon" />
+            {{ action.title }}
           </el-button>
         </template>
       </el-button-group>
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
-
+import SvgIcon from "@/components/SvgIcon/index.vue"
 const props = defineProps({
   value: {
     type: [Array, Object],
@@ -93,11 +93,12 @@ const props = defineProps({
   }
 })
 
-const fileTypeActions = ref(props.actions)
+// Start of Selection
+const fileTypeActions = computed(() => props.actions)
 
 // 处理操作
 function filterActions() {
-  // 目录没有下载选项
+  // 目前没有下载选项
   if (props.value.folderType === 1) {
     fileTypeActions.value = props.actions.filter((item) => item.label !== "download")
   }
@@ -142,7 +143,7 @@ onMounted(() => {
         color: #06a7ff;
 
         &:last-child {
-          margin-right: 0px;
+          margin-right: 0;
         }
 
         .iconfont {
@@ -172,7 +173,7 @@ onMounted(() => {
       margin-left: 12px;
 
       &:first-child {
-        margin-left: 0px;
+        margin-left: 0;
       }
 
       .iconfont {

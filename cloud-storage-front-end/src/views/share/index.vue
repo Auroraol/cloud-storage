@@ -1,96 +1,68 @@
 <template>
-  <div class="share-container">
+  <div class="app-container">
     <div class="share-header">
-      <div class="top" v-if="selectFiles.length === 0">
-        <span class="title">链接分享</span>
-        <span class="content">(分享失败超过1年以上的链接记录将被自动清理)</span>
+      <div class="top">
+        <span class="title">全部文件</span>
+        <span class="count">已加载{{ tableDataNum }}个</span>
       </div>
-      <div class="actions" v-else>
-        <!-- <FileAction :value="selectFiles" mode="btns" :actions="actions" /> -->
+      <div class="actions">
+        <button @click="copyLink">复制链接</button>
+        <button @click="cancelShare">取消分享</button>
+        <button @click="exportLink">导出链接</button>
       </div>
     </div>
     <div class="share-body">
       <div class="left-container">
-        <div class="nav">
-          <span class="txt">全部文件</span>
-          <span class="count">已加载{{ tableDataNum }}个</span>
-        </div>
-        <div class="file-list">
-          <vue-good-table
-            ref="shareTableRef"
-            :columns="columns"
-            :rows="tableRows"
-            :select-options="{
-              enabled: true,
-              selectOnCheckboxOnly: true,
-              selectionText: '选中的行数',
-              clearSelectionText: ''
-            }"
-            :search-options="{
-              enabled: true,
-              placeholder: '搜索分享',
-              skipDiacritics: true
-            }"
-            :pagination-options="{
-              enabled: true,
-              mode: 'pages',
-              perPage: 10,
-              perPageDropdown: [10, 20, 50],
-              dropdownAllowAll: false,
-              nextLabel: '下一页',
-              prevLabel: '上一页',
-              rowsPerPageLabel: '每页显示',
-              pageLabel: '页',
-              ofLabel: '/'
-            }"
-            v-on:row-click="handleTableRowSelect"
-            styleClass="vgt-table"
+        <div class="file-list" v-infinite-scroll="loadFiles" infinite-scroll-disabled="loading">
+          <el-table
+            ref="multipleTable"
+            :data="tableRows"
+            @selection-change="handleSelectionChange"
+            @row-click="handleRowClick"
+            class="custom-table"
           >
-            <template #table-row="props">
-              <span v-if="props.column.field === 'filename'">
-                <div class="file-item">
-                  <template v-if="(props.row.fileType === 3 || props.row.fileType === 1) && props.row.status === 2">
-                    <Icon :cover="props.row.fileCover" :width="32" />
-                  </template>
-                  <template v-else>
-                    <Icon v-if="props.row.folderType === 0" :file-type="props.row.fileType" />
-                    <Icon v-else icon-name="folder_2" :width="40" />
-                  </template>
-                  <span class="filename">{{ props.row.filename }}</span>
-                </div>
-              </span>
+            <el-table-column type="selection" width="55" />
+            <el-table-column prop="filename" label="文件名" />
+            <el-table-column prop="createTime" label="分享时间" />
+            <el-table-column prop="expireTime" label="状态" />
+            <el-table-column prop="browseCount" label="浏览次数" />
+            <template #empty>
+              <div style="text-align: center; margin-top: 20px">
+                <div style="margin-top: -30px; font-size: 16px; font-weight: bold">您的分享为空 ~</div>
+              </div>
             </template>
-            <template #selected-row-actions>
-              <!-- <FileAction :value="selectFiles" mode="btns" :actions="actions" /> -->
-            </template>
-            <template #emptystate>
-              <el-empty description="空空如也" />
-            </template>
-          </vue-good-table>
+          </el-table>
+          <div v-if="loading" class="loading">加载中...</div>
+          <div v-if="noMore" class="no-more">没有更多文件了</div>
         </div>
       </div>
       <div class="right-detail">
-        <el-scrollbar>
-          <ShareDetail :selectFileProps="selectFiles" />
-        </el-scrollbar>
+        <ShareDetail :selectFileProps="selectFiles" />
       </div>
-      <style lang="scss" scoped />
     </div>
+    <FileDialog
+      :show="dialogConfig.show"
+      :title="dialogConfig.title"
+      :buttons="dialogConfig.buttons"
+      :show-cancel="true"
+      width="400px"
+      @close="dialogConfig.show = false"
+    >
+      <div class="delete-info">
+        <div class="info">
+          <span class="text">取消分享后，该条记录将被删除，好友将无法访问此链接。您确认要取消分享吗？</span>
+        </div>
+      </div>
+    </FileDialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed } from "vue"
-import { VueGoodTable } from "vue-good-table-next"
-import { columns } from "./columns"
-import Icon from "@/components/FileIcon/Icon.vue"
-import ShareDetail from "./detail.vue"
-import useClipboard from "vue-clipboard3"
+import { ref, reactive, computed, onMounted, watch } from "vue"
 import { ElMessage } from "element-plus"
-import { isArray } from "@/utils/is"
-// import { FileAction } from "@/components/FileAction"
-
-console.log("当前数据:")
+import FileDialog from "@/components/FileDialog/index.vue"
+import useClipboard from "vue-clipboard3"
+import ShareDetail from "./detail.vue"
 
 interface ShareItem {
   filename: string
@@ -111,32 +83,11 @@ const shareTableRef = ref()
 const selectFiles = ref<ShareItem[]>([])
 const shareIds = ref<string>("")
 const tableDataNum = ref<number>(0)
-const { toClipboard } = useClipboard()
+const loading = ref(false)
+const noMore = ref(false)
+const page = ref(1)
+const pageSize = ref(10) // 每页加载的文件数量
 const shareUrl = ref<string>(document.location.origin + "/share/")
-
-const actions = [
-  {
-    title: "复制链接",
-    label: "copyLink",
-    showLabel: true,
-    icon: "link",
-    isShow: (data: ShareItem | ShareItem[]) => {
-      return !isArray(data) || (isArray(data) && data.length === 1)
-    },
-    onClick: (data: ShareItem | ShareItem[]) => {
-      copyLink2Clipboard(data)
-    }
-  },
-  {
-    title: "取消分享",
-    label: "cancelShare",
-    showLabel: true,
-    icon: "stop",
-    onClick: (data: ShareItem | ShareItem[]) => {
-      cancelShare(data)
-    }
-  }
-]
 
 const dialogConfig = reactive({
   show: false,
@@ -153,49 +104,7 @@ const dialogConfig = reactive({
   ]
 })
 
-const loadDataTable = (res: any) => {
-  return loadShareList(res)
-}
-
-const fetchSuccess = ({ resultTotal }: { resultTotal: number }) => {
-  tableDataNum.value = resultTotal
-}
-
-const reloadTable = () => {
-  shareTableRef.value?.reload()
-}
-
-const handleTableRowSelect = (params) => {
-  // 确保 selectFiles 是一个数组
-  selectFiles.value = [params.row] // 将选中的行作为数组传递
-}
-
-const handleRowClick = (params) => {
-  console.log("Row clicked:", params)
-}
-
-const cancelShare = (data: ShareItem | ShareItem[]) => {
-  if (isArray(data)) {
-    shareIds.value = data.map((item) => item.id).join(",")
-  } else {
-    shareIds.value = data.id.toString()
-  }
-  dialogConfig.show = true
-}
-
-const deleteShare = () => {
-  ElMessage.success("取消外链分享成功")
-  reloadTable()
-  dialogConfig.show = false
-}
-
-const copyLink2Clipboard = async (data: ShareItem | ShareItem[]) => {
-  const shareData = isArray(data) ? data[0] : data
-  await toClipboard(`链接: ${shareUrl.value}${shareData.shareId} 提取码: ${shareData.code}`)
-  ElMessage.success("复制成功")
-}
-
-// 测试文件列表数据
+// 模拟数据
 const fileList = ref<ShareItem[]>([
   {
     filename: "文件1",
@@ -227,7 +136,46 @@ const fileList = ref<ShareItem[]>([
   }
 ])
 
-// 格式化日期的函数
+const paginatedFileList = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  return fileList.value.slice(start, start + pageSize.value)
+})
+
+const tableRows = computed(() => {
+  return paginatedFileList.value.map((file) => ({
+    ...file,
+    createTime: formatDate(file.createTime.toISOString()),
+    expireTime: formatDate(file.expireTime.toISOString())
+  }))
+})
+
+const handleSelectionChange = (val) => {
+  selectFiles.value = val
+}
+
+const multipleTable = ref()
+const handleRowClick = (row) => {
+  selectFiles.value = [row]
+  //通过ref绑定来操作bom元素
+  multipleTable.value.toggleRowSelection(row)
+}
+
+const selectedFileIds = computed(() => {
+  return selectFiles.value.map((file) => file.fileId).join(",")
+})
+
+const cancelShare = () => {
+  console.log("selectedFileIds", selectedFileIds.value)
+  shareIds.value = selectedFileIds.value // 使用计算属性
+  dialogConfig.show = true
+}
+
+const deleteShare = () => {
+  ElMessage.success("取消外链分享成功")
+  dialogConfig.show = false
+  reloadTable()
+}
+
 const formatDate = (date: string): string => {
   if (!date) return "-"
   try {
@@ -245,107 +193,203 @@ const formatDate = (date: string): string => {
   }
 }
 
-// 格式化表格数据
-const tableRows = computed(() => {
-  return fileList.value.map((file) => ({
-    ...file,
-    createTime: formatDate(file.createTime.toISOString()),
-    expireTime: formatDate(file.expireTime.toISOString())
-  }))
+const reloadTable = () => {
+  shareTableRef.value?.reload()
+}
+
+// 复制链接
+const copyLink = () => {
+  if (selectFiles.value.length === 0) {
+    ElMessage.warning("请先选择文件")
+    return
+  }
+
+  // 链接: https://pan.baidu.com/s/1OtdlYyBNGL0NPpIiLgyG3A 提取码: 93vd
+  const links = selectFiles.value.map((file) => `链接: ${shareUrl.value}${file.fileId} 提取码: ${file.code}`).join("\n")
+  navigator.clipboard
+    .writeText(links)
+    .then(() => {
+      ElMessage.success("链接已复制到剪贴板")
+    })
+    .catch(() => {
+      ElMessage.error("复制链接失败")
+    })
+}
+
+// 导出链接
+const exportLink = () => {
+  if (selectFiles.value.length === 0) {
+    ElMessage.warning("请先选择文件")
+    return
+  }
+
+  const csvContent =
+    "data:text/csv;charset=utf-8," +
+    selectFiles.value
+      .map(
+        (file) =>
+          `${file.filename},${file.createTime.toISOString()},${file.expireTime.toISOString()},${file.browseCount},${file.saveCount},${file.downloadCount},${file.code}`
+      )
+      .join("\n")
+
+  const encodedUri = encodeURI(csvContent)
+  const link = document.createElement("a")
+  link.setAttribute("href", encodedUri)
+  link.setAttribute("download", "exported_files.csv")
+  document.body.appendChild(link) // Required for FF
+
+  link.click()
+  document.body.removeChild(link)
+  ElMessage.success("文件已导出为CSV格式")
+}
+
+const loadFiles = async () => {
+  if (loading.value || noMore.value) return // 防止重复加载
+  loading.value = true
+
+  // 模拟 API 请求
+  const response = await fetch(`/api/files?page=${page.value}&size=${pageSize.value}`)
+  const data = await response.json()
+
+  if (data && data.length) {
+    fileList.value.push(...data)
+    tableDataNum.value += data.length
+    page.value += 1 // 增加页码
+  } else {
+    noMore.value = true // 没有更多数据
+    ElMessage.warning("没有更多文件了")
+  }
+  loading.value = false
+}
+
+const observer = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    loadFiles()
+  }
+})
+
+onMounted(() => {
+  loadFiles() // 初始加载
+  const loadingElement = document.querySelector(".loading")
+  if (loadingElement) {
+    observer.observe(loadingElement)
+  }
+})
+
+watch(tableRows, (newVal) => {
+  if (newVal.length === 0) {
+    ElMessage.warning("没有文件")
+  }
 })
 </script>
 
 <style lang="scss">
-.share-container {
-  height: 100%;
+.app-container {
   display: flex;
   flex-direction: column;
-  padding: 10px 4px 0;
+  height: 100%;
 }
 
 .share-header {
-  height: 50px;
-  padding-left: 4px;
-  font-size: 12px;
+  height: 60px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dcdcdc;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 
   .top {
     display: inline-block;
     line-height: 36px;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
   }
 }
 
 .share-body {
   display: flex;
-  height: calc(100% - 50px); // 确保填充剩余空间
+  height: calc(100% - 60px);
+  background-color: #ffffff;
 
   .left-container {
-    flex: 1; // 使左侧容器占据剩余空间
+    flex: 1;
     display: flex;
     flex-direction: column;
-
-    .nav {
-      font-size: 12px;
-      color: #03081a;
-      padding-left: 4px;
-      display: flex;
-      justify-content: space-between;
-
-      .txt {
-        color: #03081a;
-        font-weight: 600;
-        font-size: 18px;
-        margin-bottom: 15px;
-      }
-      .count {
-        font-size: 18px;
-        color: #afb3bf;
-      }
-    }
+    // padding: 20px;
 
     .file-list {
-      padding-left: 4px;
-      flex: 1; // 使文件列表占据剩余空间
-      overflow-y: auto; // 添加滚动条
-      min-height: 272px;
-    }
-  }
+      flex: 1;
+      overflow-y: auto;
+      min-height: 300px;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      padding: 10px;
 
-  .right-detail {
-    width: 272px; // 固定宽度
-    overflow: hidden; // 确保内容不溢出
-    display: inline-block;
-    position: relative;
-    height: 100%;
-    margin-left: 16px;
-    // background-color: #f5f6fa;
-    /* background-color: #f5f6f8; */
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 13px;
-    margin-right: 4px; // 添加右侧边距
+      .custom-table {
+        border: none;
+        .el-table__header {
+          background-color: #f0f4f8;
+          border-bottom: 2px solid #007bff;
+        }
+        .el-table__body {
+          tr {
+            &:hover {
+              background-color: #e6f7ff;
+            }
+            td {
+              padding: 12px;
+              border-bottom: 1px solid #dcdcdc;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-.vgt-table {
-  min-height: 450px;
-  td {
-    vertical-align: middle !important;
-  }
+.right-detail {
+  width: 240px;
+  overflow: hidden;
+  display: inline-block;
+  position: relative;
+  height: 100%;
+  // margin-left: 20px;
+  // background-color: #f9f9f9;
+  // background-color: #f0f4f8;
+  border-radius: 8px;
+  // padding: 16px;
+  font-size: 14px;
+  border: 1px solid #dcdcdc;
+  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .filename {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.delete-info {
+  padding: 10px;
+  color: #333;
+  text-align: center;
 }
 </style>

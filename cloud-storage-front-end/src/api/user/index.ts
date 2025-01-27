@@ -1,26 +1,45 @@
-import { post, get } from "@/utils/network/axios"
-
+import { request, post, get } from "@/utils/network/axios"
+import type * as Login from "./types/login"
 const prefix = import.meta.env.VITE_APP_BASE_API
 
 /**
  * 用户注册
- * @param {Object} data
+ * @param {RegisterData} data - 注册信息
  */
-export function register(data) {
+export function register(data: RegisterData) {
   return post(`${prefix}/user/register`, data)
 }
 
 /**
  * 账号登录
- * @param {Object} params
+ * @param {Login.LoginRequestData} data - 登录信息
  */
-export function accountLogin(data) {
-  return post(`${prefix}/account/login`, data)
+export function accountLoginApi(data: Login.LoginRequestData) {
+  return request<Login.LoginResponseData>(
+    `${prefix}/user_center/v1/oauth/login`,
+    {
+      method: "post",
+      data
+    },
+    true
+  )
+}
+
+/** 获取用户详情 */
+export function getUserInfoApi() {
+  return request<Login.UserInfoResponseData>(
+    `${prefix}/user_center/v1/user/detail`,
+    {
+      method: "post"
+    },
+    true
+  )
 }
 
 /**
  * @description: 获取用户网盘空间
+ * @return {Promise<SpaceInfo>} 空间使用信息
  */
 export function getUseSpaceApi() {
-  return get(`${prefix}/getUseSpace`, {}, true)
+  return get<SpaceInfo>(`${prefix}/getUseSpace`, {}, true)
 }

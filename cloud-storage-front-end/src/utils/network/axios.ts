@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from "axios"
 import { ElMessageBox, ElMessage } from "element-plus"
 import axiosRetry from "axios-retry"
 // import { useUserStore } from "/@/store/index"
+import { getToken } from "@/utils/cache/session-storage"
 
 const axiosInstance = axios.create({
   timeout: 10000,
@@ -51,6 +52,8 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     const res = response.data // 响应数据
+    console.log("res: ", res)
+    // console.log("response: ", response)
 
     // 确保前端得到的res都是成功响应
     if (res.code !== 200000) {
@@ -134,7 +137,7 @@ axiosInstance.interceptors.response.use(
 // 给请求头添加 access_token
 const setHeaderToken = (isNeedToken: boolean) => {
   // 请求头携带token
-  const accessToken = isNeedToken ? getAccessToken() : null
+  const accessToken = isNeedToken ? getToken() : null
   if (isNeedToken) {
     // api 请求需要携带 access_token
     if (!accessToken) {
@@ -162,7 +165,7 @@ const request = <ResponseType = unknown>(
       .then((res) => {
         // 请求成功时，将解析后的响应数据传递给 Promise 的 resolve 函数
         //这里的res得到响应数据  而res.data得到的是响应数据中的data属性数据
-        resolve(res.data as ResponseType)
+        resolve(res as ResponseType)
         //console.log(res.data);
       })
       .catch((err) => {
@@ -191,6 +194,7 @@ const get = (url, params = {}, isNeedToken = false) => {
 }
 
 const post = (url, data = {}, isNeedToken = false) => {
+  console.log("url", url)
   setHeaderToken(isNeedToken)
   return new Promise((resolve, reject) => {
     setHeaderToken(isNeedToken)
@@ -203,6 +207,8 @@ const post = (url, data = {}, isNeedToken = false) => {
         resolve(res.data as ResponseType)
       })
       .catch((err) => {
+        // 临时
+        console.log("err", err)
         reject(err)
       })
   })

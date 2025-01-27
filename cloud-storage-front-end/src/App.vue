@@ -18,7 +18,8 @@ initGreyAndColorWeakness()
 onMounted(() => {
   console.log(`Hello,  ${APP_TITLE}! \n`)
   const winState: WinStateDTO = {
-    width: 1024,
+    // width: 1024,
+    width: 1224,
     height: 768,
     center: true,
     maxable: true,

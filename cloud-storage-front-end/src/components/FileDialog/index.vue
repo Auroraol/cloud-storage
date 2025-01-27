@@ -34,6 +34,11 @@
     </el-dialog>
   </div>
 </template>
+<script>
+export default {
+  name: "FileDialog"
+}
+</script>
 <script setup>
 const props = defineProps({
   show: {
@@ -81,7 +86,7 @@ const close = () => {
   emit("close")
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .cust-dialog {
   border-radius: 12px;
   // margin: 30px auto 10px !important;

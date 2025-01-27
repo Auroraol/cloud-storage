@@ -13,13 +13,16 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
 import { VueHooksPlusResolver } from "@vue-hooks-plus/resolvers"
+import { loadEnv } from "vite" // 导入 loadEnv 函数
 
 /** 清空 dist */
 rmSync("dist", { recursive: true, force: true })
 
 /** 配置项文档：https://cn.vitejs.dev/config */
 export default ({ mode }: ConfigEnv): UserConfigExport => {
-  // const viteEnv = loadEnv(mode, process.cwd()) as ImportMetaEnv
+  const viteEnv = loadEnv(mode, process.cwd()) // 获取.env文件里定义的环境变量
+  console.log("viteEnv", viteEnv)
+
   return {
     resolve: {
       alias: {
@@ -37,6 +40,18 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       /** 预热常用文件，提高初始页面加载速度 */
       warmup: {
         clientFiles: ["./src/layouts/**/*.vue"]
+      },
+      //配置自定义代理规则，跨域  //这里通过封装axios.ts实现跨域
+      proxy: {
+        [viteEnv.VITE_APP_BASE_API]: {
+          target: viteEnv.VITE_API_URL,
+          changeOrigin: true,
+          ws: true, // 允许websocket代理
+          rewrite: (path) => {
+            const regex = new RegExp(`^${viteEnv.VITE_APP_BASE_API}`)
+            return path.replace(regex, "")
+          }
+        }
       }
     },
     build: {

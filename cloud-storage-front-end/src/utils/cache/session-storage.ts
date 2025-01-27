@@ -6,6 +6,8 @@ export const getToken = () => {
   return sessionStorage.getItem(CacheKey.TOKEN)
 }
 export const setToken = (token: string) => {
+  // 临时
+  console.log("token: ", token)
   sessionStorage.setItem(CacheKey.TOKEN, token)
 }
 export const removeToken = () => {

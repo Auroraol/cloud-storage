@@ -66,7 +66,7 @@
 
 <script setup>
 import { reactive, ref, nextTick } from "vue"
-import Dialog from "@/components/FileAction/components/Dialog.vue"
+import Dialog from "@/components/FileDialog/index.vue"
 import useClipboard from "vue-clipboard3"
 import { ElMessage } from "element-plus"
 import { isArray } from "@/utils/is"

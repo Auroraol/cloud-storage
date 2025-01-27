@@ -9,12 +9,30 @@ export function getLoginCodeApi() {
   })
 }
 
-/** 登录并返回 Token */
+/** 账号密码登录 */
 export function loginApi(data: Login.LoginRequestData) {
   return request<Login.LoginResponseData>({
     url: "users/login",
     method: "post",
     data
+  })
+}
+
+/** 手机验证码登录 */
+export function phoneLoginApi(data: Login.PhoneLoginRequestData) {
+  return request<Login.LoginResponseData>({
+    url: "users/phone-login",
+    method: "post",
+    data
+  })
+}
+
+/** 发送手机验证码 */
+export function sendSmsCodeApi(mobile: string) {
+  return request<Login.SmsCodeResponseData>({
+    url: "users/send-code",
+    method: "post",
+    data: { mobile }
   })
 }
 

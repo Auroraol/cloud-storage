@@ -2,7 +2,7 @@ package response
 
 type ApiResponseResult struct {
 	Code uint32      `json:"code"`
-	Msg  string      `json:"msg"`
+	Msg  string      `json:"message"`
 	Data interface{} `json:"data"`
 }
 type NullJson struct{}

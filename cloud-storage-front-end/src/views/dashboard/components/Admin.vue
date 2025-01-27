@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <div class="main-ui-header">
       <!-- 上传按钮 -->
       <el-upload
@@ -28,18 +28,6 @@
         <el-button type="primary" color="#FBBC4D" @click="handleDownload">
           <el-icon><Download /></el-icon>下载
         </el-button>
-      </div>
-
-      <!-- 面包屑导航 -->
-      <div class="breadcrumb-nav">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }"> 全部文件 </el-breadcrumb-item>
-          <template v-if="currentPath.length > 0">
-            <el-breadcrumb-item v-for="(folder, index) in currentPath" :key="index">
-              {{ folder }}
-            </el-breadcrumb-item>
-          </template>
-        </el-breadcrumb>
       </div>
     </div>
 
@@ -105,7 +93,6 @@
         </template>
       </vue-good-table>
     </div>
-    >
   </div>
 </template>
 

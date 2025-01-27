@@ -33,6 +33,16 @@ const logout = () => {
   userStore.logout()
   router.push("/login")
 }
+
+/** 获取用户信息 */
+const getUserInfo = () => {
+  return userStore.getUserInfo()
+}
+
+/** 检查是否显示用户中心 */
+const shouldShowUserCenter = () => {
+  return userStore.isLoggedIn
+}
 </script>
 
 <template>
@@ -57,12 +67,12 @@ const logout = () => {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <a target="_blank" href="https://github.com/un-pany/v3-admin-vite">
+            <a target="_blank" href="https://github.com/Auroraol">
               <el-dropdown-item>GitHub</el-dropdown-item>
             </a>
-            <a target="_blank" href="https://gitee.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>Gitee</el-dropdown-item>
-            </a>
+            <el-dropdown-item divided v-if="shouldShowUserCenter" @click="getUserInfo">
+              <span style="display: block">用户中心</span>
+            </el-dropdown-item>
             <el-dropdown-item divided @click="logout">
               <span style="display: block">退出登录</span>
             </el-dropdown-item>

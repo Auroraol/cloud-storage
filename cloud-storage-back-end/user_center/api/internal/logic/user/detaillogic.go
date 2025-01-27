@@ -41,6 +41,12 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, 
 		return nil, errors.Wrapf(response.NewErrCode(response.ACCOUNT_NOT_FOUND), "id:%d", userId)
 	}
 	resp = &types.UserInfoResp{}
-	_ = copier.Copy(&resp.UserInfo, user)
+	_ = copier.Copy(&resp, user)
+	// 返回字段roles数组
+	// resp.admin 存在 则加入roles数组
+	if user.Admin == 1 {
+		resp.Roles = append(resp.Roles, "admin")
+	}
+	resp.Roles = []string{"admin"}
 	return resp, nil
 }

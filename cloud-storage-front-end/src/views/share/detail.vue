@@ -1,40 +1,46 @@
 <template>
-  <div class="detail-main">
-    <div class="detail-title">
-      <span>分享详情</span>
-    </div>
-    <!-- 多文件 -->
-    <div class="muti-file" v-if="!selectFile && props.selectFileProps.length > 1">
-      <!-- <Icon icon-name="folder_big" :width="128" /> -->
-    </div>
-    <!-- 单文件 -->
-    <div class="detail-content" v-if="selectFile">
-      <div class="filename">
-        <template v-if="(selectFile.fileType === 3 || selectFile.fileType === 1) && selectFile.status === 2">
-          <Icon :cover="selectFile.fileCover" />
-        </template>
-        <template v-else>
-          <Icon v-if="selectFile.folderType === 0" :file-type="selectFile.fileType" />
-          <Icon v-else icon-name="folder_2" />
-        </template>
-        <span class="text">{{ selectFile.filename }}</span>
+  <div class="app-container">
+    <div class="detail-main">
+      <div class="detail-title">
+        <span>分享详情</span>
       </div>
-      <template v-for="(item, index) in details" :key="index">
-        <div class="content-item" v-if="item.label !== 'divider'">
-          <div class="label">{{ item.label }}</div>
-          <div class="value">{{ selectFile[item.key] !== undefined ? selectFile[item.key] : 0 }}</div>
+      <!-- 多文件 -->
+      <div class="muti-file" v-if="!selectFile && props.selectFileProps.length > 1">
+        <!-- <Icon icon-name="folder_big" :width="128" /> -->
+      </div>
+      <!-- 单文件 -->
+      <div class="detail-content" v-if="selectFile">
+        <div class="filename">
+          <template v-if="(selectFile.fileType === 3 || selectFile.fileType === 1) && selectFile.status === 2">
+            <Icon :cover="selectFile.fileCover" />
+          </template>
+          <template v-else>
+            <Icon v-if="selectFile.folderType === 0" :file-type="selectFile.fileType" />
+            <Icon v-else icon-name="folder_2" />
+          </template>
+          <span class="text">{{ selectFile.filename }}</span>
         </div>
-        <div class="divider" v-else />
-      </template>
-    </div>
-    <!-- 空文件 -->
-    <div class="detail-empty" v-if="props.selectFileProps.length === 0">
-      <img src="https://nd-static.bdstatic.com/m-static/v20-main/home/img/empty-folder.55c81ea2.png" alt="空文件夹" />
-      <p>选中文件，查看详情</p>
+        <template v-for="(item, index) in details" :key="index">
+          <div class="content-item" v-if="item.label !== 'divider'">
+            <div class="label">{{ item.label }}</div>
+            <div class="value">{{ selectFile[item.key] !== undefined ? selectFile[item.key] : 0 }}</div>
+          </div>
+          <div class="divider" v-else />
+        </template>
+      </div>
+      <!-- 空文件 -->
+      <div class="detail-empty" v-if="props.selectFileProps.length === 0">
+        <img src="https://nd-static.bdstatic.com/m-static/v20-main/home/img/empty-folder.55c81ea2.png" alt="空文件夹" />
+        <p>选中文件，查看详情</p>
+      </div>
     </div>
   </div>
 </template>
-
+<script>
+export default {
+  name: "detail"
+}
+</script>
 <script setup>
 import { computed } from "vue"
 import Icon from "@/components/FileIcon/Icon.vue"
