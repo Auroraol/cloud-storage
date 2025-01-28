@@ -1,6 +1,7 @@
 import { type RouteRecordRaw, createRouter } from "vue-router"
 import { history, flatMultiLevelRoutes } from "./helper"
 import routeSettings from "@/config/route"
+import PersonalCenter from "@/views/personal-center/index1.vue" // 导入个人中心组件
 
 const Layouts = () => import("@/layouts/index.vue")
 
@@ -166,6 +167,35 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "AuditStatistics",
         component: () => import("@/views/audit/statistics.vue"),
         meta: { title: "统计分析" }
+      }
+    ]
+  },
+  {
+    path: "/transfer-records",
+    component: Layouts,
+    redirect: "/transfer-records/index",
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/transfer/index.vue"),
+        meta: {
+          title: "传输记录",
+          svgIcon: "transfer"
+        }
+      }
+    ]
+  },
+  {
+    path: "/personal-center",
+    component: Layouts,
+    children: [
+      {
+        path: "",
+        component: () => import("@/views/personal-center/index.vue"),
+        meta: {
+          title: "个人中心",
+          svgIcon: "user"
+        }
       }
     ]
   }

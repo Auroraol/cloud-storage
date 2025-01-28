@@ -50,8 +50,16 @@ service user_center {
 	post /user/detail (UserInfoReq) returns (UserInfoResp)
 
 	@doc "刷新Authorization"
-	@handler RefreshAuthorization
+	@handler refreshAuthorization
 	post /refresh/authorization (RefreshAuthRequest) returns (RefreshAuthResponse)
+
+	@doc "修改密码"
+	@handler updatePassword
+	post /user/password/update (UserPasswordReq) returns (UserPasswordResp)
+
+	@doc "更换头像"
+	@handler updateAvatar
+	post /user/avatar/update (UserAvatarReq) returns (UserAvatarResp)
 }
 
 @server (

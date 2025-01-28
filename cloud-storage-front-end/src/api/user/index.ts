@@ -43,3 +43,11 @@ export function getUserInfoApi() {
 export function getUseSpaceApi() {
   return get<SpaceInfo>(`${prefix}/getUseSpace`, {}, true)
 }
+
+// export function apiUpdateUser(data: any) {
+//   return request({
+//     url: "/user/update",
+//     method: "post",
+//     data
+//   })
+// }

@@ -72,6 +72,12 @@ type User struct {
 	Info     string `json:"info"`
 }
 
+type UserAvatarReq struct {
+}
+
+type UserAvatarResp struct {
+}
+
 type UserFile struct {
 	Id           int64  `json:"id"`
 	RepositoryId int64  `json:"repositoryId"`
@@ -143,6 +149,14 @@ type UserInfoReq struct {
 type UserInfoResp struct {
 	User
 	Roles []string `json:"roles"`
+}
+
+type UserPasswordReq struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
+type UserPasswordResp struct {
 }
 
 type UserRepositorySaveRequest struct {

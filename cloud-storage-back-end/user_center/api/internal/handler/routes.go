@@ -103,10 +103,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.RefreshAuthorizationHandler(serverCtx),
 			},
 			{
+				// 更换头像
+				Method:  http.MethodPost,
+				Path:    "/user/avatar/update",
+				Handler: user.UpdateAvatarHandler(serverCtx),
+			},
+			{
 				// 获取用户信息
 				Method:  http.MethodPost,
 				Path:    "/user/detail",
 				Handler: user.DetailHandler(serverCtx),
+			},
+			{
+				// 修改密码
+				Method:  http.MethodPost,
+				Path:    "/user/password/update",
+				Handler: user.UpdatePasswordHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

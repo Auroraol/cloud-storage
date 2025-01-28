@@ -20,7 +20,19 @@ export type LoginResponseData = ApiResponseData<{
   refreshAfter: number
 }>
 
-export type UserInfoResponseData = ApiResponseData<{ username: string; roles: string[] }>
+export type UserInfoResponseData = ApiResponseData<{
+  id: number // 用户ID
+  username: string // 用户名
+  mobile: string // 手机号
+  nickname: string // 昵称
+  gender: number // 性别，1：男，0：女，默认为1
+  avatar: string // 用户头像
+  birthday: string // 生日
+  email: string // 电子邮箱
+  brief: string // 简介|个性签名
+  info: string // 新增信息
+  roles: string[] // 角色
+}>
 
 /** 获取短信验证码的响应数据 */
 export type SmsCodeResponseData = ApiResponseData<string>

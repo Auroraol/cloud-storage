@@ -34,14 +34,10 @@ const logout = () => {
   router.push("/login")
 }
 
-/** 获取用户信息 */
+/** 跳转到用户信息 */
 const getUserInfo = () => {
-  return userStore.getUserInfo()
-}
-
-/** 检查是否显示用户中心 */
-const shouldShowUserCenter = () => {
-  return userStore.isLoggedIn
+  // 跳转到个人中心
+  router.push("/personal-center")
 }
 </script>
 
@@ -62,7 +58,7 @@ const shouldShowUserCenter = () => {
       <Notify v-if="showNotify" class="right-menu-item" />
       <el-dropdown class="right-menu-item">
         <div class="right-menu-avatar">
-          <el-avatar :icon="UserFilled" :size="30" />
+          <el-avatar :icon="UserFilled" :src="userStore.avatar" :size="30" />
           <span>{{ userStore.username }}</span>
         </div>
         <template #dropdown>
@@ -70,8 +66,8 @@ const shouldShowUserCenter = () => {
             <a target="_blank" href="https://github.com/Auroraol">
               <el-dropdown-item>GitHub</el-dropdown-item>
             </a>
-            <el-dropdown-item divided v-if="shouldShowUserCenter" @click="getUserInfo">
-              <span style="display: block">用户中心</span>
+            <el-dropdown-item divided @click="getUserInfo">
+              <span style="display: block">个人中心</span>
             </el-dropdown-item>
             <el-dropdown-item divided @click="logout">
               <span style="display: block">退出登录</span>

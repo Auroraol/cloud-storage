@@ -92,3 +92,21 @@ type (
 		Roles []string `json:"roles"`
 	}
 )
+
+type (
+	UserPasswordReq {
+		OldPassword string `json:"oldPassword"`
+		NewPassword string `json:"newPassword"`
+	}
+	UserPasswordResp {
+	}
+)
+
+type (
+	UserAvatarReq {
+		//传递form值
+		//file file
+	}
+	UserAvatarResp{
+	}
+)

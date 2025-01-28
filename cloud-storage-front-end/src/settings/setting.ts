@@ -28,3 +28,11 @@ export const useGlobalSetting = () => {
   }
   return glob
 }
+
+export const settings = {
+  // 其他设置...
+  personalCenter: {
+    enabled: true,
+    title: "个人中心"
+  }
+}

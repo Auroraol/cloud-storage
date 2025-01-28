@@ -9,11 +9,14 @@ import routeSettings from "@/config/route"
 // api
 import { accountLoginApi, getUserInfoApi } from "@/api/user"
 import { type LoginRequestData } from "@/api/user/types/login"
+import { da } from "element-plus/es/locale"
 
 export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const roles = ref<string[]>([])
   const username = ref<string>("")
+  const avatar = ref<string>("")
+  const userInfo = ref<any>({})
 
   const tagsViewStore = useTagsViewStore()
   const settingsStore = useSettingsStore()
@@ -33,6 +36,10 @@ export const useUserStore = defineStore("user", () => {
     username.value = data.username
     // 验证返回的 roles 是否为一个非空数组，否则塞入一个没有任何作用的默认角色，防止路由守卫逻辑进入无限循环
     roles.value = data.roles?.length > 0 ? data.roles : routeSettings.defaultRoles
+    // 头像
+    avatar.value = data.avatar
+    // 用户详情
+    userInfo.value = data
   }
 
   /** 模拟角色变化 */
@@ -49,6 +56,7 @@ export const useUserStore = defineStore("user", () => {
     removeToken()
     token.value = ""
     roles.value = []
+    avatar.value = ""
     resetRouter()
     _resetTagsView()
   }
@@ -57,6 +65,7 @@ export const useUserStore = defineStore("user", () => {
     removeToken()
     token.value = ""
     roles.value = []
+    avatar.value = ""
   }
   /** 重置 Visited Views 和 Cached Views */
   const _resetTagsView = () => {
@@ -66,7 +75,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, roles, username, login, getInfo, changeRoles, logout, resetToken }
+  return { token, roles, username, avatar, userInfo, login, getInfo, changeRoles, logout, resetToken }
 })
 
 /**
