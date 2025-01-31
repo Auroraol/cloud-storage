@@ -115,6 +115,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.DetailHandler(serverCtx),
 			},
 			{
+				// 修改用户信息
+				Method:  http.MethodPost,
+				Path:    "/user/info/update",
+				Handler: user.UpdateInfoHandler(serverCtx),
+			},
+			{
 				// 修改密码
 				Method:  http.MethodPost,
 				Path:    "/user/password/update",

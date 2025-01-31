@@ -3,6 +3,10 @@ package user
 import (
 	"context"
 
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/common/utils"
+
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
 
@@ -25,7 +29,37 @@ func NewUpdatePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 }
 
 func (l *UpdatePasswordLogic) UpdatePassword(req *types.UserPasswordReq) (resp *types.UserPasswordResp, err error) {
-	// todo: add your logic here and delete this line
+	// 获取用户ID
+	userId := token.GetUidFromCtx(l.ctx)
+	if userId == 0 {
+		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
+	}
 
-	return
+	// 获取用户信息
+	user, err := l.svcCtx.UserModel.FindOneByPassword(l.ctx, userId, req.OldPassword)
+	if err != nil {
+		l.Logger.Errorf("获取用户信息失败: %v", err)
+		return nil, response.NewErrCode(response.SYSTEM_ERROR)
+	}
+
+	// 验证原密码
+	if !user.Password.Valid || !utils.ComparePassword(user.Password.String, req.OldPassword) {
+		return nil, response.NewErrCodeMsg(response.INVALID_REQUEST, "原密码不正确")
+	}
+
+	// 加密新密码
+	hashedPassword := utils.Md5ByString(req.NewPassword)
+	// 更新密码
+	err = l.svcCtx.UserModel.UpdatePassword(l.ctx, userId, hashedPassword)
+	if err != nil {
+		l.Logger.Errorf("更新密码失败: %v", err)
+		return nil, response.NewErrCode(response.SYSTEM_ERROR)
+	}
+
+	//// 清除用户缓存
+	//if err := l.svcCtx.Cache.Del(fmt.Sprintf("user:%d", userId)); err != nil {
+	//	l.Logger.Errorf("清除用户缓存失败: %v", err)
+	//}
+
+	return &types.UserPasswordResp{}, nil
 }

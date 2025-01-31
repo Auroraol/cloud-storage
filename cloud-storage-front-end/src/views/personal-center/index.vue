@@ -93,7 +93,7 @@
         <li class="item">
           <span class="label">手机号</span>
           <div class="input-wrapper">
-            <el-input v-model="form.mobile" disabled placeholder="绑定手机号" />
+            <el-input v-model="form.mobile" placeholder="绑定手机号" />
           </div>
           <div class="action-box">
             <router-link v-if="form.mobile" to="/rebind-mobile" class="link-button">
@@ -107,7 +107,7 @@
         <li class="item">
           <span class="label">邮箱</span>
           <div class="input-wrapper">
-            <el-input v-model="form.email" disabled placeholder="未绑定邮箱" />
+            <el-input v-model="form.email" placeholder="未绑定邮箱" />
           </div>
           <div class="action-box">
             <router-link type="text" to="/email-validate" class="link-button">

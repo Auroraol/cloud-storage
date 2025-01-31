@@ -4,10 +4,17 @@ const prefix = import.meta.env.VITE_APP_BASE_API
 
 /**
  * 用户注册
- * @param {RegisterData} data - 注册信息
+ * @param {Login.RegisterRequestData} data - 注册信息
  */
-export function register(data: RegisterData) {
-  return post(`${prefix}/user/register`, data)
+export function registerApi(data: Login.RegisterRequestData) {
+  return request<Login.RegisterResponseData>(
+    `${prefix}/user_center/v1/oauth/register`,
+    {
+      method: "post",
+      data
+    },
+    true
+  )
 }
 
 /**
@@ -43,11 +50,3 @@ export function getUserInfoApi() {
 export function getUseSpaceApi() {
   return get<SpaceInfo>(`${prefix}/getUseSpace`, {}, true)
 }
-
-// export function apiUpdateUser(data: any) {
-//   return request({
-//     url: "/user/update",
-//     method: "post",
-//     data
-//   })
-// }

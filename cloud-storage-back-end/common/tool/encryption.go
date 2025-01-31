@@ -21,3 +21,5 @@ func Md5ByString(str string) string {
 func Md5ByBytes(b []byte) string {
 	return fmt.Sprintf("%x", md5.Sum(b))
 }
+
+//没使用

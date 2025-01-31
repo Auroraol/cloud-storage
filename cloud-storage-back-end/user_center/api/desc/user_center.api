@@ -28,11 +28,11 @@ service user_center {
 	@handler login
 	post /oauth/login (AccountLoginReq) returns (AccountLoginResp)
 
-	@doc "手机号登陆/注册"
+	@doc "手机号登陆/注册" // todo
 	@handler loginByMobileCode
 	post /oauth/login/mobile (LoginReq) returns (LoginResp)
 
-	@doc "验证码发送"
+	@doc "验证码发送" // todo
 	@handler codeSend
 	post /oauth/send (CodeSendRequest) returns (CodeSendResponse)
 //github 登录
@@ -45,7 +45,7 @@ service user_center {
 	jwt:    JwtAuth
 )
 service user_center {
-	@doc "获取用户信息"
+	@doc "获取用户信息" // todo
 	@handler detail
 	post /user/detail (UserInfoReq) returns (UserInfoResp)
 
@@ -60,6 +60,10 @@ service user_center {
 	@doc "更换头像"
 	@handler updateAvatar
 	post /user/avatar/update (UserAvatarReq) returns (UserAvatarResp)
+
+	@doc "修改用户信息"
+	@handler updateInfo
+	post /user/info/update (UpdateInfoReq) returns (UpdateInfoResp)
 }
 
 @server (

@@ -4,14 +4,15 @@ import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
 import { type FormInstance, type FormRules } from "element-plus"
 import { User, Lock } from "@element-plus/icons-vue"
-// import { loginApi, phoneLoginApi, sendSmsCodeApi } from "@/api/login"
-// import { type LoginRequestData, type PhoneLoginRequestData } from "@/api/login/types/login"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Owl from "./components/Owl.vue"
 import { useFocus } from "./hooks/useFocus"
+import SvgIcon from "@/components/SvgIcon/index.vue"
 
-import { accountLoginApi } from "@/api/user"
-import { type LoginRequestData } from "@/api/user/types/login"
+import { registerApi } from "@/api/user"
+import { type LoginRequestData, type RegisterRequestData } from "@/api/user/types/login"
+
+import { ElMessage } from "element-plus"
 
 const router = useRouter()
 const { isFocus, handleBlur, handleFocus } = useFocus()
@@ -19,9 +20,11 @@ const { isFocus, handleBlur, handleFocus } = useFocus()
 // pinia
 const useUserPinia = useUserStore()
 
-/** 登录表单元素的引用 */
+/** 表单元素的引用 */
 const loginFormRef = ref<FormInstance | null>(null)
 const phoneFormRef = ref<FormInstance | null>(null)
+const registerFormRef = ref<FormInstance | null>(null)
+const registerPhoneFormRef = ref<FormInstance | null>(null)
 
 /** 当前激活的标签页 */
 const activeTab = ref("account")
@@ -70,15 +73,13 @@ const rememberPassword = ref(false)
 /** 记住手机号选项 */
 const rememberPhone = ref(false)
 
-/** 账号密码登录逻辑 */
+/** 登录逻辑 */
 const handleLogin = async () => {
   const valid = await loginFormRef.value?.validate()
   if (valid) {
     loading.value = true
     try {
-      // console.log(loginFormData)
-      // const res = await accountLoginApi(loginFormData)
-      // console.log(res)
+      // Pinia出来登录
       await useUserPinia.login(loginFormData)
       // 如果选择记住密码，可以在这里保存登录信息
       // if (rememberPassword.value) {
@@ -140,6 +141,10 @@ const handleSendCode = async () => {
   }
 }
 
+const handleForgetPassword = () => {
+  router.push({ path: "/forget-password" })
+}
+
 // 在组件挂载时读取保存的登录信息
 onMounted(() => {
   const rememberedUsername = localStorage.getItem("rememberedUsername")
@@ -155,6 +160,116 @@ onMounted(() => {
     rememberPhone.value = true
   }
 })
+
+// 添加注册相关的响应式变量
+const registerDialogVisible = ref(false)
+const registerActiveTab = ref("account")
+const registerLoading = ref(false)
+
+// 注册表单数据
+const registerFormData = reactive({
+  name: "",
+  password: "",
+  confirmPassword: ""
+})
+
+// 手机注册表单数据
+const registerPhoneFormData = reactive({
+  mobile: "",
+  code: "",
+  password: ""
+})
+
+// 注册表单校验规则
+const registerFormRules: FormRules = {
+  name: [
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" }
+  ],
+  password: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
+  ],
+  confirmPassword: [
+    { required: true, message: "请确认密码", trigger: "blur" },
+    {
+      validator: (rule: any, value: string, callback: Function) => {
+        if (value !== registerFormData.password) {
+          callback(new Error("两次输入密码不一致"))
+        } else {
+          callback()
+        }
+      },
+      trigger: "blur"
+    }
+  ]
+}
+
+// 手机注册表单校验规则
+const registerPhoneFormRules: FormRules = {
+  mobile: [
+    { required: true, message: "请输入手机号", trigger: "blur" },
+    { pattern: /^1[3-9]\d{9}$/, message: "请输入正确的手机号", trigger: "blur" }
+  ],
+  code: [
+    { required: true, message: "请输入验证码", trigger: "blur" },
+    { len: 6, message: "验证码长度应为6位", trigger: "blur" }
+  ],
+  password: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
+  ]
+}
+
+// 处理注册
+const handleRegister = async () => {
+  if (registerActiveTab.value === "account") {
+    const valid = await registerFormRef.value?.validate()
+    if (valid) {
+      registerLoading.value = true
+      try {
+        console.log("registerFormData", registerFormData)
+        const data: RegisterRequestData = {
+          name: registerFormData.name,
+          password: registerFormData.password
+        }
+        await registerApi(data)
+        ElMessage.success("注册成功")
+        // 注册成功后，直接跳转登录
+        const loginData: LoginRequestData = {
+          name: registerFormData.name,
+          password: registerFormData.password
+        }
+        await useUserPinia.login(loginData)
+        router.push({ path: "/" })
+        registerDialogVisible.value = false
+      } catch (error) {
+        console.error("注册失败:", error)
+      } finally {
+        registerLoading.value = false
+      }
+    }
+  } else {
+    const valid = await registerPhoneFormRef.value?.validate()
+    if (valid) {
+      registerLoading.value = true
+      try {
+        console.log(registerPhoneFormData)
+        const data: RegisterRequestData = {
+          name: registerPhoneFormData.mobile,
+          password: registerPhoneFormData.password
+        }
+        await registerApi(data)
+        ElMessage.success("注册成功")
+        registerDialogVisible.value = false
+      } catch (error) {
+        console.error("注册失败:", error)
+      } finally {
+        registerLoading.value = false
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -191,7 +306,7 @@ onMounted(() => {
               </el-form-item>
               <div class="form-footer">
                 <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
-                <el-link type="primary" :underline="false">忘记密码？</el-link>
+                <el-link type="primary" @click="handleForgetPassword" :underline="false">忘记密码？</el-link>
               </div>
               <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">登 录</el-button>
             </el-form>
@@ -234,7 +349,6 @@ onMounted(() => {
             </el-form>
           </el-tab-pane>
         </el-tabs>
-
         <div class="other-login">
           <div class="divider">
             <span class="line" />
@@ -242,20 +356,85 @@ onMounted(() => {
             <span class="line" />
           </div>
           <div class="icons">
-            <el-tooltip content="微信登录" placement="top">
-              <i class="iconfont icon-weixin" />
-            </el-tooltip>
-            <el-tooltip content="QQ登录" placement="top">
-              <i class="iconfont icon-QQ" />
-            </el-tooltip>
-            <el-tooltip content="Github登录" placement="top">
-              <i class="iconfont icon-github" />
-            </el-tooltip>
+            <a href="" class="icon-item" title="QQ登录">
+              <svg-icon name="qq-login" color="green" width="26" height="26" />
+            </a>
+            <a href="" class="icon-item" title="GitHub登录">
+              <svg-icon name="github-login" width="24" height="24" />
+            </a>
+            <a
+              href="https://gitee.com/oauth/authorize?client_id=62d3af1f2058b5facec5316ab9d18b8d3602406fcb704adde7f5b38de381996b&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Foauth&response_type=code&state=3"
+              class="icon-item"
+              title="Gitee登录"
+            >
+              <svg-icon name="gitee-login" width="26" height="26" />
+            </a>
+            <a href="javascript:;" class="icon-item" title="注册" @click="registerDialogVisible = true">
+              <svg-icon name="register" width="26" height="26" />
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 注册对话框 -->
+  <el-dialog v-model="registerDialogVisible" title="用户注册" width="400px" :close-on-click-modal="false">
+    <el-tabs v-model="registerActiveTab" stretch>
+      <el-tab-pane label="账号注册" name="account">
+        <el-form ref="registerFormRef" :model="registerFormData" :rules="registerFormRules" label-width="80px">
+          <el-form-item label="用户名" prop="name">
+            <el-input v-model="registerFormData.name" placeholder="请输入用户名" />
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="registerFormData.password" type="password" placeholder="请输入密码" show-password />
+          </el-form-item>
+          <el-form-item label="确认密码" prop="confirmPassword">
+            <el-input
+              v-model="registerFormData.confirmPassword"
+              type="password"
+              placeholder="请确认密码"
+              show-password
+            />
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane label="手机注册" name="phone">
+        <el-form
+          ref="registerPhoneFormRef"
+          :model="registerPhoneFormData"
+          :rules="registerPhoneFormRules"
+          label-width="80px"
+        >
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="registerPhoneFormData.mobile" placeholder="请输入手机号">
+              <template #prepend>+86</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="验证码" prop="code">
+            <el-input v-model="registerPhoneFormData.code" placeholder="请输入验证码">
+              <template #append>
+                <el-button :loading="sendCodeLoading" :disabled="countdown > 0" @click="handleSendCode">
+                  {{ countdown > 0 ? `${countdown}s后重试` : "获取验证码" }}
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="registerPhoneFormData.password" type="password" placeholder="请输入密码" show-password />
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="registerDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="registerLoading" @click="handleRegister"> 注册 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>

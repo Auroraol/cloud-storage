@@ -52,7 +52,7 @@ type (
 	}
 )
 
-//
+// 账号密码注册
 type (
 	AccountRegisterReq {
 		Name string `json:"name"`         // 用户名称
@@ -93,6 +93,19 @@ type (
 	}
 )
 
+type (
+	UpdateInfoReq {
+		Avatar string `json:"avatar"`
+		Nickname string `json:"nickname"`
+		Mobile string `json:"mobile"`
+		Email string `json:"email"`
+		Birthday string `json:"birthday"`
+		Gender int64 `json:"gender"`
+		Brief string `json:"brief"`
+	}
+	UpdateInfoResp {
+	}
+)
 type (
 	UserPasswordReq {
 		OldPassword string `json:"oldPassword"`

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/tool"
+	"github.com/Auroraol/cloud-storage/common/utils"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
 	"github.com/Auroraol/cloud-storage/user_center/model"
@@ -52,7 +53,7 @@ func (l *RegisterLogic) Register(req *types.AccountRegisterReq) (resp *types.Acc
 	}
 	if len(req.Password) > 0 {
 		password := sql.NullString{
-			String: tool.Md5ByString(req.Password),
+			String: utils.Md5ByString(req.Password),
 			Valid:  true,
 		}
 		user.Password = password

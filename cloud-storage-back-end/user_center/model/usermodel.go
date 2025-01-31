@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -19,6 +20,10 @@ type (
 		withSession(session sqlx.Session) UserModel
 		FindUserIdByUsernameAndPassword(ctx context.Context, username string, password string) (int64, error)
 		UpdateVolume(ctx context.Context, id int64, size int64) (result sql.Result, err error)
+		UpdateAvatar(ctx context.Context, id int64, avatar string) (result sql.Result, err error)
+		UpdatePassword(ctx context.Context, id int64, password string) (err error)
+		UpdateInfo(ctx context.Context, id int64, nickname string, brief string, birthday string, gender int64, email string, mobile string) (err error)
+		FindOneByPassword(ctx context.Context, id int64, password string) (*User, error)
 	}
 
 	customUserModel struct {
@@ -59,4 +64,74 @@ func (m *defaultUserModel) UpdateVolume(ctx context.Context, id int64, size int6
 		return nil, err
 	}
 	return res, nil
+}
+
+func (m *defaultUserModel) UpdateAvatar(ctx context.Context, id int64, avatar string) (result sql.Result, err error) {
+	return nil, err
+}
+
+func (m *defaultUserModel) FindOneByPassword(ctx context.Context, id int64, password string) (*User, error) {
+	var resp User
+	query := fmt.Sprintf("select %s from %s where `id` = ? and `password` = ? limit 1", userRows, m.table)
+	err := m.conn.QueryRowCtx(ctx, &resp, query, id, password)
+	switch {
+	case err == nil:
+		return &resp, nil
+	case errors.Is(err, sqlx.ErrNotFound):
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserModel) UpdateInfo(ctx context.Context, id int64, nickname string, brief string, birthday string, gender int64, email string, mobile string) (err error) {
+	var setStmt []string
+	var args []interface{}
+
+	// 动态构建更新字段
+	if nickname != "" {
+		setStmt = append(setStmt, "`nickname` = ?")
+		args = append(args, nickname)
+	}
+	if brief != "" {
+		setStmt = append(setStmt, "`brief` = ?")
+		args = append(args, brief)
+	}
+	if birthday != "" {
+		setStmt = append(setStmt, "`birthday` = ?")
+		args = append(args, birthday)
+	}
+	if gender != 0 {
+		setStmt = append(setStmt, "`gender` = ?")
+		args = append(args, gender)
+	}
+	if email != "" {
+		setStmt = append(setStmt, "`email` = ?")
+		args = append(args, email)
+	}
+	if mobile != "" {
+		setStmt = append(setStmt, "`mobile` = ?")
+		args = append(args, mobile)
+	}
+
+	// 如果没有需要更新的字段，直接返回
+	if len(setStmt) == 0 {
+		return errors.New("没有需要更新的信息")
+	}
+
+	// 构建完整的 SQL 语句
+	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, strings.Join(setStmt, ", "))
+	args = append(args, id)
+
+	_, err = m.conn.ExecCtx(ctx, query, args...)
+	return err
+}
+
+func (m *defaultUserModel) UpdatePassword(ctx context.Context, id int64, password string) error {
+	query := fmt.Sprintf("UPDATE %s SET `password` = ? WHERE `id` = ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, password, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

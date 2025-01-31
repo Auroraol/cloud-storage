@@ -29,7 +29,7 @@ export const useUserStore = defineStore("user", () => {
     token.value = data.accesssToken
   }
 
-  /** 获取用户详情 */
+  /** 获取用户详情(动态路由) */
   const getInfo = async () => {
     const { data } = await getUserInfoApi()
     console.log(data)

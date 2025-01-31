@@ -4,9 +4,11 @@ go 1.23.1
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
+	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/jinzhu/copier v0.4.0
+	github.com/json-iterator/go v1.1.12
 	github.com/kr/fs v0.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.7
@@ -16,6 +18,7 @@ require (
 	golang.org/x/crypto v0.29.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.35.2
+	gopkg.in/amz.v1 v1.0.0-20150111123259-ad23e96a31d2
 	gorm.io/driver/clickhouse v0.4.3
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/driver/postgres v1.4.6
@@ -64,7 +67,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect

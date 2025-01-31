@@ -59,6 +59,19 @@ type RegisterReq struct {
 type RegisterResp struct {
 }
 
+type UpdateInfoReq struct {
+	Avatar   string `json:"avatar"`
+	Nickname string `json:"nickname"`
+	Mobile   string `json:"mobile"`
+	Email    string `json:"email"`
+	Birthday string `json:"birthday"`
+	Gender   int64  `json:"gender"`
+	Brief    string `json:"brief"`
+}
+
+type UpdateInfoResp struct {
+}
+
 type User struct {
 	Id       int64  `json:"id"`
 	Username string `json:"username"` // 用户名

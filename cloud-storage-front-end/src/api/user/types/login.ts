@@ -36,3 +36,12 @@ export type UserInfoResponseData = ApiResponseData<{
 
 /** 获取短信验证码的响应数据 */
 export type SmsCodeResponseData = ApiResponseData<string>
+
+/** 注册请求数据 */
+export interface RegisterRequestData {
+  name: string
+  password: string
+}
+
+/** 注册响应数据 */
+export type RegisterResponseData = ApiResponseData<object>

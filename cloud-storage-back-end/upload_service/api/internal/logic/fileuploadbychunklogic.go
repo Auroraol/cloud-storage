@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
-	"github.com/Auroraol/cloud-storage/common/tool"
+	"github.com/Auroraol/cloud-storage/common/utils"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
 	"github.com/Auroraol/cloud-storage/upload_service/model"
@@ -59,7 +59,7 @@ func (l *FileUploadByChunkLogic) FileUploadByChunk(req *types.FileUploadByChunkR
 	if err != nil {
 		return nil, err
 	}
-	md5Str := tool.Md5ByBytes(b)
+	md5Str := utils.Md5ByBytes(b)
 	//
 	count, err := l.svcCtx.RepositoryPoolModel.CountByHash(l.ctx, md5Str)
 	if count > 0 {
