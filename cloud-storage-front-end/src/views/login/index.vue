@@ -2,6 +2,7 @@
 import { reactive, ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
+import { useLoginStore } from "@/store/modules/login"
 import { type FormInstance, type FormRules } from "element-plus"
 import { User, Lock } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
@@ -19,6 +20,7 @@ const { isFocus, handleBlur, handleFocus } = useFocus()
 
 // pinia
 const useUserPinia = useUserStore()
+const useLoginPinia = useLoginStore()
 
 /** 表单元素的引用 */
 const loginFormRef = ref<FormInstance | null>(null)
@@ -37,8 +39,8 @@ const countdown = ref(0)
 
 /** 账号密码登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
-  name: "lfj",
-  password: "123456"
+  name: "",
+  password: ""
 })
 
 /** 手机号登录表单数据 */
@@ -70,6 +72,7 @@ const phoneFormRules: FormRules = {
 
 /** 记住密码选项 */
 const rememberPassword = ref(false)
+
 /** 记住手机号选项 */
 const rememberPhone = ref(false)
 
@@ -82,12 +85,17 @@ const handleLogin = async () => {
       // Pinia出来登录
       await useUserPinia.login(loginFormData)
       // 如果选择记住密码，可以在这里保存登录信息
-      // if (rememberPassword.value) {
-      //   localStorage.setItem("rememberedUsername", loginFormData.username)
-      //   // 注意：在实际应用中，不建议直接存储密码，应该使用更安全的方式
-      // }
+      if (rememberPassword.value) {
+        useLoginPinia.setUsernameAndPassword({
+          username: loginFormData.name,
+          password: loginFormData.password
+        })
+      } else {
+        useLoginPinia.clearUsernameAndPassword()
+      }
       router.push({ path: "/" })
-    } catch {
+    } catch (err: any) {
+      ElMessage.error(err.message)
       loginFormData.password = ""
     } finally {
       loading.value = false
@@ -141,24 +149,30 @@ const handleSendCode = async () => {
   }
 }
 
+/** 忘记密码 */
 const handleForgetPassword = () => {
+  useLoginPinia.changeVisible(false)
   router.push({ path: "/forget-password" })
 }
 
 // 在组件挂载时读取保存的登录信息
 onMounted(() => {
-  const rememberedUsername = localStorage.getItem("rememberedUsername")
-  const rememberedPhone = localStorage.getItem("rememberedPhone")
+  // const rememberedPhone = tokenService.getPhone()
 
-  if (rememberedUsername) {
-    loginFormData.name = rememberedUsername
+  if (useLoginPinia.username) {
+    loginFormData.name = useLoginPinia.username
+  }
+  if (useLoginPinia.password) {
+    loginFormData.password = useLoginPinia.password
     rememberPassword.value = true
   }
 
-  if (rememberedPhone) {
-    phoneFormData.mobile = rememberedPhone
-    rememberPhone.value = true
-  }
+  // // todo
+  // // todo
+  // if (rememberedPhone) {
+  //   phoneFormData.mobile = rememberedPhone
+  //   rememberPhone.value = true
+  // }
 })
 
 // 添加注册相关的响应式变量
@@ -518,6 +532,14 @@ const handleRegister = async () => {
         :deep(.el-input__wrapper) {
           border-radius: 8px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        :deep(.el-input-group__append) {
+          .el-button {
+            min-width: 120px;
+            padding: 0 12px;
+            white-space: nowrap;
+          }
         }
 
         .el-input {

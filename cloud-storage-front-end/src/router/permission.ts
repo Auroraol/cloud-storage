@@ -4,7 +4,8 @@ import { usePermissionStoreHook } from "@/store/modules/permission"
 import { ElMessage } from "element-plus"
 import { setRouteChange } from "@/hooks/useRouteListener"
 import { useTitle } from "@/hooks/useTitle"
-import { getToken } from "@/utils/cache/session-storage"
+// import { getToken } from "@/utils/cache/session-storage"
+import { tokenService } from "@/utils/cache/localStorage-storage"
 import routeSettings from "@/config/route"
 import isWhiteList from "@/config/white-list"
 import NProgress from "nprogress"
@@ -18,7 +19,8 @@ const permissionStore = usePermissionStoreHook()
 router.beforeEach(async (to, _from, next) => {
   NProgress.start()
   // 如果没有登陆
-  if (!getToken()) {
+  // if (!getToken()) {
+  if (!tokenService.getToken()) {
     // 如果在免登录的白名单中，则直接进入
     if (isWhiteList(to)) return next()
     // 其他没有访问权限的页面将被重定向到登录页面

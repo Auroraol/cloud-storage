@@ -4,7 +4,7 @@
     <div class="profile">
       <div class="info">
         <div>
-          <img :src="userInfo.avatar || defaultAvatar" class="avatar-wrapper" />
+          <img :src="userInfo.avatar" class="avatar-wrapper" />
         </div>
         <p class="username">用户名: {{ userInfo.username }}</p>
         <p class="nickname">昵称: {{ userInfo.nickname }}</p>
@@ -32,7 +32,7 @@
         <li class="item">
           <span class="label">头像</span>
           <div class="avatar-wrapper">
-            <img :src="userInfo.avatar || defaultAvatar" class="user-avatar" />
+            <img :src="userInfo.avatar" class="user-avatar" />
           </div>
           <div class="hint">支持 jpg、png 格式大小 300KB 以内的图片</div>
           <div class="action-box">
@@ -219,8 +219,8 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, FormInstance } from "element-plus"
-// import { useUserStore } from "@/store/modules/user"
-// import { apiUpdateUser } from "@/api/user" // 需要创建这个API函数
+import { useUserStore } from "@/store/modules/user"
+import { updatePasswordApi, updateUserInfoApi } from "@/api/user" // 需要创建这个API函数
 
 const dialogVisible = ref(false)
 const passwordDialogVisible = ref(false)
@@ -250,10 +250,9 @@ const opVisible = ref({
 })
 
 // 上传头像相关变量
-// const path = `${import.meta.env.VITE_APP_BASE_API}/user/avatar/update` // 修复上传路径
-
+const path = import.meta.env.VITE_APP_BASE_API + "/user_center/v1/user/avatar/update" // 后端服务器api接口
 const headers = computed(() => {
-  return { Authorization: `Bearer ${userStore.token}` } // 修复请求头
+  return { Authorization: `Bearer ${userStore.token}` }
 })
 
 const files = ref([])
@@ -267,15 +266,12 @@ const form = ref({
   brief: ""
 })
 
+const userStore = useUserStore()
 //  ref获取dom元素
 const nicknameIput = ref() // 昵称
 const genderIput = ref() // 性别
 const briefIput = ref() // 简介
 const birthdayIput = ref() // 简介
-import { useUserStore } from "@/store/modules/user"
-const userStore = useUserStore()
-// 默认头像
-// const defaultAvatar = computed(() => useSettingsStorePinia.defaultAvatar)
 
 // 计算属性
 const userInfo = computed(() => {
@@ -310,9 +306,9 @@ const cancelNickname = () => {
 }
 
 // 昵称保存
-const saveNickname = () => {
+const saveNickname = async () => {
   const data = { nickname: form.value.nickname, userId: userInfo.value.id }
-  updateUser(data, 0)
+  await updateUser(data, 0)
 }
 
 // 生日栏聚焦
@@ -328,10 +324,9 @@ const cancelBirthday = () => {
 }
 
 // 保存生日
-const saveBirthday = () => {
+const saveBirthday = async () => {
   const data = { birthday: form.value.birthday, userId: userInfo.value.id }
-  console.error(data)
-  updateUser(data, 1)
+  await updateUser(data, 1)
 }
 
 // 性别栏聚焦
@@ -347,9 +342,9 @@ const cancelGender = () => {
 }
 
 // 性别保存
-const saveGender = () => {
+const saveGender = async () => {
   const data = { gender: form.value.gender, userId: userInfo.value.id }
-  updateUser(data, 2)
+  await updateUser(data, 2)
 }
 
 // 简介聚焦
@@ -365,15 +360,15 @@ const cancelBrief = () => {
 }
 
 // 保存简介
-const saveBrief = () => {
+const saveBrief = async () => {
   const data = { brief: form.value.brief, userId: userInfo.value.id }
-  updateUser(data, 3)
+  await updateUser(data, 3)
 }
 
 // 更新用户信息
 const updateUser = async (data: any, index: number) => {
   try {
-    // await apiUpdateUser(data)
+    await updateUserInfoApi(data)
     switch (index) {
       case 0:
         opVisible.value.nickname = false
@@ -389,9 +384,8 @@ const updateUser = async (data: any, index: number) => {
         break
     }
     ElMessage.success("保存成功")
-    // 重写获取用户信息
-    // await userStore.getUserInfo()
-    // 表单重写初始化
+    // 重新获取用户信息
+    await userStore.getInfo()
     init()
   } catch (error) {
     console.error(error)
@@ -404,15 +398,16 @@ const onExceed = () => {
   loading.value = false
 }
 
-const uploadSuccess = (res: any) => {
+const uploadSuccess = async (res: any) => {
   if (res.code !== 200000) {
     ElMessage.error("文件上传失败")
     return
   }
   loading.value = false
   ElMessage.success("上传成功")
-  // 重写获取用户信息 + 表单重写初始化
-  // userStore.getUserInfo().then(() => init())
+  // 重新获取用户信息
+  await userStore.getInfo()
+  init()
 }
 
 const uploadError = (err: any) => {
@@ -513,11 +508,10 @@ const submitChangePassword = async () => {
     if (valid) {
       try {
         changePasswordLoading.value = true
-        // 调用修改密码API
-        // await apiChangePassword({
-        //   oldPassword: passwordForm.value.oldPassword,
-        //   newPassword: passwordForm.value.newPassword
-        // })
+        await updatePasswordApi({
+          oldPassword: passwordForm.value.oldPassword,
+          newPassword: passwordForm.value.newPassword
+        })
         ElMessage.success("密码修改成功")
         passwordDialogVisible.value = false
       } catch (error: any) {

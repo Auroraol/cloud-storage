@@ -3,7 +3,8 @@ import axios, { AxiosRequestConfig } from "axios"
 import { ElMessageBox, ElMessage } from "element-plus"
 import axiosRetry from "axios-retry"
 // import { useUserStore } from "/@/store/index"
-import { getToken } from "@/utils/cache/session-storage"
+// import { getToken } from "@/utils/cache/session-storage"
+import { tokenService } from "@/utils/cache/localStorage-storage"
 
 const axiosInstance = axios.create({
   timeout: 10000,
@@ -137,7 +138,11 @@ axiosInstance.interceptors.response.use(
 // 给请求头添加 access_token
 const setHeaderToken = (isNeedToken: boolean) => {
   // 请求头携带token
-  const accessToken = isNeedToken ? getToken() : null
+  // 方式1
+  // const accessToken = isNeedToken ? getToken() : null
+  // 方式2
+  const accessToken = isNeedToken ? tokenService.getToken() : null
+
   if (isNeedToken) {
     // api 请求需要携带 access_token
     if (!accessToken) {

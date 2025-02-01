@@ -32,12 +32,58 @@ export function accountLoginApi(data: Login.LoginRequestData) {
   )
 }
 
+/** 刷新token */
+export function refreshTokenApi() {
+  return request<Login.RefreshTokenResponseData>(
+    `${prefix}/user_center/v1/refresh/authorization`,
+    {
+      method: "post"
+    },
+    true
+  )
+}
+
 /** 获取用户详情 */
 export function getUserInfoApi() {
   return request<Login.UserInfoResponseData>(
     `${prefix}/user_center/v1/user/detail`,
     {
       method: "post"
+    },
+    true
+  )
+}
+/** 更新用户信息 */
+export function updateUserInfoApi(data: Login.UserInfoRequestData) {
+  return request<Login.UpdateUserInfoResponseData>(
+    `${prefix}/user_center/v1/user/info/update`,
+    {
+      method: "post",
+      data
+    },
+    true
+  )
+}
+
+/** 修改密码 */
+export function updatePasswordApi(data: Login.UpdatePasswordRequestData) {
+  return request<Login.UpdatePasswordResponseData>(
+    `${prefix}/user_center/v1/user/password/update`,
+    {
+      method: "post",
+      data
+    },
+    true
+  )
+}
+
+/** 更新头像 */
+export function updateAvatarApi(data: Login.UpdateAvatarRequestData) {
+  return request<Login.UpdateAvatarResponseData>(
+    `${prefix}/user_center/v1/user/avatar/update`,
+    {
+      method: "post",
+      data
     },
     true
   )

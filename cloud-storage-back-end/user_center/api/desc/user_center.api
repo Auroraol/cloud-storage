@@ -45,7 +45,7 @@ service user_center {
 	jwt:    JwtAuth
 )
 service user_center {
-	@doc "获取用户信息" // todo
+	@doc "获取用户信息"
 	@handler detail
 	post /user/detail (UserInfoReq) returns (UserInfoResp)
 

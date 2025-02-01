@@ -5,7 +5,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
+
+	"github.com/Auroraol/cloud-storage/common/time"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -67,7 +70,12 @@ func (m *defaultUserModel) UpdateVolume(ctx context.Context, id int64, size int6
 }
 
 func (m *defaultUserModel) UpdateAvatar(ctx context.Context, id int64, avatar string) (result sql.Result, err error) {
-	return nil, err
+	query := fmt.Sprintf("update %s set `avatar` = ? where `id` = ?", m.table)
+	res, err := m.conn.ExecCtx(ctx, query, avatar, id)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (m *defaultUserModel) FindOneByPassword(ctx context.Context, id int64, password string) (*User, error) {
@@ -98,6 +106,11 @@ func (m *defaultUserModel) UpdateInfo(ctx context.Context, id int64, nickname st
 		args = append(args, brief)
 	}
 	if birthday != "" {
+		timestamp, err := strconv.ParseInt(birthday, 10, 64)
+		if err != nil {
+			return err
+		}
+		birthday = time.TimestampToStringTime(timestamp)
 		setStmt = append(setStmt, "`birthday` = ?")
 		args = append(args, birthday)
 	}
@@ -124,7 +137,14 @@ func (m *defaultUserModel) UpdateInfo(ctx context.Context, id int64, nickname st
 	args = append(args, id)
 
 	_, err = m.conn.ExecCtx(ctx, query, args...)
-	return err
+	switch {
+	case err == nil:
+		return nil
+	case errors.Is(err, sqlx.ErrNotFound):
+		return ErrNotFound
+	default:
+		return err
+	}
 }
 
 func (m *defaultUserModel) UpdatePassword(ctx context.Context, id int64, password string) error {

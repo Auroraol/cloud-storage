@@ -1,4 +1,4 @@
-const SYSTEM_NAME = "v3-admin-vite"
+const SYSTEM_NAME = "cloud-storage"
 
 /** 缓存数据时用到的 Key */
 class CacheKey {
@@ -8,6 +8,10 @@ class CacheKey {
   static readonly ACTIVE_THEME_NAME = `${SYSTEM_NAME}-active-theme-name-key`
   static readonly VISITED_VIEWS = `${SYSTEM_NAME}-visited-views-key`
   static readonly CACHED_VIEWS = `${SYSTEM_NAME}-cached-views-key`
+
+  static readonly USERNAME_KEY = "username"
+  static readonly PASSWORD_KEY = "password"
+  static readonly REMEMBER_KEY = "remember"
 }
 
 export default CacheKey

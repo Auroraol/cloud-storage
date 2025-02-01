@@ -10,9 +10,12 @@ import routeSettings from "@/config/route"
 import { accountLoginApi, getUserInfoApi } from "@/api/user"
 import { type LoginRequestData } from "@/api/user/types/login"
 import { da } from "element-plus/es/locale"
+import { tokenService } from "@/utils/cache/localStorage-storage"
 
 export const useUserStore = defineStore("user", () => {
-  const token = ref<string>(getToken() || "")
+  // 全局变量
+  // const token = ref<string>(getToken() || "")
+  const token = ref<string>(tokenService.getToken() || "")
   const roles = ref<string[]>([])
   const username = ref<string>("")
   const avatar = ref<string>("")
@@ -23,17 +26,21 @@ export const useUserStore = defineStore("user", () => {
 
   /** 登录 */
   const login = async ({ name, password }: LoginRequestData) => {
-    const { data } = await accountLoginApi({ name, password })
+    const { data, message } = await accountLoginApi({ name, password })
     // console.log(data)
-    setToken(data.accesssToken)
-    token.value = data.accesssToken
+    // 方式1
+    // setToken(data.accessToken) //保存在sessionStorage, 也可以使用cookie
+    // 方式2 tokenService
+    tokenService.setToken(data)
+    token.value = data.accessToken
+    return message // 添加返回值
   }
 
   /** 获取用户详情(动态路由) */
   const getInfo = async () => {
     const { data } = await getUserInfoApi()
     console.log(data)
-    username.value = data.username
+    username.value = data.nickname
     // 验证返回的 roles 是否为一个非空数组，否则塞入一个没有任何作用的默认角色，防止路由守卫逻辑进入无限循环
     roles.value = data.roles?.length > 0 ? data.roles : routeSettings.defaultRoles
     // 头像
@@ -53,16 +60,23 @@ export const useUserStore = defineStore("user", () => {
 
   /** 登出 */
   const logout = () => {
-    removeToken()
+    // 方式1
+    // removeToken()
+    // 方式2 tokenService
+    tokenService.clearToken()
     token.value = ""
     roles.value = []
     avatar.value = ""
     resetRouter()
     _resetTagsView()
   }
+
   /** 重置 Token */
   const resetToken = () => {
-    removeToken()
+    // 方式1
+    // removeToken()
+    // 方式2 tokenService
+    tokenService.clearToken()
     token.value = ""
     roles.value = []
     avatar.value = ""

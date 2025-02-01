@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/token"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -28,9 +30,9 @@ func NewUpdateInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 
 func (l *UpdateInfoLogic) UpdateInfo(req *types.UpdateInfoReq) (resp *types.UpdateInfoResp, err error) {
 	// 从context中获取用户ID
-	userId := l.ctx.Value("userId").(int64)
+	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
-		return nil, errors.New("用户未登录")
+		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
 	// 调用 UserModel 的 UpdateInfo 方法

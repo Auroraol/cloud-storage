@@ -36,10 +36,10 @@ func (l *UpdatePasswordLogic) UpdatePassword(req *types.UserPasswordReq) (resp *
 	}
 
 	// 获取用户信息
-	user, err := l.svcCtx.UserModel.FindOneByPassword(l.ctx, userId, req.OldPassword)
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
 	if err != nil {
 		l.Logger.Errorf("获取用户信息失败: %v", err)
-		return nil, response.NewErrCode(response.SYSTEM_ERROR)
+		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取用户信息失败")
 	}
 
 	// 验证原密码

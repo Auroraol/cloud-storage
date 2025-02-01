@@ -15,7 +15,7 @@ export interface PhoneLoginRequestData {
 export type LoginCodeResponseData = ApiResponseData<string>
 
 export type LoginResponseData = ApiResponseData<{
-  accesssToken: string
+  accessToken: string
   accessExpire: number
   refreshAfter: number
 }>
@@ -45,3 +45,41 @@ export interface RegisterRequestData {
 
 /** 注册响应数据 */
 export type RegisterResponseData = ApiResponseData<object>
+
+/** 更新用户信息请求数据 */
+export interface UserInfoRequestData {
+  avatar: string
+  nickname: string
+  mobile: string
+  gender: number
+  birthday: string
+  email: string
+  brief: string
+}
+
+/** 更新用户信息响应数据  */
+export type UpdateUserInfoResponseData = ApiResponseData<object>
+
+/** 更新头像请求数据 */
+export interface UpdateAvatarRequestData {
+  file: File // 文件
+}
+
+/** 更新头像响应数据 */
+export type UpdateAvatarResponseData = ApiResponseData<object>
+
+/** 修改密码请求数据 */
+export interface UpdatePasswordRequestData {
+  oldPassword: string
+  newPassword: string
+}
+
+/** 修改密码响应数据 */
+export type UpdatePasswordResponseData = ApiResponseData<object>
+
+/** 刷新token响应数据 */
+export type RefreshTokenResponseData = ApiResponseData<{
+  accessToken: string
+  accessExpire: number
+  refreshAfter: number
+}>
