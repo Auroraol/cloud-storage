@@ -16,7 +16,7 @@ func Client() *oss.Client {
 		return ossCli
 	}
 	var err error
-	ossCli, err = oss.New(OSSEndpoint, OSSAccesskeyID, OSSAccessKeySecret)
+	ossCli, err = oss.New(OSSEndpoint, GetOSSAccessKeyID(), GetOSSAccessKeySecret())
 	if err != nil {
 		fmt.Printf("创建OSS客户端失败: %v\n", err)
 		return nil
