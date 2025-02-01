@@ -16,7 +16,7 @@ func Client() *oss.Client {
 		return ossCli
 	}
 	var err error
-	ossCli, err = oss.New(OSSEndpoint, GetOSSAccessKeyID(), GetOSSAccessKeySecret())
+	ossCli, err = oss.New(Config.Endpoint, Config.AccessKeyId, Config.AccessKeySecret)
 	if err != nil {
 		fmt.Printf("创建OSS客户端失败: %v\n", err)
 		return nil
@@ -28,7 +28,7 @@ func Client() *oss.Client {
 func Bucket() *oss.Bucket {
 	cli := Client()
 	if cli != nil {
-		bucket, err := cli.Bucket(OSSBucket)
+		bucket, err := cli.Bucket(Config.BucketName)
 		if err != nil {
 			fmt.Printf("获取Bucket失败: %v\n", err)
 			return nil
