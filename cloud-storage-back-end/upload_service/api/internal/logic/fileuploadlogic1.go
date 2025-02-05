@@ -1,5 +1,27 @@
 package logic
 
+//import (
+//	"context"
+//	"crypto/md5"
+//	"fmt"
+//	"io"
+//	"mime/multipart"
+//	"os"
+//	"path"
+//	"path/filepath"
+//	"time"
+//
+//	"github.com/Auroraol/cloud-storage/common/response"
+//	"github.com/Auroraol/cloud-storage/common/store/oss"
+//	"github.com/Auroraol/cloud-storage/common/token"
+//	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
+//	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
+//	"github.com/Auroraol/cloud-storage/upload_service/model"
+//	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+//
+//	"github.com/google/uuid"
+//	"github.com/zeromicro/go-zero/core/logx"
+//)
 //
 //const (
 //	// 上传方式的阈值
@@ -169,24 +191,24 @@ package logic
 //		return "chunk"
 //	}
 //}
+
 //
-////
-////// 文件上传
-////func CosUpload(fileHeader *multipart.FileHeader, newId int64, b []byte) (string, string, error) {
-////	u, _ := url.Parse(CosUrl)
-////	bs := &cos.BaseURL{BucketURL: u}
-////	c := cos.NewClient(bs, &http.Client{
-////		Transport: &cos.AuthorizationTransport{
-////			SecretID:  SecretID,
-////			SecretKey: SecretKey,
-////		},
-////	})
-////	baseName := path.Base(fileHeader.Filename)
-////	name := "butane-netdisk/" + strconv.FormatInt(newId, 10) + baseName
-////	_, err := c.Object.Put(context.Background(), name, bytes.NewReader(b), nil)
-////	if err != nil {
-////		return "", "", err
-////	}
-////	filePath := CosUrl + "/" + name
-////	return filePath, baseName, nil
-////}
+//// 文件上传
+//func CosUpload(fileHeader *multipart.FileHeader, newId int64, b []byte) (string, string, error) {
+//	u, _ := url.Parse(CosUrl)
+//	bs := &cos.BaseURL{BucketURL: u}
+//	c := cos.NewClient(bs, &http.Client{
+//		Transport: &cos.AuthorizationTransport{
+//			SecretID:  SecretID,
+//			SecretKey: SecretKey,
+//		},
+//	})
+//	baseName := path.Base(fileHeader.Filename)
+//	name := "butane-netdisk/" + strconv.FormatInt(newId, 10) + baseName
+//	_, err := c.Object.Put(context.Background(), name, bytes.NewReader(b), nil)
+//	if err != nil {
+//		return "", "", err
+//	}
+//	filePath := CosUrl + "/" + name
+//	return filePath, baseName, nil
+//}

@@ -46,7 +46,7 @@ func NormalUpload(options FileUploadOptions) (string, error) {
 		return "", fmt.Errorf("上传文件失败: %v", err)
 	}
 
-	return fmt.Sprintf("https://%s.%s/%s", Config.BucketName, Config.Endpoint, options.ObjectKey), nil
+	return fmt.Sprintf("https://%s.%s/%s", config.BucketName, config.Endpoint, options.ObjectKey), nil
 }
 
 // 分片上传
@@ -56,8 +56,17 @@ func MultipartUpload(options FileUploadOptions) (string, error) {
 		return "", fmt.Errorf("获取Bucket失败")
 	}
 
+	// 设置上传选项
+	uploadOptions := []oss.Option{}
+	if options.ContentType != "" {
+		uploadOptions = append(uploadOptions, oss.ContentType(options.ContentType))
+	}
+	for k, v := range options.Metadata {
+		uploadOptions = append(uploadOptions, oss.Meta(k, v))
+	}
+
 	// 初始化分片上传
-	imur, err := bucket.InitiateMultipartUpload(options.ObjectKey)
+	imur, err := bucket.InitiateMultipartUpload(options.ObjectKey, uploadOptions...)
 	if err != nil {
 		return "", fmt.Errorf("初始化分片上传失败: %v", err)
 	}
@@ -103,13 +112,13 @@ func MultipartUpload(options FileUploadOptions) (string, error) {
 		parts = append(parts, part)
 	}
 
-	// 完成分片上传
-	_, err = bucket.CompleteMultipartUpload(imur, parts)
+	// 完成分片上传时添加选项
+	_, err = bucket.CompleteMultipartUpload(imur, parts, uploadOptions...)
 	if err != nil {
 		return "", fmt.Errorf("完成分片上传失败: %v", err)
 	}
 
-	return fmt.Sprintf("https://%s.%s/%s", Config.BucketName, Config.Endpoint, options.ObjectKey), nil
+	return fmt.Sprintf("https://%s.%s/%s", config.BucketName, config.Endpoint, options.ObjectKey), nil
 }
 
 // 断点续传上传
@@ -147,22 +156,27 @@ func ResumeUpload(options FileUploadOptions) (string, error) {
 	// 清理断点续传文件
 	os.Remove(checkpoint)
 
-	return fmt.Sprintf("https://%s.%s/%s", Config.BucketName, Config.Endpoint, options.ObjectKey), nil
+	return fmt.Sprintf("https://%s.%s/%s", config.BucketName, config.Endpoint, options.ObjectKey), nil
 }
 
 // 根据文件大小自动选择上传方式
 func UploadFile(options FileUploadOptions) (string, error) {
+	if options.FilePath == "" {
+		return "", fmt.Errorf("文件路径不能为空")
+	}
+
 	fileInfo, err := os.Stat(options.FilePath)
 	if err != nil {
 		return "", fmt.Errorf("获取文件信息失败: %v", err)
 	}
 
+	if fileInfo.Size() == 0 {
+		return "", fmt.Errorf("不能上传空文件")
+	}
+
 	// 根据文件大小选择上传方式
 	if fileInfo.Size() <= NormalUploadLimit {
-		// 小于20MB使用普通上传
 		return NormalUpload(options)
-	} else {
-		// 大于20MB使用断点续传
-		return ResumeUpload(options)
 	}
+	return ResumeUpload(options)
 }

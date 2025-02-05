@@ -1,6 +1,5 @@
 package logic
 
-//
 //type FileUploadLogic struct {
 //	logx.Logger
 //	ctx    context.Context
@@ -102,7 +101,6 @@ package logic
 //		Size: header.Size,
 //	}, nil
 //}
-
 //
 //// 文件上传
 //func CosUpload(fileHeader *multipart.FileHeader, newId int64, b []byte) (string, string, error) {

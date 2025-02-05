@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	"github.com/Masterminds/squirrel"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -39,10 +40,10 @@ func (m *defaultRepositoryPoolModel) InsertWithId(ctx context.Context, data *Rep
 	repositoryPoolHashKey := fmt.Sprintf("%s%v", cacheRepositoryPoolHashPrefix, data.Hash)
 	repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
 
-	// 使用 squirrel 构建插入查询
+	// 使用 squirrel 构建插入查询，添加 id 字段
 	query, args, err := squirrel.Insert(m.table).
-		Columns("identity", "hash", "ext", "size", "path", "name").
-		Values(data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name).
+		Columns("id", "identity", "hash", "ext", "size", "path", "name").
+		Values(data.Id, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name).
 		ToSql()
 	if err != nil {
 		return nil, err

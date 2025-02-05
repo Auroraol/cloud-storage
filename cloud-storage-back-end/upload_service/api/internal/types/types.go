@@ -36,7 +36,8 @@ type ChunkUploadResponse struct {
 }
 
 type FileUploadRequest struct {
-	Metadata string `form:"metadata,optional"`
+	// File     string `form:"file"`
+	// Metadata string `form:"metadata,optional"`
 }
 
 type FileUploadResponse struct {

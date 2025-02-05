@@ -3,6 +3,7 @@ package oss
 import (
 	"fmt"
 	"io"
+	"log"
 	"strings"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -15,10 +16,11 @@ func Client() *oss.Client {
 	if ossCli != nil {
 		return ossCli
 	}
+
 	var err error
-	ossCli, err = oss.New(Config.Endpoint, Config.AccessKeyId, Config.AccessKeySecret)
+	ossCli, err = oss.New(config.Endpoint, config.AccessKeyId, config.AccessKeySecret)
 	if err != nil {
-		fmt.Printf("创建OSS客户端失败: %v\n", err)
+		log.Printf("创建OSS客户端失败: %v\n", err)
 		return nil
 	}
 	return ossCli
@@ -28,7 +30,7 @@ func Client() *oss.Client {
 func Bucket() *oss.Bucket {
 	cli := Client()
 	if cli != nil {
-		bucket, err := cli.Bucket(Config.BucketName)
+		bucket, err := cli.Bucket(config.BucketName)
 		if err != nil {
 			fmt.Printf("获取Bucket失败: %v\n", err)
 			return nil
@@ -75,16 +77,21 @@ func GenFileMeta(metas map[string]string) []oss.Option {
 
 // 文件上传
 func Upload(inputStream io.Reader, path string, contentType string) (string, error) {
-	metadata := GenFileMeta(map[string]string{
-		"Content-Type": contentType,
-	})
+	bucket := Bucket()
+	if bucket == nil {
+		return "", fmt.Errorf("获取Bucket失败")
+	}
 
-	err := Bucket().PutObject(path, inputStream, metadata...)
+	metadata := []oss.Option{
+		oss.ContentType(contentType),
+	}
+
+	err := bucket.PutObject(path, inputStream, metadata...)
 	if err != nil {
 		return "", fmt.Errorf("上传文件失败: %v", err)
 	}
 
-	return fmt.Sprintf("https://%s.%s/%s", Config.BucketName, Config.Endpoint, path), nil
+	return fmt.Sprintf("https://%s.%s/%s", config.BucketName, config.Endpoint, path), nil
 }
 
 // 删除文件
@@ -93,13 +100,22 @@ func Upload(inputStream io.Reader, path string, contentType string) (string, err
 // @return 是否删除成功
 func Delete(fullPath string) (bool, error) {
 	if strings.TrimSpace(fullPath) == "" {
-		return false, nil
+		return false, fmt.Errorf("文件路径不能为空")
 	}
 
-	err := Bucket().DeleteObject(getFileNameFromFullPath(fullPath))
+	bucket := Bucket()
+	if bucket == nil {
+		return false, fmt.Errorf("获取Bucket失败")
+	}
+
+	fileName := getFileNameFromFullPath(fullPath)
+	if fileName == "" {
+		return false, fmt.Errorf("无效的文件路径")
+	}
+
+	err := bucket.DeleteObject(fileName)
 	if err != nil {
-		fmt.Printf("删除文件失败: %v\n", err)
-		return false, err
+		return false, fmt.Errorf("删除文件失败: %v", err)
 	}
 	return true, nil
 }
