@@ -1,26 +1,80 @@
 syntax = "v1"
 
 info (
-	title:   ""
-	desc:    ""
-	author:  "lfj"
-	email:   "1665834268@qq.com"
+	title: "文件上传服务"
+	desc:  "提供文件上传相关的API接口"
+	author: "lfj"
+	email:  "1665834268@qq.com"
 )
 
-type FileUploadRequest {
-	//传递form值
-	//file file
-}
+type (
+	// 普通文件上传请求
+	FileUploadRequest {
+		// 文件表单字段名为 "file"
+		// 可选的元数据，以JSON字符串形式传递
+		Metadata string `form:"metadata,optional"`
+	}
 
-type FileUploadResponse {
-	Id string `json:"id"`
-}
+	// 普通文件上传响应
+	FileUploadResponse {
+		URL string `json:"url"`         // 文件访问URL
+		Key string `json:"key"`         // 文件在OSS中的键
+		Size int64 `json:"size"`        // 文件大小（字节）
+	}
 
-type FileUploadByChunkRequest {
-	//传递form值
-	//file file
-}
+	// 分片上传初始化请求
+	ChunkUploadInitRequest {
+		FileName string `form:"fileName"`        // 文件名
+		FileSize int64  `form:"fileSize"`        // 文件总大小
+		Metadata string `form:"metadata,optional"` // 可选的元数据
+	}
 
-type FileUploadByChunkResponse {
-	Id string `json:"id"`
-}
+	// 分片上传初始化响应
+	ChunkUploadInitResponse {
+		UploadId string `json:"uploadId"`      // 上传ID
+		Key      string `json:"key"`           // 文件在OSS中的键
+	}
+
+	// 分片上传请求
+	ChunkUploadRequest {
+		UploadId   string `form:"uploadId"`    // 上传ID
+		ChunkIndex int    `form:"chunkIndex"`  // 分片索引
+		Key        string `form:"key"`
+		// 文件分片数据，表单字段名为 "file"
+	}
+
+	// 分片上传响应
+	ChunkUploadResponse {
+		ETag string `json:"etag"`              // 分片的ETag
+	}
+
+	// 完成分片上传请求
+	ChunkUploadCompleteRequest {
+		UploadId string   `json:"uploadId"`    // 上传ID
+		Key      string   `json:"key"`         // 文件键
+		ETags    []string `json:"etags"`       // 所有分片的ETag列表
+	}
+
+	// 完成分片上传响应
+	ChunkUploadCompleteResponse {
+		URL  string `json:"url"`               // 文件访问URL
+		Size int64  `json:"size"`              // 文件大小（字节）
+	}
+
+	ListPartsRequest {
+		UploadId string `form:"uploadId"` // 上传ID
+		Key string `form:"key"`           // 文件键
+	}
+
+	PartInfo {
+		PartNumber int `json:"partNumber"` // 分片编号
+		Size int64 `json:"size"`           // 分片大小
+		ETag string `json:"etag"`          // 分片ETag
+	}
+
+	ListPartsResponse {
+		Parts []PartInfo `json:"parts"`      // 已上传的分片信息列表
+		TotalParts int `json:"totalParts"`   // 总分片数
+		FileSize int64 `json:"fileSize"`     // 文件总大小
+	}
+)

@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	Chunk "github.com/Auroraol/cloud-storage/upload_service/api/internal/handler/Chunk"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -15,16 +16,41 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 文件分片上传
-				Method:  http.MethodPost,
-				Path:    "/file/chunk/upload",
-				Handler: FileUploadByChunkHandler(serverCtx),
-			},
-			{
-				// 文件上传
+				// 普通文件上传
 				Method:  http.MethodPost,
 				Path:    "/file/upload",
 				Handler: FileUploadHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/upload_service/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 完成分片上传
+				Method:  http.MethodPost,
+				Path:    "/file/multipart/complete",
+				Handler: Chunk.CompleteMultipartUploadHandler(serverCtx),
+			},
+			{
+				// 初始化分片上传
+				Method:  http.MethodPost,
+				Path:    "/file/multipart/init",
+				Handler: Chunk.InitiateMultipartUploadHandler(serverCtx),
+			},
+			{
+				// 查询分片上传状态
+				Method:  http.MethodGet,
+				Path:    "/file/multipart/status",
+				Handler: Chunk.ListUploadedPartsHandler(serverCtx),
+			},
+			{
+				// 上传分片
+				Method:  http.MethodPost,
+				Path:    "/file/multipart/upload",
+				Handler: Chunk.UploadPartHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

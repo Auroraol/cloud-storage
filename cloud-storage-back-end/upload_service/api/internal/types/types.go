@@ -3,16 +3,61 @@
 
 package types
 
-type FileUploadByChunkRequest struct {
+type ChunkUploadCompleteRequest struct {
+	UploadId string   `json:"uploadId"` // 上传ID
+	Key      string   `json:"key"`      // 文件键
+	ETags    []string `json:"etags"`    // 所有分片的ETag列表
 }
 
-type FileUploadByChunkResponse struct {
-	Id string `json:"id"`
+type ChunkUploadCompleteResponse struct {
+	URL  string `json:"url"`  // 文件访问URL
+	Size int64  `json:"size"` // 文件大小（字节）
+}
+
+type ChunkUploadInitRequest struct {
+	FileName string `form:"fileName"`          // 文件名
+	FileSize int64  `form:"fileSize"`          // 文件总大小
+	Metadata string `form:"metadata,optional"` // 可选的元数据
+}
+
+type ChunkUploadInitResponse struct {
+	UploadId string `json:"uploadId"` // 上传ID
+	Key      string `json:"key"`      // 文件在OSS中的键
+}
+
+type ChunkUploadRequest struct {
+	UploadId   string `form:"uploadId"`   // 上传ID
+	ChunkIndex int    `form:"chunkIndex"` // 分片索引
+	Key        string `form:"key"`
+}
+
+type ChunkUploadResponse struct {
+	ETag string `json:"etag"` // 分片的ETag
 }
 
 type FileUploadRequest struct {
+	Metadata string `form:"metadata,optional"`
 }
 
 type FileUploadResponse struct {
-	Id string `json:"id"`
+	URL  string `json:"url"`  // 文件访问URL
+	Key  string `json:"key"`  // 文件在OSS中的键
+	Size int64  `json:"size"` // 文件大小（字节）
+}
+
+type ListPartsRequest struct {
+	UploadId string `form:"uploadId"` // 上传ID
+	Key      string `form:"key"`      // 文件键
+}
+
+type ListPartsResponse struct {
+	Parts      []PartInfo `json:"parts"`      // 已上传的分片信息列表
+	TotalParts int        `json:"totalParts"` // 总分片数
+	FileSize   int64      `json:"fileSize"`   // 文件总大小
+}
+
+type PartInfo struct {
+	PartNumber int    `json:"partNumber"` // 分片编号
+	Size       int64  `json:"size"`       // 分片大小
+	ETag       string `json:"etag"`       // 分片ETag
 }

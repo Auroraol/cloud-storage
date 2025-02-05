@@ -84,7 +84,7 @@ func Upload(inputStream io.Reader, path string, contentType string) (string, err
 		return "", fmt.Errorf("上传文件失败: %v", err)
 	}
 
-	return fmt.Sprintf("https://%s.%s/%s", OSSBucket, OSSEndpoint, path), nil
+	return fmt.Sprintf("https://%s.%s/%s", Config.BucketName, Config.Endpoint, path), nil
 }
 
 // 删除文件

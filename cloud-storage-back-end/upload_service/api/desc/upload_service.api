@@ -2,7 +2,7 @@ syntax = "v1"
 
 info (
 	title:   "上传服务"
-	desc:    "上传服务"
+	desc:    "提供文件上传相关的API接口"
 	author:  "lfj"
 	email:   "1665834268@qq.com"
 	version: "v1"
@@ -13,29 +13,6 @@ import (
 )
 
 //============================> uploadservice v1 <============================
-////no need login
-//@server (
-// prefix: user_center/v1
-// group:  oauth
-//)
-//service user_center {
-// @doc "账号密码注册"
-// @handler register
-// post /oauth/register (AccountRegisterReq) returns (AccountRegisterResp)
-//
-// @doc "账号密码登录"
-// @handler login
-// post /oauth/login (AccountLoginReq) returns (AccountLoginResp)
-//
-// @doc "手机号登陆/注册"
-// @handler loginByMobileCode
-// post /oauth/login/mobile (LoginReq) returns (LoginResp)
-//
-// @doc "验证码发送"
-// @handler codeSend
-// post /oauth/send (CodeSendRequest) returns (CodeSendResponse)
-////github 登录
-//}
 //need login
 @server (
 	prefix: upload_service/v1
@@ -43,16 +20,47 @@ import (
 )
 service upload_service {
 	@doc (
-		summary: "文件上传"
+		summary:     "普通文件上传"
+		description: "用于上传小文件（<20MB）"
 	)
 	@handler FileUpload
 	post /file/upload (FileUploadRequest) returns (FileUploadResponse)
+}
+
+//need login
+@server (
+	prefix: upload_service/v1
+	group:  Chunk
+	jwt:    JwtAuth
+)
+service upload_service {
+	@doc (
+		summary:     "初始化分片上传"
+		description: "初始化一个分片上传任务，获取uploadId"
+	)
+	@handler InitiateMultipartUpload
+	post /file/multipart/init (ChunkUploadInitRequest) returns (ChunkUploadInitResponse)
 
 	@doc (
-		summary: "文件分片上传"
+		summary:     "上传分片"
+		description: "上传单个分片数据"
 	)
-	@handler FileUploadByChunk
-	post /file/chunk/upload (FileUploadByChunkRequest) returns (FileUploadByChunkResponse)
+	@handler UploadPart
+	post /file/multipart/upload (ChunkUploadRequest) returns (ChunkUploadResponse)
+
+	@doc (
+		summary:     "完成分片上传"
+		description: "完成分片上传任务，合并所有分片"
+	)
+	@handler CompleteMultipartUpload
+	post /file/multipart/complete (ChunkUploadCompleteRequest) returns (ChunkUploadCompleteResponse)
+
+	@doc (
+		summary:     "查询分片上传状态"
+		description: "查询已上传的分片状态，用于断点续传"
+	)
+	@handler ListUploadedParts
+	get /file/multipart/status (ListPartsRequest) returns (ListPartsResponse)
 }
 
 // goctl api go --api *.api --dir ./..
