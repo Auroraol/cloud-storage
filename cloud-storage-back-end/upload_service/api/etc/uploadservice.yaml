@@ -24,4 +24,6 @@ UserCenterRpcConf:
     Hosts:
       - 127.0.0.1:2379
     Key: user_center.rpc
+  Timeout: 30000  # 设置30秒超时
+  NonBlock: true  # 启用非阻塞调用
 

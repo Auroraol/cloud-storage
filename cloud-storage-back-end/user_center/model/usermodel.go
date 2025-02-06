@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 	"strconv"
 	"strings"
 
@@ -27,6 +28,7 @@ type (
 		UpdatePassword(ctx context.Context, id int64, password string) (err error)
 		UpdateInfo(ctx context.Context, id int64, nickname string, brief string, birthday string, gender int64, email string, mobile string) (err error)
 		FindOneByPassword(ctx context.Context, id int64, password string) (*User, error)
+		FindVolume(ctx context.Context, id int64) (*pb.FindVolumeResp, error)
 	}
 
 	customUserModel struct {
@@ -154,4 +156,18 @@ func (m *defaultUserModel) UpdatePassword(ctx context.Context, id int64, passwor
 		return err
 	}
 	return nil
+}
+
+func (m *defaultUserModel) FindVolume(ctx context.Context, id int64) (*pb.FindVolumeResp, error) {
+	query := fmt.Sprintf("SELECT `total_volume`, `now_volume` FROM %s WHERE `id` = ?", m.table)
+	var resp pb.FindVolumeResp
+	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
+	switch {
+	case err == nil:
+		return &resp, nil
+	case errors.Is(err, sqlx.ErrNotFound):
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }

@@ -39,21 +39,10 @@ func NewRepositoryPoolModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.
 func (m *defaultRepositoryPoolModel) InsertWithId(ctx context.Context, data *RepositoryPool) (sql.Result, error) {
 	repositoryPoolHashKey := fmt.Sprintf("%s%v", cacheRepositoryPoolHashPrefix, data.Hash)
 	repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
-
-	// 使用 squirrel 构建插入查询，添加 id 字段
-	query, args, err := squirrel.Insert(m.table).
-		Columns("id", "identity", "hash", "ext", "size", "path", "name").
-		Values(data.Id, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name).
-		ToSql()
-	if err != nil {
-		return nil, err
-	}
-
-	// 执行插入操作并更新缓存
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		return conn.ExecCtx(ctx, query, args...)
-	}, repositoryPoolHashKey, repositoryPoolIdKey)
-
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, "`id`,`identity`,`hash`,`ext`,`size`,`path`,`name`")
+		return conn.ExecCtx(ctx, query, data.Id, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name)
+	}, repositoryPoolIdKey, repositoryPoolHashKey)
 	return ret, err
 }
 

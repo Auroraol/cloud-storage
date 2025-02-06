@@ -24,13 +24,13 @@ func NewFindVolumeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Fi
 }
 
 func (l *FindVolumeByIdLogic) FindVolumeById(in *pb.FindVolumeReq) (*pb.FindVolumeResp, error) {
-	userInfo, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
+	userVolume, err := l.svcCtx.UserModel.FindVolume(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
 	}
 
 	return &pb.FindVolumeResp{
-		NowVolume:   userInfo.NowVolume,
-		TotalVolume: userInfo.TotalVolume,
+		NowVolume:   userVolume.NowVolume,
+		TotalVolume: userVolume.TotalVolume,
 	}, nil
 }

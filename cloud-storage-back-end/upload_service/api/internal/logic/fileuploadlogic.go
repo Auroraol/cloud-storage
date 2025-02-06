@@ -77,10 +77,22 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	if userId == 0 {
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
-	volumeInfo, err := l.svcCtx.UserCenterRpc.FindVolumeById(l.ctx, &pb.FindVolumeReq{Id: userId})
-	if err != nil {
-		return nil, err
+
+	// 添加重试机制
+	var volumeInfo *pb.FindVolumeResp
+	maxRetries := 3
+	for i := 0; i < maxRetries; i++ {
+		volumeInfo, err = l.svcCtx.UserCenterRpc.FindVolumeById(l.ctx, &pb.FindVolumeReq{Id: userId})
+		if err == nil {
+			break
+		}
+		if i < maxRetries-1 {
+			time.Sleep(time.Second * time.Duration(i+1))
+			continue
+		}
+		return nil, response.NewErrMsg(fmt.Sprintf("调用用户中心服务RPC失败, err: %v", err))
 	}
+
 	if volumeInfo.NowVolume+fileHeader.Size > volumeInfo.TotalVolume {
 		return nil, response.NewErrCode(response.FILE_TOO_LARGE_ERROR)
 	}
@@ -88,25 +100,25 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	// 保存文件到临时目录
 	tempFilePath, err := utils.SaveUploadedFile(fileHeader)
 	if err != nil {
-		return nil, fmt.Errorf("保存临时文件失败: %v", err)
+		return nil, response.NewErrMsg(fmt.Sprintf("保存临时文件失败, err: %v", err))
 	}
 	defer os.Remove(tempFilePath) // 确保清理临时文件
 
 	// 计算文件MD5
 	md5Str, err := calculateFileMD5(tempFilePath)
 	if err != nil {
-		return nil, fmt.Errorf("计算文件MD5失败: %v", err)
+		return nil, response.NewErrMsg(fmt.Sprintf("计算文件MD5失败: %v", err))
 	}
 
 	// 检查文件是否已存在（秒传）
 	count, err := l.svcCtx.RepositoryPoolModel.CountByHash(l.ctx, md5Str)
 	if err != nil {
-		return nil, err
+		return nil, response.NewErrMsg(fmt.Sprintf("查询文件MD5失败, err: %v", err))
 	}
 	if count > 0 {
 		repositoryInfo, err := l.svcCtx.RepositoryPoolModel.FindRepositoryPoolByHash(l.ctx, md5Str)
 		if err != nil {
-			return nil, err
+			return nil, response.NewErrMsg(fmt.Sprintf("查询文件MD5失败, err: %v", err))
 		}
 		return &types.FileUploadResponse{
 			URL:  repositoryInfo.Path,
@@ -131,7 +143,8 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	// 上传文件
 	fileUrl, err := oss.UploadFile(uploadOptions)
 	if err != nil {
-		return nil, fmt.Errorf("文件上传失败: %v", err)
+		return nil, response.NewErrMsg(fmt.Sprintf("文件上传失败: %v", err))
+
 	}
 
 	// 保存文件信息到数据库
@@ -145,7 +158,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		Path:     fileUrl,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("保存文件信息失败: %v", err)
+		return nil, response.NewErrMsg(fmt.Sprintf("保存文件信息失败: %v", err))
 	}
 
 	// 更新用户存储容量
@@ -154,7 +167,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		Size: fileHeader.Size,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("更新用户存储容量失败: %v", err)
+		return nil, response.NewErrMsg(fmt.Sprintf("更新用户存储容量失败: %v", err))
 	}
 
 	return &types.FileUploadResponse{
