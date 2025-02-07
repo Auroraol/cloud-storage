@@ -10,7 +10,8 @@ Etcd:
 # 数据库
 Options:
   DBType: mysql
-  Dsn: root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
+  Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
+
 # 缓存
 CacheRedis:
   - Host: "101.37.165.220:6379"

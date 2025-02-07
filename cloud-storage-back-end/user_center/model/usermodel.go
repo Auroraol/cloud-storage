@@ -159,7 +159,7 @@ func (m *defaultUserModel) UpdatePassword(ctx context.Context, id int64, passwor
 }
 
 func (m *defaultUserModel) FindVolume(ctx context.Context, id int64) (*pb.FindVolumeResp, error) {
-	query := fmt.Sprintf("SELECT `total_volume`, `now_volume` FROM %s WHERE `id` = ?", m.table)
+	query := fmt.Sprintf("SELECT `now_volume`, `total_volume` FROM %s WHERE `id` = ?", m.table)
 	var resp pb.FindVolumeResp
 	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
 	switch {

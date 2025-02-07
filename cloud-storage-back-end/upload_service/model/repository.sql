@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `repository_pool`
 (
     `id`         bigint unsigned NOT NULL AUTO_INCREMENT,
-    `identity`   varchar(32) NOT NULL DEFAULT '',
+    `identity`   varchar(255) NOT NULL DEFAULT '',
     `hash`       varchar(32) NOT NULL DEFAULT '' COMMENT '文件的唯一标识',
     `ext`        varchar(30) NOT NULL DEFAULT '' COMMENT '文件扩展名',
     `size`       int(11) NOT NULL DEFAULT '0' COMMENT '文件大小',

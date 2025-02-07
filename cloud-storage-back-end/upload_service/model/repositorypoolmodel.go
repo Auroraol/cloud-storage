@@ -40,10 +40,18 @@ func (m *defaultRepositoryPoolModel) InsertWithId(ctx context.Context, data *Rep
 	repositoryPoolHashKey := fmt.Sprintf("%s%v", cacheRepositoryPoolHashPrefix, data.Hash)
 	repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, "`id`,`identity`,`hash`,`ext`,`size`,`path`,`name`")
-		return conn.ExecCtx(ctx, query, data.Id, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, "`identity`,`hash`,`ext`,`size`,`path`,`name`")
+		return conn.ExecCtx(ctx, query, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name)
 	}, repositoryPoolIdKey, repositoryPoolHashKey)
-	return ret, err
+
+	switch {
+	case err == nil:
+		return ret, nil
+	case errors.Is(err, sqlc.ErrNotFound):
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultRepositoryPoolModel) CountByHash(ctx context.Context, hash string) (int64, error) {
@@ -54,10 +62,10 @@ func (m *defaultRepositoryPoolModel) CountByHash(ctx context.Context, hash strin
 	}
 	var resp int64
 	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return 0, ErrNotFound
 	default:
 		return 0, err

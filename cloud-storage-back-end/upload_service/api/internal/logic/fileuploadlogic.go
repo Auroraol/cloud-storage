@@ -4,14 +4,6 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"io"
-	"mime/multipart"
-	"net/http"
-	"os"
-	"path"
-	"strconv"
-	"time"
-
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/store/oss"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -22,6 +14,13 @@ import (
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path"
+	"strconv"
+	"time"
 )
 
 type FileUploadLogic struct {
@@ -149,7 +148,6 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 
 	// 保存文件信息到数据库
 	_, err = l.svcCtx.RepositoryPoolModel.InsertWithId(l.ctx, &model.RepositoryPool{
-		Id:       10,
 		Identity: objectKey,
 		Hash:     md5Str,
 		Name:     fileHeader.Filename,
@@ -175,4 +173,32 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		Key:  objectKey,
 		Size: fileHeader.Size,
 	}, nil
+}
+
+func (l *FileUploadLogic) FileUpload_test(req *types.FileUploadRequest, r *http.Request) (resp *types.FileUploadResponse, err error) {
+	// 保存文件信息到数据库
+	_, err = l.svcCtx.RepositoryPoolModel.InsertWithId(l.ctx, &model.RepositoryPool{
+		Identity: "sss",
+		Hash:     "md5Str",
+		Name:     "fileHeader.Filename",
+		Ext:      "path.Ext(fileHeader.Filename)",
+		Size:     1,
+		Path:     "fileUrl",
+	})
+	if err != nil {
+		fmt.Printf("保存文件信息失败: %v", err)
+	}
+
+	hash, err := l.svcCtx.RepositoryPoolModel.CountByHash(l.ctx, "md5Str")
+	if err != nil {
+		fmt.Printf("查询文件MD5失败, err: %v", err)
+	}
+	fmt.Printf("hash--->", hash)
+
+	byHash, err := l.svcCtx.RepositoryPoolModel.FindRepositoryPoolByHash(l.ctx, "md5Str")
+	if err != nil {
+		fmt.Printf("查询文件MD5失败, err: %v", err)
+	}
+	fmt.Printf("byHash--->", byHash)
+	return nil, err
 }

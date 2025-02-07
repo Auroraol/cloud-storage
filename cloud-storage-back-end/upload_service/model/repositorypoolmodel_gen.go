@@ -121,14 +121,7 @@ func (m *defaultRepositoryPoolModel) Insert(ctx context.Context, data *Repositor
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, repositoryPoolRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name)
 	}, repositoryPoolHashKey, repositoryPoolIdKey)
-	switch err {
-	case nil:
-		return ret, nil
-	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
-	default:
-		return nil, err
-	}
+	return ret, err
 }
 
 func (m *defaultRepositoryPoolModel) Update(ctx context.Context, newData *RepositoryPool) error {
