@@ -1,8 +1,9 @@
 package Chunk
 
 import (
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
 	"net/http"
+
+	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
@@ -15,6 +16,19 @@ func CompleteMultipartUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.ChunkUploadCompleteRequest
 		if err := httpx.Parse(r, &req); err != nil {
+			// 参数验证
+			if req.UploadId == "" {
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "uploadId不能为空"))
+				return
+			}
+			if req.Key == "" {
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "key不能为空"))
+				return
+			}
+			if len(req.ETags) == 0 {
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "分片ETag列表不能为空"))
+				return
+			}
 			response.ParamErrorResult(r, w, err)
 			return
 		}

@@ -98,7 +98,7 @@
     <div class="upload-progress">
       <div class="file-info">
         <span class="filename">当前上传文件:</span>
-        <span class="filesize">{{ currentFile?.size ? formatFileSize(currentFile.size) : "" }}</span>
+        <span class="filesize">{{ currentFile ? formatFileSize(currentFile.size) : '' }}</span>
       </div>
       <div class="status-text">
         {{ statusText }}
@@ -113,7 +113,7 @@
           {{ item.filename }}
         </div>
         <div class="file-status">
-          {{ item.status === "success" ? "上传成功" : "上传失败" }}
+          {{ item.status === 'success' ? '上传成功' : '上传失败' }}
         </div>
       </div>
     </div>
@@ -122,52 +122,24 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue"
-import type { UploadRequestOptions, UploadRawFile } from "element-plus"
+import type { UploadRequestOptions } from "element-plus"
 import { ElMessage } from "element-plus"
 import { VueGoodTable } from "vue-good-table-next"
 import Icon from "@/components/FileIcon/Icon.vue"
-
+import { FolderOpened } from "@element-plus/icons-vue"
 import { uploadFileApi } from "@/api/file" // 导入上传API
-import {
-  type FileUploadRequestData,
-  type ChunkUploadRequestData,
-  type FileUploadResponseData,
-  type ChunkUploadCompleteResponseData
-} from "@/api/file/types/upload"
-
-import { isNotEmpty } from "@/utils/isEmpty"
 
 // 定义文件接受类型
 const fileAccept = ".jpg,.jpeg,.png,.gif,.zip,.doc,.docx,.pdf"
 
-// 定义上传历史记录项的接口
-interface UploadHistoryItem {
-  filename: string
-  size: number
-  status: "success" | "error"
-  url?: string
-  key?: string
-}
-
-// 定义当前文件的类型
-const currentFile = ref<UploadRawFile | null>(null)
-
-// 定义上传历史数组的类型
-const uploadHistory = ref<UploadHistoryItem[]>([])
-
 // 上传状态
-const uploadStatus = ref("")
+const uploadStatus = ref('')
 const uploadProgress = ref(0)
-const statusText = ref("")
+const currentFile = ref(null)
+const statusText = ref('')
 
-// 定义分片大小为 5MB
-const CHUNK_SIZE = 5 * 1024 * 1024
-
-// 添加分片上传相关的状态
-const chunks = ref<Blob[]>([])
-const currentChunkIndex = ref(0)
-const uploadId = ref("")
-const uploadedETags = ref<string[]>([])
+// 上传历史记录
+const uploadHistory = ref([])
 
 // 格式化文件大小
 const formatFileSize = (size: number): string => {
@@ -364,156 +336,71 @@ const formatColumnValue = (props) => {
 
 // 处理文件上传
 const handleFileUpload = async (options: UploadRequestOptions) => {
-  const { file } = options
   try {
-    if (!file) {
-      throw new Error("No file selected")
-    }
-
-    currentFile.value = file as UploadRawFile
-    uploadStatus.value = "uploading"
+    const { file } = options
+    currentFile.value = file
+    uploadStatus.value = 'uploading'
     uploadProgress.value = 0
-    statusText.value = "准备上传..."
+    statusText.value = '准备上传...'
 
-    // 根据文件大小选择上传方式
-    if (file.size > 20 * 1024 * 1024) {
-      await handleChunkUpload(file)
-    } else {
-      await handleNormalUpload(file)
-    }
-  } catch (err) {
-    handleUploadError(err, file)
-  }
-}
-
-// 处理普通上传
-const handleNormalUpload = async (file: File) => {
-  const fileUploadRequestData: FileUploadRequestData = {
-    file: file,
-    metadata: JSON.stringify({
+    // 创建 FormData
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('metadata', JSON.stringify({
       filename: file.name,
       type: file.type
-    })
-  }
+    }))
 
-  const response = await uploadFileApi.upload(fileUploadRequestData, {
-    onUploadProgress: (progressEvent) => {
-      if (progressEvent.total) {
+    // 调用上传API
+    const response = await uploadFileApi(formData, {
+      onUploadProgress: (progressEvent) => {
         const progress = (progressEvent.loaded / progressEvent.total) * 100
         uploadProgress.value = Math.round(progress)
-        statusText.value = "正在上传..."
+        statusText.value = '正在上传...'
       }
-    }
-  })
+    })
 
-  handleUploadSuccess(response.data, file)
-}
+    // 处理上传成功
+    uploadStatus.value = 'success'
+    uploadProgress.value = 100
+    statusText.value = '上传成功'
 
-// 处理分片上传
-const handleChunkUpload = async (file: File) => {
-  // 初始化分片上传
-  const initResponse = await uploadFileApi.initiateMultipart({
-    file_name: file.name,
-    file_size: file.size,
-    metadata: JSON.stringify({ type: file.type })
-  })
+    // 添加到上传历史
+    uploadHistory.value.unshift({
+      filename: file.name,
+      size: file.size,
+      status: 'success',
+      url: response.data.url,
+      key: response.data.key
+    })
 
-  const { upload_id, key } = initResponse.data
-  uploadId.value = upload_id
+    // 刷新文件列表
+    handleRefresh()
 
-  // 将文件分片
-  const chunkCount = Math.ceil(file.size / CHUNK_SIZE)
-  chunks.value = []
-  uploadedETags.value = new Array(chunkCount)
+    ElMessage.success('文件上传成功')
 
-  for (let i = 0; i < chunkCount; i++) {
-    const start = i * CHUNK_SIZE
-    const end = Math.min(start + CHUNK_SIZE, file.size)
-    chunks.value.push(file.slice(start, end))
+    // 重置上传状态
+    setTimeout(() => {
+      currentFile.value = null
+      uploadProgress.value = 0
+      uploadStatus.value = ''
+      statusText.value = ''
+    }, 2000)
+
+  } catch (err: unknown) {
+    // 处理上传错误
+    uploadStatus.value = 'error'
+    statusText.value = '上传失败'
+
+    uploadHistory.value.unshift({
+      filename: file.name,
+      size: file.size,
+      status: 'error'
+    })
+
+    console.error("Upload error:", err)
+    ElMessage.error('文件上传失败')
   }
-
-  // 上传所有分片
-  for (let i = 0; i < chunks.value.length; i++) {
-    currentChunkIndex.value = i
-    const chunkUploadRequestData: ChunkUploadRequestData = {
-      upload_id: uploadId.value,
-      chunk_index: i + 1,
-      key: key,
-      file: chunks.value[i]
-    }
-
-    const chunkResponse = await uploadFileApi.uploadPart(chunkUploadRequestData)
-    if (isNotEmpty(chunkResponse.data)) {
-      uploadedETags.value[i] = chunkResponse.data.etag
-    }
-
-    // 更新进度
-    const progress = ((i + 1) / chunks.value.length) * 100
-    uploadProgress.value = Math.round(progress)
-    statusText.value = `正在上传第 ${i + 1}/${chunks.value.length} 个分片`
-  }
-
-  // 完成分片上传
-  const completeResponse = await uploadFileApi.completeMultipart({
-    upload_id: uploadId.value,
-    key: key,
-    etags: uploadedETags.value
-  })
-
-  handleUploadSuccess(completeResponse.data, file)
-}
-
-// 修改处理上传成功的函数
-const handleUploadSuccess = (data: any, file: File) => {
-  uploadStatus.value = "success"
-  uploadProgress.value = 100
-  statusText.value = "上传成功"
-
-  const historyItem: UploadHistoryItem = {
-    filename: file.name,
-    size: file.size,
-    status: "success",
-    url: data.url,
-    key: "key" in data ? data.key : undefined
-  }
-  uploadHistory.value.unshift(historyItem)
-
-  handleRefresh()
-  ElMessage.success("文件上传成功")
-
-  resetUploadState()
-}
-
-// 处理上传错误
-const handleUploadError = (error: any, file: File) => {
-  uploadStatus.value = "error"
-  statusText.value = "上传失败"
-
-  const historyItem: UploadHistoryItem = {
-    filename: file.name,
-    size: file.size,
-    status: "error"
-  }
-  uploadHistory.value.unshift(historyItem)
-
-  console.error("Upload error:", error)
-  ElMessage.error("文件上传失败")
-
-  resetUploadState()
-}
-
-// 重置上传状态
-const resetUploadState = () => {
-  setTimeout(() => {
-    currentFile.value = null
-    uploadProgress.value = 0
-    uploadStatus.value = ""
-    statusText.value = ""
-    chunks.value = []
-    currentChunkIndex.value = 0
-    uploadId.value = ""
-    uploadedETags.value = []
-  }, 2000)
 }
 
 const currentPath = ref<string[]>([])
@@ -531,6 +418,14 @@ const handleDownload = () => {
 
 const handleRowClick = (params) => {
   console.log("Row clicked:", params)
+}
+
+const handleSelectionChange = (params) => {
+  console.log("Selection changed:", params)
+}
+
+const handleBatchDownload = () => {
+  // 处理批量下载
 }
 
 const handleBatchDelete = () => {

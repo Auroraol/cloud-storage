@@ -109,7 +109,10 @@
         uploadedETags: [],
         // 断点续传相关
         pauseUpload: false,
-        uploadController: null
+        uploadController: null,
+        // 分片状态
+        uploadedParts: [],
+        totalUploadedSize: 0
       }
     },
   
@@ -177,57 +180,90 @@
         }
       },
   
-      // 分片上传
-      async startChunkUpload(file) {
+      // 查询分片上传状态
+      async checkUploadStatus() {
         try {
-          // 1. 初始化分片上传
-          const initResponse = await axios.post('/upload_service/v1/file/multipart/init', {
-            fileName: file.name,
-            fileSize: file.size,
-            metadata: JSON.stringify({
-              type: file.type
-            })
+          const response = await axios.get('/upload_service/v1/file/multipart/status', {
+            params: {
+              key: this.currentKey,
+              uploadId: this.uploadId
+            }
           })
-  
-          this.uploadId = initResponse.data.uploadId
-          const key = initResponse.data.key
-  
-          // 2. 准备分片
-          const chunkCount = Math.ceil(file.size / this.chunkSize)
-          this.chunks = Array.from({ length: chunkCount }, (_, index) => {
-            const start = index * this.chunkSize
-            const end = Math.min(file.size, start + this.chunkSize)
-            return file.slice(start, end)
+          
+          this.uploadedParts = response.data.parts
+          this.totalUploadedSize = response.data.fileSize
+          
+          // 更新已上传的分片信息
+          this.uploadedParts.forEach(part => {
+            if (!this.uploadedETags[part.partNumber - 1]) {
+              this.uploadedETags[part.partNumber - 1] = part.etag
+            }
           })
+          
+          // 更新进度
+          if (this.currentFile) {
+            const progress = (this.totalUploadedSize / this.currentFile.size) * 100
+            this.uploadProgress = Math.round(progress)
+            this.statusText = `已上传 ${this.formatSize(this.totalUploadedSize)}/${this.formatSize(this.currentFile.size)}`
+          }
+          
+          return response.data
+        } catch (error) {
+          console.error('获取上传状态失败:', error)
+          ElMessage.error('获取上传状态失败')
+          return null
+        }
+      },
   
-          // 3. 上传分片
-          this.uploadedETags = []
-          for (let i = 0; i < this.chunks.length && !this.pauseUpload; i++) {
+      // 恢复上传
+      async resumeUpload() {
+        try {
+          // 先获取已上传的分片状态
+          const status = await this.checkUploadStatus()
+          if (!status) return
+          
+          this.uploadStatus = 'uploading'
+          this.pauseUpload = false
+          
+          // 从上次中断的地方继续上传
+          const startIndex = this.uploadedETags.findIndex(etag => !etag)
+          if (startIndex === -1) {
+            // 所有分片都已上传，直接完成
+            await this.completeMultipartUpload()
+            return
+          }
+          
+          // 继续上传剩余分片
+          for (let i = startIndex; i < this.chunks.length && !this.pauseUpload; i++) {
             this.currentChunkIndex = i
             const formData = new FormData()
             formData.append('file', this.chunks[i])
             formData.append('uploadId', this.uploadId)
-            formData.append('key', key)
+            formData.append('key', this.currentKey)
             formData.append('chunkIndex', i + 1)
-  
+            
             const response = await axios.post('/upload_service/v1/file/multipart/upload', formData)
-            this.uploadedETags.push(response.data.etag)
+            this.uploadedETags[i] = response.data.etag
             this.updateChunkProgress(i)
           }
-  
-          if (this.pauseUpload) {
-            this.uploadStatus = 'paused'
-            this.statusText = '上传已暂停'
-            return
+          
+          if (!this.pauseUpload) {
+            await this.completeMultipartUpload()
           }
+        } catch (error) {
+          this.handleUploadError(error)
+        }
+      },
   
-          // 4. 完成上传
+      // 完成分片上传
+      async completeMultipartUpload() {
+        try {
           const completeResponse = await axios.post('/upload_service/v1/file/multipart/complete', {
             uploadId: this.uploadId,
-            key: key,
+            key: this.currentKey,
             etags: this.uploadedETags
           })
-  
+          
           this.handleUploadSuccess(completeResponse.data)
         } catch (error) {
           this.handleUploadError(error)
@@ -299,13 +335,6 @@
         this.pauseUpload = true
         this.uploadStatus = 'paused'
         this.statusText = '正在暂停...'
-      },
-  
-      // 继续上传
-      async resumeUpload() {
-        this.pauseUpload = false
-        this.uploadStatus = 'uploading'
-        await this.startChunkUpload(this.currentFile)
       },
   
       // 取消上传

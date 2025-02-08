@@ -30,17 +30,6 @@ func NewCompleteMultipartUploadLogic(ctx context.Context, svcCtx *svc.ServiceCon
 }
 
 func (l *CompleteMultipartUploadLogic) CompleteMultipartUpload(req *types.ChunkUploadCompleteRequest) (resp *types.ChunkUploadCompleteResponse, err error) {
-	// 参数验证
-	if req.UploadId == "" {
-		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "uploadId不能为空")
-	}
-	if req.Key == "" {
-		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "key不能为空")
-	}
-	if len(req.ETags) == 0 {
-		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "分片ETag列表不能为空")
-	}
-
 	// 获取OSS bucket
 	bucket := oss.Bucket()
 	if bucket == nil {

@@ -41,16 +41,27 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       warmup: {
         clientFiles: ["./src/layouts/**/*.vue"]
       },
-      //配置自定义代理规则，跨域  //这里通过封装axios.ts实现跨域
       proxy: {
-        [viteEnv.VITE_APP_BASE_API]: {
-          target: viteEnv.VITE_API_URL,
+        // 用户中心服务
+        [`${viteEnv.VITE_APP_BASE_API}/user_center`]: {
+          target: viteEnv.VITE_API_URL_1,
           changeOrigin: true,
-          ws: true, // 允许websocket代理
-          rewrite: (path) => {
-            const regex = new RegExp(`^${viteEnv.VITE_APP_BASE_API}`)
-            return path.replace(regex, "")
-          }
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^${viteEnv.VITE_APP_BASE_API}`), "") // 移除 BASE_API 前缀后，转发到用户中心服务
+        },
+        // 文件上传服务
+        [`${viteEnv.VITE_APP_BASE_API}/upload_service`]: {
+          target: viteEnv.VITE_API_URL_2,
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^${viteEnv.VITE_APP_BASE_API}`), "") // 移除 BASE_API 前缀后，转发到文件上传服务
+        },
+        // 文件下载服务
+        [`${viteEnv.VITE_APP_BASE_API}/download_service`]: {
+          target: viteEnv.VITE_API_URL_3,
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^${viteEnv.VITE_APP_BASE_API}`), "")
         }
       }
     },

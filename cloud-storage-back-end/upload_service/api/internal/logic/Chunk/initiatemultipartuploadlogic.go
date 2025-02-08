@@ -50,7 +50,7 @@ func (l *InitiateMultipartUploadLogic) InitiateMultipartUpload(req *types.ChunkU
 	if userId == 0 {
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
-	objectKey := fmt.Sprintf("users/%s/files/%s", userId, filepath.Base(req.FileName))
+	objectKey := fmt.Sprintf("users/%d/files/%s", userId, filepath.Base(req.FileName))
 
 	// 获取OSS bucket
 	bucket := oss.Bucket()

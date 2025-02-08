@@ -1,5 +1,17 @@
 import { request, post, get } from "@/utils/network/axios"
 import { ContentTypeEnum, RequestEnum } from "@/utils/network/httpEnum"
+import type {
+  FileUploadRequestData,
+  FileUploadResponseData,
+  ChunkUploadInitResponseData,
+  ChunkUploadInitRequestData,
+  ChunkUploadResponseData,
+  ChunkUploadRequestData,
+  ChunkUploadCompleteResponseData,
+  ChunkUploadCompleteRequestData,
+  ChunkUploadStatusRequestData,
+  ChunkUploadStatusResponseData
+} from "./types/upload"
 
 const prefix = import.meta.env.VITE_APP_BASE_API
 
@@ -11,24 +23,74 @@ export function loadDataListApi(params) {
   return get(`${prefix}/loadDataList/`, params, true)
 }
 
-/**
- * @description: 上传文件
- * @param {Object} formData
- * @param {Object} config
- */
-export function uploadFileApi(formData, config) {
-  return request(
-    `${prefix}/uploadFile`,
-    {
-      method: RequestEnum.POST,
-      headers: {
-        "Content-Type": ContentTypeEnum.FORM_DATA
+// 文件上传相关接口
+export const uploadFileApi = {
+  // 普通上传
+  upload(formData: FileUploadRequestData, config?: any) {
+    return request<FileUploadResponseData>(
+      `${prefix}/upload_service/v1/file/upload`,
+      {
+        method: RequestEnum.POST,
+        headers: {
+          "Content-Type": ContentTypeEnum.FORM_DATA
+        },
+        data: formData,
+        ...config
       },
-      data: formData,
-      ...config
-    },
-    true
-  )
+      true
+    )
+  },
+
+  // 初始化分片上传
+  initiateMultipart(data: ChunkUploadInitRequestData) {
+    return request<ChunkUploadInitResponseData>(
+      `${prefix}/upload_service/v1/file/multipart/init`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
+  // 上传分片
+  uploadPart(formData: ChunkUploadRequestData) {
+    return request<ChunkUploadResponseData>(
+      `${prefix}/upload_service/v1/file/multipart/upload`,
+      {
+        method: RequestEnum.POST,
+        headers: {
+          "Content-Type": ContentTypeEnum.FORM_DATA
+        },
+        data: formData
+      },
+      true
+    )
+  },
+
+  // 完成分片上传
+  completeMultipart(data: ChunkUploadCompleteRequestData) {
+    return request<ChunkUploadCompleteResponseData>(
+      `${prefix}/upload_service/v1/file/multipart/complete`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
+  // 查询分片上传状态
+  getUploadStatus(params: ChunkUploadStatusRequestData) {
+    return request<ChunkUploadStatusResponseData>(
+      `${prefix}/upload_service/v1/file/multipart/status`,
+      {
+        method: RequestEnum.GET,
+        params
+      },
+      true
+    )
+  }
 }
 
 /**

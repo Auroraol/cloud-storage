@@ -101,7 +101,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	if err != nil {
 		return nil, response.NewErrMsg(fmt.Sprintf("保存临时文件失败, err: %v", err))
 	}
-	defer os.Remove(tempFilePath) // 确保清理临时文件
+	defer utils.CleanupTempFile(tempFilePath) // 确保清理临时文件
 
 	// 计算文件MD5
 	md5Str, err := calculateFileMD5(tempFilePath)

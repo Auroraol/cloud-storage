@@ -1,10 +1,11 @@
 package Chunk
 
 import (
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
-	"github.com/zeromicro/go-zero/core/logx"
 	"mime/multipart"
 	"net/http"
+
+	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 
@@ -20,13 +21,16 @@ func UploadPartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		// 参数验证
 		if err := httpx.Parse(r, &req); err != nil {
 			if req.UploadId == "" {
-				logx.Errorf("uploadId不能为空: %v", err)
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "uploadId不能为空"))
+				return
 			}
 			if req.ChunkIndex <= 0 {
-				logx.Errorf("分片索引必须大于0: %v", err)
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "分片索引必须大于0"))
+				return
 			}
 			if req.Key == "" {
-				logx.Errorf("key不能为空: %v", err)
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "key不能为空"))
+				return
 			}
 			response.ParamErrorResult(r, w, err)
 			return

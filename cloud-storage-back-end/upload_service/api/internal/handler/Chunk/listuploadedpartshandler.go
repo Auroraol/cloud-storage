@@ -1,8 +1,9 @@
 package Chunk
 
 import (
-	"github.com/Auroraol/cloud-storage/common/response"
 	"net/http"
+
+	"github.com/Auroraol/cloud-storage/common/response"
 
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
@@ -15,7 +16,16 @@ func ListUploadedPartsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.ListPartsRequest
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			// 1. 参数验证
+			if req.UploadId == "" {
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "uploadId不能为空"))
+				return
+			}
+			if req.Key == "" {
+				response.ParamErrorResult(r, w, response.NewErrCodeMsg(response.SYSTEM_ERROR, "key不能为空"))
+				return
+			}
+			response.ParamErrorResult(r, w, err)
 			return
 		}
 
