@@ -38,6 +38,9 @@ func (l *UserFolderListLogic) UserFolderList(req *types.UserFolderListRequest) (
 	}
 	newList := make([]*types.UserFolder, 0)
 	for _, userRepository := range allUserRepository {
+		if userRepository.RepositoryId != 0 {
+			continue
+		}
 		newList = append(newList, &types.UserFolder{
 			Id:   int64(userRepository.Id),
 			Name: userRepository.Name,

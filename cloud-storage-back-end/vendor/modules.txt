@@ -290,6 +290,7 @@ github.com/redis/go-redis/v9/internal/rand
 github.com/redis/go-redis/v9/internal/util
 # github.com/satori/go.uuid v1.2.0
 ## explicit
+github.com/satori/go.uuid
 # github.com/segmentio/asm v1.2.0
 ## explicit; go 1.18
 github.com/segmentio/asm/bswap

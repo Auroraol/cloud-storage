@@ -8,7 +8,7 @@ type DetailRequest struct {
 }
 
 type DetailResponse struct {
-	RepositoryId int64  `json:"repositoryId"`
+	RepositoryId int64  `json:"repository_id"`
 	Name         string `json:"name"`
 	Ext          string `json:"ext"`
 	Size         int64  `json:"size"`
@@ -16,7 +16,7 @@ type DetailResponse struct {
 }
 
 type ShareBasicCreateRequest struct {
-	UserRepositoryId int64 `json:"userRepositoryId"`
+	UserRepositoryId int64 `json:"user_repository_id"`
 	ExpiredTime      int64 `json:"expiredTime"`
 }
 
@@ -25,8 +25,8 @@ type ShareBasicCreateResponse struct {
 }
 
 type ShareBasicSaveRequest struct {
-	RepositoryId int64 `json:"repositoryId"` //分享的文件id
-	ParentId     int64 `json:"parentId"`     //保存在该parentId目录下
+	RepositoryId int64 `json:"repository_id"` //分享的文件id
+	ParentId     int64 `json:"parentId"`      //保存在该parentId目录下
 }
 
 type ShareBasicSaveResponse struct {

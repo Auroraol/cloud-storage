@@ -73,7 +73,7 @@ service user_center {
 )
 service user_center {
 	@doc (
-		summary: "用户文件的关联存储"
+		summary: "用户文件的关联存储(文件与文件夹)"
 	)
 	@handler UserRepositorySave
 	post /user/repository/save (UserRepositorySaveRequest) returns (UserRepositorySaveResponse)

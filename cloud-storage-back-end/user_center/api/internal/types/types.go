@@ -93,11 +93,12 @@ type UserAvatarResp struct {
 
 type UserFile struct {
 	Id           int64  `json:"id"`
-	RepositoryId int64  `json:"repositoryId"`
+	RepositoryId int64  `json:"repository_id"`
 	Name         string `json:"name"`
 	Ext          string `json:"ext"`
 	Path         string `json:"path"`
 	Size         int64  `json:"size"`
+	UpdateTime   int64  `json:"update_time"`
 }
 
 type UserFileDeleteRequest struct {
@@ -140,7 +141,7 @@ type UserFolder struct {
 }
 
 type UserFolderCreateRequest struct {
-	ParentId int64  `json:"parentId"`
+	ParentId int64  `json:"parent_id"`
 	Name     string `json:"name"`
 }
 
@@ -173,8 +174,8 @@ type UserPasswordResp struct {
 }
 
 type UserRepositorySaveRequest struct {
-	ParentId     int64  `json:"parentId"`
-	RepositoryId int64  `json:"repositoryId"`
+	ParentId     int64  `json:"parent_id"`
+	RepositoryId int64  `json:"repository_id"`
 	Name         string `json:"name"`
 }
 

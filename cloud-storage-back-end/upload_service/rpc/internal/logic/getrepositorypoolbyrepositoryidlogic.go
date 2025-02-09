@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"github.com/Auroraol/cloud-storage/common/time"
 
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
@@ -24,13 +25,24 @@ func NewGetRepositoryPoolByRepositoryIdLogic(ctx context.Context, svcCtx *svc.Se
 }
 
 func (l *GetRepositoryPoolByRepositoryIdLogic) GetRepositoryPoolByRepositoryId(in *pb.RepositoryReq) (*pb.RepositoryResp, error) {
-	repositoryPoolInfo, err := l.svcCtx.RepositoryPoolModel.FindOne(l.ctx, uint64(in.RepositoryId))
+	repositoryPoolInfo, err := l.svcCtx.RepositoryPoolModel.FindOneByIdentity(l.ctx, uint64(in.RepositoryId))
+	if err != nil {
+		logx.Errorf("repositoryPoolInfo is nil, err: %v", err)
+		return nil, err
+	}
+
+	s := repositoryPoolInfo.UpdateTime.String()
+	timePart := s[:19]
+	timestamp, err := time.StringTimeToTimestamp(timePart)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.RepositoryResp{Ext: repositoryPoolInfo.Ext,
-		Size: repositoryPoolInfo.Size,
-		Path: repositoryPoolInfo.Path,
-		Name: repositoryPoolInfo.Name}, nil
+	return &pb.RepositoryResp{
+		Ext:        repositoryPoolInfo.Ext,
+		Size:       repositoryPoolInfo.Size,
+		Path:       repositoryPoolInfo.Path,
+		Name:       repositoryPoolInfo.Name,
+		UpdateTime: timestamp,
+	}, nil
 }

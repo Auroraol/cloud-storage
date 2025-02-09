@@ -51,15 +51,17 @@ func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest) (resp *
 	for _, userRepository := range allUserRepository {
 		repositoryInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadServicePb.RepositoryReq{RepositoryId: int64(userRepository.RepositoryId)})
 		if err != nil {
-			return nil, err
+			continue
+			//return nil, err
 		}
 		newList = append(newList, &types.UserFile{
 			Id:           int64(userRepository.Id),
 			RepositoryId: int64(userRepository.RepositoryId),
-			Name:         userRepository.Name,
+			Name:         repositoryInfo.Name,
 			Ext:          repositoryInfo.Ext,
 			Path:         repositoryInfo.Path,
 			Size:         repositoryInfo.Size,
+			UpdateTime:   repositoryInfo.UpdateTime,
 		})
 	}
 	return &types.UserFileListResponse{

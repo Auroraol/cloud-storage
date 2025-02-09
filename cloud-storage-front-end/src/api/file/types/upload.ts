@@ -11,6 +11,7 @@ export type FileUploadResponseData = ApiResponseData<{
   url: string
   key: string
   size: number
+  repository_id: number
 }>
 
 // 分片上传初始化请求

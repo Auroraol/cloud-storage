@@ -24,11 +24,11 @@ func NewDeleteByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteByIdLogic) DeleteById(in *pb.DeleteByIdReq) (*pb.DeleteByIdResp, error) {
-	repositoryInfo, err := l.svcCtx.RepositoryPoolModel.FindOne(l.ctx, uint64(in.RepositoryId))
+	repositoryInfo, err := l.svcCtx.RepositoryPoolModel.FindOneByIdentity(l.ctx, uint64(in.RepositoryId))
 	if err != nil {
 		return nil, err
 	}
-	err = l.svcCtx.RepositoryPoolModel.Delete(l.ctx, uint64(in.RepositoryId))
+	err = l.svcCtx.RepositoryPoolModel.DeleteByIdentity(l.ctx, uint64(in.RepositoryId))
 	if err != nil {
 		return nil, err
 	}

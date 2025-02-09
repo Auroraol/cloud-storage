@@ -12,7 +12,6 @@ import (
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/utils"
 	"github.com/Auroraol/cloud-storage/upload_service/model"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
-	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 	"mime/multipart"
@@ -120,14 +119,15 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 			return nil, response.NewErrMsg(fmt.Sprintf("查询文件MD5失败, err: %v", err))
 		}
 		return &types.FileUploadResponse{
-			URL:  repositoryInfo.Path,
-			Key:  repositoryInfo.Identity,
-			Size: repositoryInfo.Size,
+			URL:          repositoryInfo.Path,
+			Key:          repositoryInfo.OssKey,
+			Size:         repositoryInfo.Size,
+			RepositoryId: int64(repositoryInfo.Identity),
 		}, nil
 	}
 
 	// 准备OSS上传选项
-	objectKey := fmt.Sprintf("files/%s/%s", strconv.FormatInt(userId, 10), uuid.New().String())
+	objectKey := fmt.Sprintf("files/%s/%s", strconv.FormatInt(userId, 10), utils.StringUuid())
 	uploadOptions := oss.FileUploadOptions{
 		FilePath:    tempFilePath,
 		ObjectKey:   objectKey,
@@ -146,9 +146,11 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 
 	}
 
+	identity := utils.IntUuid()
 	// 保存文件信息到数据库
 	_, err = l.svcCtx.RepositoryPoolModel.InsertWithId(l.ctx, &model.RepositoryPool{
-		Identity: objectKey,
+		Identity: uint64(identity),
+		OssKey:   objectKey,
 		Hash:     md5Str,
 		Name:     fileHeader.Filename,
 		Ext:      path.Ext(fileHeader.Filename),
@@ -169,16 +171,17 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	}
 
 	return &types.FileUploadResponse{
-		URL:  fileUrl,
-		Key:  objectKey,
-		Size: fileHeader.Size,
+		URL:          fileUrl,
+		Key:          objectKey,
+		Size:         fileHeader.Size,
+		RepositoryId: int64(identity),
 	}, nil
 }
 
 func (l *FileUploadLogic) FileUpload_test(req *types.FileUploadRequest, r *http.Request) (resp *types.FileUploadResponse, err error) {
 	// 保存文件信息到数据库
 	_, err = l.svcCtx.RepositoryPoolModel.InsertWithId(l.ctx, &model.RepositoryPool{
-		Identity: "sss",
+		Identity: 0,
 		Hash:     "md5Str",
 		Name:     "fileHeader.Filename",
 		Ext:      "path.Ext(fileHeader.Filename)",

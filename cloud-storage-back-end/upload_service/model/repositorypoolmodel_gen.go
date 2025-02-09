@@ -44,11 +44,12 @@ type (
 
 	RepositoryPool struct {
 		Id         uint64    `db:"id"`
-		Identity   string    `db:"identity"`
-		Hash       string    `db:"hash"` // 文件的唯一标识
-		Ext        string    `db:"ext"`  // 文件扩展名
-		Size       int64     `db:"size"` // 文件大小
-		Path       string    `db:"path"` // 文件路径
+		Identity   uint64    `db:"identity"` // 文件id
+		OssKey     string    `db:"oss_key"`  // 文件在OSS中的键
+		Hash       string    `db:"hash"`     // 文件的唯一标识
+		Ext        string    `db:"ext"`      // 文件扩展名
+		Size       int64     `db:"size"`     // 文件大小
+		Path       string    `db:"path"`     // 文件路径
 		Name       string    `db:"name"`
 		CreateTime time.Time `db:"create_time"`
 		UpdateTime time.Time `db:"update_time"`
@@ -118,8 +119,8 @@ func (m *defaultRepositoryPoolModel) Insert(ctx context.Context, data *Repositor
 	repositoryPoolHashKey := fmt.Sprintf("%s%v", cacheRepositoryPoolHashPrefix, data.Hash)
 	repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, repositoryPoolRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Identity, data.Hash, data.Ext, data.Size, data.Path, data.Name)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, repositoryPoolRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Identity, data.OssKey, data.Hash, data.Ext, data.Size, data.Path, data.Name)
 	}, repositoryPoolHashKey, repositoryPoolIdKey)
 	return ret, err
 }
@@ -134,7 +135,7 @@ func (m *defaultRepositoryPoolModel) Update(ctx context.Context, newData *Reposi
 	repositoryPoolIdKey := fmt.Sprintf("%s%v", cacheRepositoryPoolIdPrefix, data.Id)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, repositoryPoolRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.Identity, newData.Hash, newData.Ext, newData.Size, newData.Path, newData.Name, newData.Id)
+		return conn.ExecCtx(ctx, query, newData.Identity, newData.OssKey, newData.Hash, newData.Ext, newData.Size, newData.Path, newData.Name, newData.Id)
 	}, repositoryPoolHashKey, repositoryPoolIdKey)
 	return err
 }

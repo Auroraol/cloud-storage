@@ -13,6 +13,7 @@ message RepositoryResp {
   int64 size = 2;
   string path = 3;
   string name = 4;
+  int64 update_time = 5;
 }
 
 message DeleteByIdReq {
@@ -28,4 +29,4 @@ service UploadService {
   rpc deleteById(DeleteByIdReq) returns (DeleteByIdResp);
 }
 
-//  goctl rpc protoc usercenter.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m  //-m 分组
+//  goctl rpc protoc upload_service.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m  //-m 分组

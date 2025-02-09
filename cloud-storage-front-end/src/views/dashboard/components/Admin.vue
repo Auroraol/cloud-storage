@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 顶部工具栏 -->
     <div class="main-ui-header">
       <!-- 上传按钮 -->
       <el-upload
@@ -24,81 +25,70 @@
         <el-button type="primary" color="#FBBC4D" @click="handleRefresh">
           <el-icon><Refresh /></el-icon>刷新
         </el-button>
-
-        <el-button type="primary" color="#FBBC4D" @click="handleDownload">
-          <el-icon><Download /></el-icon>下载
-        </el-button>
       </div>
+      <el-button type="primary" color="#FBBC4D" @click="handleDownload">
+        <el-icon><Download /></el-icon>下载
+      </el-button>
+    </div>
+
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item @click="handleRootClick">
+          <el-icon><FolderOpened /></el-icon>全部文件
+        </el-breadcrumb-item>
+        <el-breadcrumb-item v-for="(path, index) in pathHistory" :key="index" @click="handlePathClick(index)">
+          {{ path.name }}
+        </el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
 
     <!-- 文件列表 -->
     <div class="main-ui-table">
-      <vue-good-table
-        max-height="100%"
-        :columns="columns"
-        :rows="tableRows"
-        :select-options="{
-          enabled: true,
-          selectOnCheckboxOnly: true,
-          selectionText: '选中的行数',
-          clearSelectionText: ''
-        }"
-        :search-options="{ enabled: true, placeholder: '搜索文件...', skipDiacritics: true }"
-        :pagination-options="{
-          enabled: true,
-          mode: 'pages',
-          perPage: 10,
-          perPageDropdown: [10, 20, 50],
-          dropdownAllowAll: false,
-          nextLabel: '下一页',
-          prevLabel: '上一页',
-          allLabel: '全部',
-          rowsPerPageLabel: '每页显示',
-          pageLabel: '页',
-          ofLabel: '/'
-        }"
-        v-on:row-click="handleRowClick"
-        styleClass="vgt-table"
+      <el-table
+        v-loading="loading"
+        :data="fileList"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        @row-click="handleRowClick"
       >
-        <!-- 列 -->
-        <template #table-row="props">
-          <span v-if="props.column.field === 'filename'">
+        <el-table-column type="selection" width="55" />
+        <el-table-column label="文件名" min-width="200">
+          <template #default="{ row }">
             <div class="file-item">
               <!-- 文件图标/预览图 -->
-              <template v-if="isPreviewable(props.row)">
-                <Icon :cover="props.row.fileCover" :width="32" />
+              <!-- <template v-if="row.isFolder">
+                <el-icon><Folder /></el-icon>
+              </template> -->
+              <template v-if="isPreviewable(row)">
+                <Icon :cover="row.fileCover" :width="32" />
               </template>
               <template v-else>
-                <Icon :file-type="props.row.fileType" :width="32" />
+                <Icon :file-type="row.fileType" :width="32" />
               </template>
-
               <!-- 文件名 -->
-              <span class="filename" :title="props.row.filename">
-                {{ props.row.filename }}
-              </span>
+              <span class="filename" :title="row.filename">{{ row.filename }}</span>
             </div>
-          </span>
-          <span v-else>
-            <span class="rows-value" :title="props.row.filename">
-              {{ formatColumnValue(props) }}
-            </span>
-          </span>
-        </template>
-        <!-- 所选行操作槽-->
-        <template #selected-row-actions>
-          <el-button-group>
-            <el-button type="danger" @click="handleBatchDelete">删除</el-button>
-            <el-button @click="handleBatchMove">移动到</el-button>
-          </el-button-group>
-        </template>
-      </vue-good-table>
+          </template>
+        </el-table-column>
+        <el-table-column prop="size" label="大小" width="120">
+          <template #default="{ row }">
+            {{ formatFileSize(row.fileSize) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="updateTime" label="修改时间" width="180">
+          <template #default="{ row }">
+            {{ formatDate(row.updateTime) }}
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
 
     <!-- 上传进度 -->
-    <div class="upload-progress">
+    <div v-if="currentFile" class="upload-progress">
       <div class="file-info">
-        <span class="filename">当前上传文件:</span>
-        <span class="filesize">{{ currentFile?.size ? formatFileSize(currentFile.size) : "" }}</span>
+        <span class="filename">当前上传文件: {{ currentFile.name }}</span>
+        <span class="filesize">{{ formatFileSize(currentFile.size) }}</span>
       </div>
       <div class="status-text">
         {{ statusText }}
@@ -107,7 +97,6 @@
 
     <!-- 上传历史 -->
     <div class="upload-history">
-      <h3>上传历史</h3>
       <div v-for="(item, index) in uploadHistory" :key="index" class="history-item">
         <div class="file-info">
           {{ item.filename }}
@@ -117,17 +106,44 @@
         </div>
       </div>
     </div>
+
+    <!-- 分页 -->
+    <div class="pagination">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :total="total"
+        :page-sizes="[10, 20, 50, 100]"
+        layout="total, sizes, prev, pager, next"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
+
+    <!-- 新建文件夹对话框 -->
+    <el-dialog v-model="folderDialog.visible" :title="folderDialog.title" width="30%">
+      <el-form :model="folderDialog.form" label-width="80px">
+        <el-form-item label="文件夹名">
+          <el-input v-model="folderDialog.form.name" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="folderDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="confirmCreateFolder">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue"
-import type { UploadRequestOptions, UploadRawFile } from "element-plus"
+import { ref, reactive, onMounted } from "vue"
 import { ElMessage } from "element-plus"
-import { VueGoodTable } from "vue-good-table-next"
+import type { UploadRequestOptions, UploadRawFile } from "element-plus"
+import { userFileApi } from "@/api/file/repository"
+import type * as Repository from "@/api/file/types/repository"
 import Icon from "@/components/FileIcon/Icon.vue"
 
-import { uploadFileApi } from "@/api/file" // 导入上传API
+import { uploadFileApi } from "@/api/file"
 import {
   type FileUploadRequestData,
   type ChunkUploadRequestData,
@@ -135,39 +151,15 @@ import {
   type ChunkUploadCompleteResponseData
 } from "@/api/file/types/upload"
 
-import { isNotEmpty } from "@/utils/isEmpty"
-
-// 定义文件接受类型
-const fileAccept = ".jpg,.jpeg,.png,.gif,.zip,.doc,.docx,.pdf"
-
-// 定义上传历史记录项的接口
-interface UploadHistoryItem {
+interface FileListItem {
+  id: number
   filename: string
-  size: number
-  status: "success" | "error"
-  url?: string
-  key?: string
+  updateTime: string
+  fileSize?: number
+  fileType?: number
+  isFolder: boolean // 使用isFolder替代type来判断是否为文件夹
+  fileCover?: string
 }
-
-// 定义当前文件的类型
-const currentFile = ref<UploadRawFile | null>(null)
-
-// 定义上传历史数组的类型
-const uploadHistory = ref<UploadHistoryItem[]>([])
-
-// 上传状态
-const uploadStatus = ref("")
-const uploadProgress = ref(0)
-const statusText = ref("")
-
-// 定义分片大小为 5MB
-const CHUNK_SIZE = 5 * 1024 * 1024
-
-// 添加分片上传相关的状态
-const chunks = ref<Blob[]>([])
-const currentChunkIndex = ref(0)
-const uploadId = ref("")
-const uploadedETags = ref<string[]>([])
 
 // 格式化文件大小
 const formatFileSize = (size: number): string => {
@@ -200,167 +192,150 @@ const formatDate = (date: string): string => {
   }
 }
 
-// 测试文件列表数据
-const fileList = ref([
-  {
-    id: 1,
-    filename: "文件1.jpg",
-    updateTime: "2023-10-01 14:49:56",
-    fileSize: 102400,
-    fileType: 3,
-    status: 2
-  },
-  {
-    id: 2,
-    filename: "文件2",
-    updateTime: "2023-10-01 14:48:57",
-    fileSize: 209715200,
-    fileType: 0,
-    status: 2
-  },
-  {
-    id: 3,
-    filename: "文件.zip",
-    updateTime: "2023-10-01 12:17:57",
-    fileSize: 10485760,
-    fileType: 9
-  },
-  {
-    id: 1,
-    filename: "文件1.jpg",
-    updateTime: "2023-10-01 14:49:56",
-    fileSize: 102400,
-    fileType: 3,
-    status: 2
-  },
-  {
-    id: 2,
-    filename: "文件2",
-    updateTime: "2023-10-01 14:48:57",
-    fileSize: 209715200,
-    fileType: 0,
-    status: 2
-  },
-  {
-    id: 3,
-    filename: "文件.zip",
-    updateTime: "2023-10-01 12:17:57",
-    fileSize: 10485760,
-    fileType: 9
-  },
-  {
-    id: 1,
-    filename: "文件1.jpg",
-    updateTime: "2023-10-01 14:49:56",
-    fileSize: 102400,
-    fileType: 3,
-    status: 2
-  },
-  {
-    id: 2,
-    filename: "文件2",
-    updateTime: "2023-10-01 14:48:57",
-    fileSize: 209715200,
-    fileType: 0,
-    status: 2
-  },
-  {
-    id: 3,
-    filename: "文件.zip",
-    updateTime: "2023-10-01 12:17:57",
-    fileSize: 10485760,
-    fileType: 9
-  },
-  {
-    id: 1,
-    filename: "文件1.jpg",
-    updateTime: "2023-10-01 14:49:56",
-    fileSize: 102400,
-    fileType: 3,
-    status: 2
-  },
-  {
-    id: 2,
-    filename: "文件2",
-    updateTime: "2023-10-01 14:48:57",
-    fileSize: 209715200,
-    fileType: 0,
-    status: 2
-  },
-  {
-    id: 3,
-    filename: "文件.zip",
-    updateTime: "2023-10-01 12:17:57",
-    fileSize: 10485760,
-    fileType: 9
-  },
-  {
-    id: 1,
-    filename: "文件1.jpg",
-    updateTime: "2023-10-01 14:49:56",
-    fileSize: 102400,
-    fileType: 3,
-    status: 2
-  },
-  {
-    id: 2,
-    filename: "文件2",
-    updateTime: "2023-10-01 14:48:57",
-    fileSize: 209715200,
-    fileType: 0,
-    status: 2
-  },
-  {
-    id: 3,
-    filename: "文件.zip",
-    updateTime: "2023-10-01 12:17:57",
-    fileSize: 10485760,
-    fileType: 9
-  }
-])
+// 文件接受类型
+const fileAccept = ".jpg,.jpeg,.png,.gif,.zip,.doc,.docx,.pdf"
 
-// 使用 computed 来缓存格式化后的数据
-const formattedFileList = computed(() => {
-  return fileList.value.map((file) => ({
-    ...file,
-    formattedSize: formatFileSize(file.fileSize),
-    formattedDate: formatDate(file.updateTime)
-  }))
+// 状态变量
+const loading = ref(false)
+const searchKeyword = ref("")
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+const fileList = ref<FileListItem[]>([])
+const selectedFiles = ref([])
+
+// 上传相关状态
+const currentFile = ref<UploadRawFile | null>(null)
+const statusText = ref("")
+const uploadHistory = ref<
+  Array<{
+    filename: string
+    status: "success" | "error"
+  }>
+>([])
+
+// 路径历史
+const pathHistory = ref<Array<{ id: number; name: string }>>([])
+const currentPath = ref<number[]>([0]) // 0表示根目录
+
+// 新建文件夹对话框
+const folderDialog = reactive({
+  visible: false,
+  title: "新建文件夹",
+  form: {
+    name: ""
+  }
 })
 
-// 修改表格列定义
-const columns = ref([
-  {
-    label: "文件名",
-    field: "filename",
-    sortable: true,
-    width: "50%"
-  },
-  {
-    label: "修改时间",
-    field: "formattedDate", // 使用预先格式化的字段
-    sortable: true
-  },
-  {
-    label: "大小",
-    field: "formattedSize", // 使用预先格式化的字段
-    sortable: true
-  }
-])
-
-// 修改数据源
-const tableRows = computed(() => formattedFileList.value)
-
 // 判断文件是否可预览
-const isPreviewable = (file: { fileType: number; status?: number }): boolean => {
-  return file.fileType === 3 || (file.fileType === 1 && file.status === 2)
+const isPreviewable = (file: FileListItem): boolean => {
+  if (file.isFolder) return false
+  return file.fileType === 3 || file.fileType === 1
 }
 
-// 格式化表格列值
-const formatColumnValue = (props) => {
-  const { column, formattedRow } = props
-  return column.formatFn ? column.formatFn(formattedRow[column.field]) : formattedRow[column.field]
+// 根据文件扩展名判断文件类型
+const getFileType = (ext: string): number => {
+  if (!ext) return 0 // 文件夹返回0
+  const extMap = {
+    // 图片
+    jpg: 3,
+    jpeg: 3,
+    png: 3,
+    gif: 3,
+    // 视频
+    mp4: 4,
+    avi: 4,
+    mov: 4,
+    // 音频
+    mp3: 5,
+    wav: 5,
+    // Word
+    doc: 6,
+    docx: 6,
+    // Excel
+    xls: 7,
+    xlsx: 7,
+    // PPT
+    ppt: 8,
+    pptx: 8,
+    // 压缩包
+    zip: 9,
+    rar: 9,
+    "7z": 9,
+    // PDF
+    pdf: 10,
+    // 文本
+    txt: 2,
+    md: 2
+  }
+  const extension = ext.toLowerCase().replace(".", "")
+  return extMap[extension] || 1 // 默认为普通文件
 }
+
+// 获取文件列表
+const loadFileList = async () => {
+  loading.value = true
+  try {
+    const parentId = currentPath.value[currentPath.value.length - 1]
+
+    // 获取文件夹列表
+    const folderResponse = await userFileApi.getFolderList({
+      id: parentId
+    })
+
+    // 获取文件列表
+    const fileResponse = await userFileApi.getFileList({
+      id: parentId,
+      page: currentPage.value,
+      size: pageSize.value
+    })
+
+    console.log("文件夹列表:", folderResponse.data)
+    // console.log('文件列表:', fileResponse.data)
+
+    // 合并文件夹和文件列表
+    const folders = folderResponse.data.list.map((folder) => ({
+      id: folder.id,
+      filename: folder.name,
+      fileType: 0, // 文件夹类型为0
+      fileSize: 0, // 文件夹大小为0
+      updateTime: folder.update_time || new Date().toISOString(),
+      isFolder: true
+    }))
+
+    const files = fileResponse.data.list.map((file) => ({
+      id: file.id,
+      filename: file.name,
+      fileType: getFileType(file.ext),
+      fileSize: file.size,
+      updateTime: file.update_time || new Date().toISOString(),
+      fileCover: file.path,
+      isFolder: false
+    }))
+
+    // 文件夹在前，文件在后
+    fileList.value = [...folders, ...files]
+    total.value = folderResponse.data.count + fileResponse.data.count
+  } catch (error) {
+    console.error("获取文件列表失败:", error)
+    ElMessage.error("获取文件列表失败")
+  }
+  loading.value = false
+}
+
+// 上传状态
+const uploadStatus = ref("")
+const uploadProgress = ref(0)
+// const statusText = ref("")
+
+// 定义分片大小为 5MB
+const CHUNK_SIZE = 5 * 1024 * 1024
+
+// 添加分片上传相关的状态
+const chunks = ref<Blob[]>([])
+const currentChunkIndex = ref(0)
+const uploadId = ref("")
+const uploadedETags = ref<string[]>([])
 
 // 处理文件上传
 const handleFileUpload = async (options: UploadRequestOptions) => {
@@ -464,19 +439,30 @@ const handleChunkUpload = async (file: File) => {
 }
 
 // 修改处理上传成功的函数
-const handleUploadSuccess = (data: any, file: File) => {
+const handleUploadSuccess = async (data: any, file: File) => {
   uploadStatus.value = "success"
   uploadProgress.value = 100
   statusText.value = "上传成功"
+  // console.log(parentId, data.repository_id, file.name)
 
-  const historyItem: UploadHistoryItem = {
-    filename: file.name,
-    size: file.size,
-    status: "success",
-    url: data.url,
-    key: "key" in data ? data.key : undefined
-  }
-  uploadHistory.value.unshift(historyItem)
+  // 保存文件关联信息
+  const parentId = currentPath.value[currentPath.value.length - 1] || 0
+  console.log("parentId: ", parentId)
+  await userFileApi.saveRepository({
+    parent_id: Number(parentId),
+    repository_id: Number(data.repository_id),
+    name: ""
+    // name: folderName
+  })
+
+  // const historyItem: UploadHistoryItem = {
+  //   filename: file.name,
+  //   size: file.size,
+  //   status: "success",
+  //   url: data.url,
+  //   key: data.key
+  // }
+  // uploadHistory.value.unshift(historyItem)
 
   handleRefresh()
   ElMessage.success("文件上传成功")
@@ -516,49 +502,103 @@ const resetUploadState = () => {
   }, 2000)
 }
 
-const currentPath = ref<string[]>([])
+// 新建文件夹
 const handleCreateFolder = () => {
-  // 处理新建文件夹
+  folderDialog.form.name = ""
+  folderDialog.visible = true
 }
 
-const handleRefresh = () => {
-  // 刷新文件列表
-}
+const confirmCreateFolder = async () => {
+  if (!folderDialog.form.name) {
+    ElMessage.warning("请输入文件夹名称")
+    return
+  }
 
-const handleDownload = () => {
-  // 处理下载
-}
+  try {
+    const parentId = currentPath.value[currentPath.value.length - 1]
+    await userFileApi.createFolder({
+      parent_id: parentId,
+      name: folderDialog.form.name
+    })
 
-const handleRowClick = (params) => {
-  console.log("Row clicked:", params)
-}
-
-const handleBatchDelete = () => {
-  // 处理批量删除
-}
-
-const handleBatchMove = () => {
-  // 处理批量移动
-}
-</script>
-
-<style lang="scss">
-.main-ui-header {
-  display: flex;
-  align-items: center;
-  // padding: 16px 20px;
-  margin-left: 1%;
-  margin-top: 1%;
-  gap: 16px;
-
-  .breadcrumb-nav {
-    flex: 1;
-    margin: 0;
-    padding: 0;
+    folderDialog.visible = false
+    ElMessage.success("创建成功")
+    loadFileList()
+  } catch (error) {
+    ElMessage.error("创建失败")
   }
 }
 
-.main-ui-table {
+// 处理文件/文件夹点击
+const handleRowClick = (row: FileListItem) => {
+  console.log("点击的行:", row)
+  if (row.isFolder) {
+    currentPath.value.push(row.id)
+    pathHistory.value.push({
+      id: row.id,
+      name: row.filename
+    })
+    currentPage.value = 1
+    loadFileList()
+  }
+}
+
+// 处理面包屑点击
+const handleRootClick = () => {
+  pathHistory.value = []
+  currentPath.value = [0]
+  currentPage.value = 1
+  loadFileList()
+}
+
+const handlePathClick = (index: number) => {
+  pathHistory.value = pathHistory.value.slice(0, index + 1)
+  currentPath.value = currentPath.value.slice(0, index + 2)
+  currentPage.value = 1
+  loadFileList()
+}
+
+// 其他事件处理器
+const handleRefresh = () => {
+  loadFileList()
+}
+
+const handleSearch = () => {
+  currentPage.value = 1
+  loadFileList()
+}
+
+const handleSelectionChange = (selection: any[]) => {
+  selectedFiles.value = selection
+}
+
+const handleSizeChange = (val: number) => {
+  pageSize.value = val
+  loadFileList()
+}
+
+const handleCurrentChange = (val: number) => {
+  currentPage.value = val
+  loadFileList()
+}
+
+// 初始化
+onMounted(() => {
+  loadFileList()
+})
+</script>
+
+<style lang="scss" scoped>
+.app-container {
+  padding: 20px;
+
+  .main-ui-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+
   .file-item {
     display: flex;
     align-items: center;
@@ -571,142 +611,62 @@ const handleBatchMove = () => {
     white-space: nowrap;
   }
 
-  .vgt-table {
-    td {
-      vertical-align: middle !important;
-    }
+  .upload-progress {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f5f7fa;
 
-    td:first-child {
-      .file-item {
-        min-height: 40px;
+    .file-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+
+      .filename {
+        margin-left: 8px;
+        font-weight: bold;
+      }
+
+      .filesize {
+        margin-left: 8px;
+        color: #909399;
       }
     }
 
-    .rows-value {
-      display: inline-block;
-      line-height: 40px;
-    }
-  }
-
-  .vgt-wrap {
-    .vgt-global-search {
-      border: none;
-      margin: -37px 0 10px;
-      float: right;
-
-      .vgt-global-search__input {
-        .input__icon {
-          display: none;
-        }
-
-        input {
-          width: 300px;
-          border: 1px solid #dcdfe6;
-          border-radius: 4px;
-          padding: 8px 12px;
-          font-size: 14px;
-          transition: all 0.3s;
-
-          &:focus {
-            outline: none;
-            border-color: #fbbc4d;
-            box-shadow: 0 0 0 2px rgba(251, 188, 77, 0.2);
-          }
-
-          &::placeholder {
-            color: #909399;
-          }
-        }
-      }
-    }
-  }
-}
-
-.breadcrumb-nav {
-  .el-breadcrumb {
-    font-size: 14px;
-
-    .el-breadcrumb__item {
-      .el-icon {
-        margin-right: 4px;
-        font-size: 16px;
-        vertical-align: -0.15em;
-      }
-
-      .el-breadcrumb__inner {
-        color: #606266;
-        display: inline-flex;
-        align-items: center;
-
-        &:hover {
-          color: #409eff;
-        }
-
-        &.is-link {
-          font-weight: normal;
-        }
-      }
-
-      &:last-child {
-        .el-breadcrumb__inner {
-          color: #303133;
-          cursor: default;
-
-          &:hover {
-            color: #303133;
-          }
-        }
-      }
-    }
-  }
-}
-
-// 添加上传进度相关样式
-.upload-progress {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #f5f7fa;
-
-  .file-info {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-
-    .filename {
-      margin-left: 8px;
-      font-weight: bold;
-    }
-
-    .filesize {
-      margin-left: 8px;
+    .status-text {
+      margin-top: 5px;
+      font-size: 12px;
       color: #909399;
     }
   }
 
-  .status-text {
-    margin-top: 5px;
-    font-size: 12px;
-    color: #909399;
+  .upload-history {
+    margin-top: 20px;
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border-bottom: 1px solid #ebeef5;
+
+      .file-info {
+        flex: 1;
+      }
+
+      .file-status {
+        margin: 0 10px;
+      }
+    }
   }
-}
 
-.upload-history {
-  margin-top: 20px;
+  .breadcrumb {
+    margin-bottom: 20px;
+  }
 
-  .history-item {
+  .pagination {
+    margin-top: 20px;
     display: flex;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ebeef5;
-
-    .file-info {
-      flex: 1;
-    }
-
-    .file-status {
-      margin: 0 10px;
-    }
+    justify-content: flex-end;
   }
 }
 </style>

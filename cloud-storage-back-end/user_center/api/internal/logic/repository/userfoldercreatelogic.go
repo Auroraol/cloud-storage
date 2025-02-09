@@ -35,6 +35,7 @@ func (l *UserFolderCreateLogic) UserFolderCreate(req *types.UserFolderCreateRequ
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
+	// 验证文件夹名字是否存在
 	existCount, err := l.svcCtx.UserRepositoryModel.CountByParentIdAndName(l.ctx, req.ParentId, userId, req.Name)
 	if err != nil {
 		return nil, response.NewErrMsg("验证文件夹名字不存在失败！")

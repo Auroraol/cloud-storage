@@ -35,7 +35,7 @@ func (l *UserRepositorySaveLogic) UserRepositorySave(req *types.UserRepositorySa
 	// 判断文件是否超容量
 	repositoryPoolInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadServicePb.RepositoryReq{RepositoryId: req.RepositoryId})
 	if err != nil {
-		return nil, err
+		return nil, response.NewErrMsg(fmt.Sprintf("调用上传服务RPC失败, err: %v", err))
 	}
 
 	userId := token.GetUidFromCtx(l.ctx)

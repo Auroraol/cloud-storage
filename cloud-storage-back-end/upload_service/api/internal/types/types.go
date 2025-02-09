@@ -40,9 +40,10 @@ type FileUploadRequest struct {
 }
 
 type FileUploadResponse struct {
-	URL  string `json:"url"`  // 文件访问URL
-	Key  string `json:"key"`  // 文件在OSS中的键
-	Size int64  `json:"size"` // 文件大小（字节）
+	URL          string `json:"url"`           // 文件访问URL
+	Key          string `json:"key"`           // 文件在OSS中的键
+	Size         int64  `json:"size"`          // 文件大小（字节）
+	RepositoryId int64  `json:"repository_id"` // repository表设置的主建id
 }
 
 type ListPartsRequest struct {

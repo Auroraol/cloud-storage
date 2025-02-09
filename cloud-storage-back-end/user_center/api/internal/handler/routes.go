@@ -84,7 +84,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: repository.UserFolderListHandler(serverCtx),
 			},
 			{
-				// 用户文件的关联存储
+				// 用户文件的关联存储(文件与文件夹)
 				Method:  http.MethodPost,
 				Path:    "/user/repository/save",
 				Handler: repository.UserRepositorySaveHandler(serverCtx),
