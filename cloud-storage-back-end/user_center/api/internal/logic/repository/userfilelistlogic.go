@@ -47,6 +47,7 @@ func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest) (resp *
 	if err != nil {
 		return nil, response.NewErrMsg("该文件夹下搜索文件失败！")
 	}
+	// 获得所有文件信息
 	newList := make([]*types.UserFile, 0)
 	for _, userRepository := range allUserRepository {
 		repositoryInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadServicePb.RepositoryReq{RepositoryId: int64(userRepository.RepositoryId)})

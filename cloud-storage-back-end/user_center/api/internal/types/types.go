@@ -94,7 +94,7 @@ type UserAvatarResp struct {
 type UserFile struct {
 	Id           int64  `json:"id"`
 	RepositoryId int64  `json:"repository_id"`
-	Name         string `json:"name"`
+	Name         string `json:"name"` // 文件名
 	Ext          string `json:"ext"`
 	Path         string `json:"path"`
 	Size         int64  `json:"size"`
@@ -136,8 +136,9 @@ type UserFileNameUpdateResponse struct {
 }
 
 type UserFolder struct {
-	Id   int64  `json:"id"`
-	Name string `json:"name"`
+	Id         int64  `json:"id"`
+	Name       string `json:"name"`
+	UpdateTime int64  `json:"update_time"`
 }
 
 type UserFolderCreateRequest struct {
@@ -155,6 +156,14 @@ type UserFolderListRequest struct {
 
 type UserFolderListResponse struct {
 	List []*UserFolder `json:"list"`
+}
+
+type UserFolderSizeRequest struct {
+	Id int64 `form:"id,optional"`
+}
+
+type UserFolderSizeResponse struct {
+	Size int `json:"size"`
 }
 
 type UserInfoReq struct {

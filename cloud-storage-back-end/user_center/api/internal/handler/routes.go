@@ -84,6 +84,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: repository.UserFolderListHandler(serverCtx),
 			},
 			{
+				// 获取用户文件夹总大小
+				Method:  http.MethodGet,
+				Path:    "/user/folder/size",
+				Handler: repository.UserFolderSizeHandler(serverCtx),
+			},
+			{
 				// 用户文件的关联存储(文件与文件夹)
 				Method:  http.MethodPost,
 				Path:    "/user/repository/save",

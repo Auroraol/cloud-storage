@@ -113,6 +113,12 @@ service user_center {
 	)
 	@handler UserFileMove
 	post /user/file/move (UserFileMoveRequest) returns (UserFileMoveResponse)
+
+	@doc (
+		summary: "获取用户文件夹总大小"
+	)
+	@handler UserFolderSize
+	get /user/folder/size (UserFolderSizeRequest) returns (UserFolderSizeResponse)
 }
 
 // goctl api go --api *.api --dir ./..

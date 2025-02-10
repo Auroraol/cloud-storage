@@ -16,13 +16,6 @@
         </el-button>
       </el-upload>
 
-      <!-- 添加搜索框 -->
-      <el-input v-model="searchKeyword" placeholder="搜索文件" class="search-input" @input="handleSearch">
-        <template #prefix>
-          <el-icon><Search /></el-icon>
-        </template>
-      </el-input>
-
       <!-- 操作按钮组 -->
       <div class="operation-buttons">
         <el-button type="primary" color="#FBBC4D" @click="handleCreateFolder">
@@ -32,15 +25,10 @@
         <el-button type="primary" color="#FBBC4D" @click="handleRefresh">
           <el-icon><Refresh /></el-icon>刷新
         </el-button>
-
-        <el-button type="primary" color="#FBBC4D" @click="handleDownload">
-          <el-icon><Download /></el-icon>下载
-        </el-button>
-
-        <el-button type="danger" @click="handleDelete">
-          <el-icon><Delete /></el-icon>删除
-        </el-button>
       </div>
+      <el-button type="primary" color="#FBBC4D" @click="handleDownload">
+        <el-icon><Download /></el-icon>下载
+      </el-button>
     </div>
 
     <!-- 面包屑导航 -->
@@ -67,7 +55,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="文件名" min-width="200">
           <template #default="{ row }">
-            <div class="file-item" :data-id="row.id" @contextmenu.prevent="handleContextMenu(row, $event)">
+            <div class="file-item">
               <!-- 文件图标/预览图 -->
               <template v-if="isPreviewable(row)">
                 <Icon :cover="row.fileCover" :width="32" />
@@ -141,61 +129,17 @@
         <el-button type="primary" @click="confirmCreateFolder">确定</el-button>
       </template>
     </el-dialog>
-
-    <!-- 重命名对话框 -->
-    <el-dialog v-model="renameDialog.visible" title="重命名" width="30%">
-      <el-form :model="renameDialog.form" label-width="80px">
-        <el-form-item label="新名称">
-          <el-input v-model="renameDialog.form.name" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="renameDialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="handleRename(renameDialog.fileId, renameDialog.form.name)"> 确定 </el-button>
-      </template>
-    </el-dialog>
-
-    <!-- 右键菜单 -->
-    <div
-      v-show="contextMenu.visible"
-      class="context-menu"
-      :style="{
-        left: contextMenu.x + 'px',
-        top: contextMenu.y + 'px'
-      }"
-    >
-      <ul>
-        <li @click="openRenameDialog">
-          <el-icon><Edit /></el-icon>
-          重命名
-        </li>
-        <li @click="openMoveDialog">
-          <el-icon><FolderAdd /></el-icon>
-          移动到
-        </li>
-      </ul>
-    </div>
-
-    <!-- 修改遮罩层，添加 @contextmenu 事件处理 -->
-    <div
-      v-show="contextMenu.visible"
-      class="context-menu-mask"
-      @click="closeContextMenu"
-      @contextmenu.prevent="handleMaskContextMenu"
-    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, computed, onUnmounted } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { ElMessage } from "element-plus"
 import type { UploadRequestOptions, UploadRawFile } from "element-plus"
-import Icon from "@/components/FileIcon/Icon.vue"
-import { debounce } from "lodash-es"
-
-// api接口
 import { userFileApi } from "@/api/file/repository"
 import type * as Repository from "@/api/file/types/repository"
+import Icon from "@/components/FileIcon/Icon.vue"
+
 import { uploadFileApi } from "@/api/file"
 import {
   type FileUploadRequestData,
@@ -203,8 +147,6 @@ import {
   type FileUploadResponseData,
   type ChunkUploadCompleteResponseData
 } from "@/api/file/types/upload"
-
-import { isNotEmpty } from "@/utils/isEmpty"
 
 interface FileListItem {
   id: number
@@ -214,14 +156,6 @@ interface FileListItem {
   fileType?: number
   isFolder: boolean // 使用isFolder替代type来判断是否为文件夹
   fileCover?: string
-}
-
-interface UploadHistoryItem {
-  filename: string
-  size?: number
-  status: "success" | "error"
-  url?: string
-  key?: string
 }
 
 // 格式化文件大小
@@ -265,12 +199,17 @@ const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 const fileList = ref<FileListItem[]>([])
-const selectedFiles = ref<FileListItem[]>([])
+const selectedFiles = ref([])
 
 // 上传相关状态
 const currentFile = ref<UploadRawFile | null>(null)
 const statusText = ref("")
-const uploadHistory = ref<UploadHistoryItem[]>([])
+const uploadHistory = ref<
+  Array<{
+    filename: string
+    status: "success" | "error"
+  }>
+>([])
 
 // 路径历史
 const pathHistory = ref<Array<{ id: number; name: string }>>([])
@@ -283,23 +222,6 @@ const folderDialog = reactive({
   form: {
     name: ""
   }
-})
-
-// 重命名对话框
-const renameDialog = reactive({
-  visible: false,
-  fileId: 0,
-  form: {
-    name: ""
-  }
-})
-
-// 右键菜单相关状态
-const contextMenu = reactive({
-  visible: false,
-  x: 0,
-  y: 0,
-  row: null as FileListItem | null
 })
 
 // 判断文件是否可预览
@@ -350,11 +272,11 @@ const getFileType = (ext: string): number => {
 // 获取文件夹大小
 const getFolderSize = async (folderId: number): Promise<number> => {
   try {
-    // console.log("获取文件夹id:", folderId)
+    console.log("获取文件夹id:", folderId)
     const response = await userFileApi.getFolderSize({
       id: folderId
     })
-    // console.log("文件夹大小:", response.data)
+    console.log("文件夹大小:", response.data)
     return response.data.size || 0
   } catch (error) {
     console.error("获取文件夹大小失败:", error)
@@ -380,13 +302,13 @@ const loadFileList = async () => {
       size: pageSize.value
     })
 
-    // console.log("文件列表:", fileResponse.data)
-    // console.log("文件夹列表:", folderResponse.data)
+    console.log("文件列表:", fileResponse.data)
+    console.log("文件夹列表:", folderResponse.data)
     // 获取所有文件夹的大小
     const folders = await Promise.all(
       folderResponse.data.list.map(async (folder) => {
         const folderSize = await getFolderSize(folder.id)
-        // console.log("文件夹大小:", folderSize)
+        console.log("文件夹大小:", folderSize)
         return {
           id: folder.id,
           filename: folder.name,
@@ -408,6 +330,8 @@ const loadFileList = async () => {
       isFolder: false
     }))
 
+    console.log("文件列表:", files)
+
     fileList.value = [...folders, ...files]
     total.value = fileResponse.data.count
   } catch (error) {
@@ -425,6 +349,7 @@ const timestampToDate = (timestamp: number): string => {
 // 上传状态
 const uploadStatus = ref("")
 const uploadProgress = ref(0)
+// const statusText = ref("")
 
 // 定义分片大小为 5MB
 const CHUNK_SIZE = 5 * 1024 * 1024
@@ -623,7 +548,6 @@ const confirmCreateFolder = async () => {
     ElMessage.success("创建成功")
     loadFileList()
   } catch (error) {
-    console.log("创建失败:", error)
     ElMessage.error("创建失败")
   }
 }
@@ -662,13 +586,12 @@ const handleRefresh = () => {
   loadFileList()
 }
 
-// 处理搜索
-const handleSearch = debounce(() => {
-  // 调用搜索api接口
-  const keyword = searchKeyword.value.trim()
-}, 300)
+const handleSearch = () => {
+  currentPage.value = 1
+  loadFileList()
+}
 
-const handleSelectionChange = (selection: FileListItem[]) => {
+const handleSelectionChange = (selection: any[]) => {
   selectedFiles.value = selection
 }
 
@@ -682,143 +605,10 @@ const handleCurrentChange = (val: number) => {
   loadFileList()
 }
 
-// 添加文件操作相关的方法
-const handleDownload = () => {
-  if (selectedFiles.value.length === 0) {
-    ElMessage.warning("请选择要下载的文件")
-    return
-  }
-  // TODO: 实现文件下载逻辑
-}
-
-const handleDelete = async () => {
-  if (selectedFiles.value.length === 0) {
-    ElMessage.warning("请选择要删除的文件")
-    return
-  }
-
-  try {
-    for (const file of selectedFiles.value) {
-      await userFileApi.deleteFile({
-        id: file.id
-      })
-    }
-    ElMessage.success("删除成功")
-    loadFileList()
-  } catch (error) {
-    console.error("删除失败:", error)
-    ElMessage.error("删除失败")
-  }
-}
-
-const handleMove = async (targetFolderId: number) => {
-  if (selectedFiles.value.length === 0) {
-    ElMessage.warning("请选择要移动的文件")
-    return
-  }
-
-  try {
-    for (const file of selectedFiles.value) {
-      await userFileApi.moveFile({
-        id: file.id,
-        parent_id: targetFolderId
-      })
-    }
-    ElMessage.success("移动成功")
-    loadFileList()
-  } catch (error) {
-    console.error("移动失败:", error)
-    ElMessage.error("移动失败")
-  }
-}
-
-const handleRename = async (fileId: number, newName: string) => {
-  try {
-    await userFileApi.updateFileName({
-      id: fileId,
-      name: newName
-    })
-    ElMessage.success("重命名成功")
-    loadFileList()
-  } catch (error) {
-    console.error("重命名失败:", error)
-    ElMessage.error("重命名失败")
-  }
-}
-
-// 处理右键点击事件
-const handleContextMenu = (row: FileListItem, event: MouseEvent) => {
-  console.log("右键点击事件", row, event)
-  event.preventDefault()
-  event.stopPropagation()
-
-  // 如果菜单已经显示，先关闭它
-  if (contextMenu.visible) {
-    closeContextMenu()
-  }
-
-  // 设置新的菜单位置和数据
-  contextMenu.x = event.pageX
-  contextMenu.y = event.pageY
-  contextMenu.row = row
-  contextMenu.visible = true
-
-  // 添加全局点击事件监听
-  document.addEventListener("click", closeContextMenu, { once: true })
-}
-
-// 修改关闭菜单函数
-const closeContextMenu = () => {
-  contextMenu.visible = false
-  contextMenu.row = null
-  // 移除全局点击事件监听
-  document.removeEventListener("click", closeContextMenu)
-}
-
-// 在组件卸载时清理事件监听
-onUnmounted(() => {
-  closeContextMenu()
-})
-
-// 打开重命名对话框
-const openRenameDialog = () => {
-  if (!contextMenu.row) return
-  renameDialog.fileId = contextMenu.row.id
-  renameDialog.form.name = contextMenu.row.filename
-  renameDialog.visible = true
-  closeContextMenu()
-}
-
-// 打开移动对话框
-const openMoveDialog = () => {
-  if (!contextMenu.row) return
-  // TODO: 实现移动对话框
-  closeContextMenu()
-}
-
 // 初始化
 onMounted(() => {
   loadFileList()
 })
-
-// 添加遮罩层右键事件处理函数
-const handleMaskContextMenu = (event: MouseEvent) => {
-  // 处理遮罩层点击事件
-  // console.log("遮罩层点击事件", event)
-  // 获取鼠标位置下的实际元素
-  const element = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
-
-  // 查找最近的 file-item 元素
-  const fileItem = element?.closest(".file-item")
-  if (fileItem) {
-    // 获取对应的行数据
-    const row = fileList.value.find((item) => item.id === Number(fileItem.getAttribute("data-id")))
-    console.log("行数据", row)
-    if (row) {
-      handleContextMenu(row, event)
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -830,21 +620,6 @@ const handleMaskContextMenu = (event: MouseEvent) => {
     align-items: center;
     margin-bottom: 20px;
     gap: 16px;
-
-    .search-input {
-      width: 300px;
-      margin-right: auto;
-
-      :deep(.el-input__wrapper) {
-        background-color: #f5f7fa;
-      }
-
-      :deep(.el-input__inner) {
-        &::placeholder {
-          color: #909399;
-        }
-      }
-    }
   }
 
   .file-item {
@@ -928,49 +703,6 @@ const handleMaskContextMenu = (event: MouseEvent) => {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
-  }
-
-  .context-menu {
-    position: fixed;
-    z-index: 2000;
-    background: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    padding: 8px 0;
-    min-width: 120px;
-    user-select: none;
-
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    li {
-      padding: 8px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #606266;
-
-      &:hover {
-        background-color: #f5f7fa;
-      }
-
-      .el-icon {
-        font-size: 16px;
-      }
-    }
-  }
-
-  .context-menu-mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1999;
   }
 }
 </style>

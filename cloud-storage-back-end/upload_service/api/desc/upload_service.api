@@ -10,6 +10,7 @@ info (
 
 import (
 	"proto/upload.api"
+	"proto/history.api"
 )
 
 //============================> uploadservice v1 <============================
@@ -30,7 +31,7 @@ service upload_service {
 //need login
 @server (
 	prefix: upload_service/v1
-	group:  Chunk
+	group:  chunk
 	jwt:    JwtAuth
 )
 service upload_service {
@@ -62,5 +63,26 @@ service upload_service {
 	@handler ListUploadedParts
 	get /file/multipart/status (ListPartsRequest) returns (ListPartsResponse)
 }
+
+//need login
+@server (
+	prefix: upload_service/v1
+	group:  history
+	jwt:    JwtAuth
+)
+service upload_service {
+	@doc (
+		summary:     "更新历史上传记录"
+	)
+	@handler UpdateHistory
+	post /file/history/update (UpdateHistoryRequest) returns (UpdateHistoryResponse)
+
+	@doc (
+		summary:     "历史记录列表"
+	)
+	@handler HistoryList
+	get /file/history/list (HistoryListRequest) returns (HistoryListResponse)
+}
+
 
 // goctl api go --api *.api --dir ./..

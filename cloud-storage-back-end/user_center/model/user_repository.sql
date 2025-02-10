@@ -3,7 +3,7 @@ CREATE TABLE `user_repository`
     `id`                  bigint unsigned NOT NULL AUTO_INCREMENT,
     `user_id`       bigint unsigned NOT NULL DEFAULT '0',
     `parent_id`           bigint unsigned NOT NULL DEFAULT '0' ,
-    `repository_id` bigint unsigned NOT NULL DEFAULT '0' COMMENT '0则为文件夹',
+    `repository_id` bigint unsigned NOT NULL DEFAULT '0' COMMENT '0则为文件夹, 其他为文件id',
     `name`                varchar(255) NOT NULL DEFAULT '' COMMENT '文件夹名称',
     `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

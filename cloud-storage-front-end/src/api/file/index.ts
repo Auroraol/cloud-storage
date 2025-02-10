@@ -15,14 +15,6 @@ import type {
 
 const prefix = import.meta.env.VITE_APP_BASE_API
 
-/**
- * @description: 文件列表
- * @param {Object} params
- */
-export function loadDataListApi(params) {
-  return get(`${prefix}/loadDataList/`, params, true)
-}
-
 // 文件上传相关接口
 export const uploadFileApi = {
   // 普通上传

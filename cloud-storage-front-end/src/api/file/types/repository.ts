@@ -28,9 +28,9 @@ type UserFile = {
   update_time: number
 }
 
-export type UserFolderListRequestData = ApiResponseData<{
+export interface UserFolderListRequestData {
   id: number
-}>
+}
 
 export type UserFolderListResponseData = ApiResponseData<{
   list: UserFolder[]
@@ -39,33 +39,54 @@ export type UserFolderListResponseData = ApiResponseData<{
 type UserFolder = {
   id: number
   name: string
+  update_time: number
 }
 
-export type UserFileNameUpdateRequestData = ApiResponseData<{
+export interface UserFileNameUpdateRequestData {
   id: number
   name: string
-}>
+}
 
 export type UserFileNameUpdateResponseData = ApiResponseData<object>
 
-export type UserFolderCreateRequestData = ApiResponseData<{
+export interface UserFolderCreateRequestData {
   parent_id: number
   name: string
-}>
+}
 
 export type UserFolderCreateResponseData = ApiResponseData<{
   id: number
 }>
 
-export type UserFileDeleteRequestData = ApiResponseData<{
+export interface UserFileDeleteRequestData {
   id: number
-}>
+}
 
 export type UserFileDeleteResponseData = ApiResponseData<object>
 
-export type UserFileMoveRequestData = ApiResponseData<{
+export interface UserFileMoveRequestData {
   id: number
   parent_id: number
-}>
+}
 
 export type UserFileMoveResponseData = ApiResponseData<object>
+
+export interface UserFolderSizeRequestData {
+  id: number
+}
+
+export type UserFolderSizeResponseData = ApiResponseData<{
+  size: number
+}>
+
+export interface GetFileListParams {
+  id: number
+  page: number
+  size: number
+  keyword?: string
+}
+
+export interface GetFolderListParams {
+  id: number
+  keyword?: string
+}

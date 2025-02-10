@@ -24,9 +24,9 @@ type UserRepositorySaveResponse {
 
 // 文件列表
 type UserFileListRequest {
-    Id   int64 `json:"id"`            //查询的文件夹id
-    Page int64 `json:"page,optional"` //查询的第几页
-    Size int64 `json:"size,optional"` //每页页数
+    Id   int64 `json:"id"`   //查询的文件夹id
+    Page int64 `json:"page"` //查询的第几页
+    Size int64 `json:"size"` //每页页数
 }
 
 type UserFileListResponse {
@@ -54,8 +54,9 @@ type UserFolderListResponse {
 }
 
 type UserFolder {
-    Id   int64  `json:"id"`
+    Id int64 `json:"id"`
     Name string `json:"name"`
+    UpdateTime int64 `json:"update_time"`
 }
 
 type UserFileNameUpdateRequest {
@@ -88,4 +89,13 @@ type UserFileMoveRequest {
 }
 
 type UserFileMoveResponse {
+}
+
+
+type UserFolderSizeRequest {
+    Id  int64 `form:"id,optional"`
+}
+
+type UserFolderSizeResponse {
+    Size int `json:"size"`
 }

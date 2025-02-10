@@ -1,0 +1,27 @@
+syntax = "v1"
+
+info (
+    title: "文件上传服务"
+    desc:  "提供文件上传历史记录相关的API接口"
+    author: "lfj"
+    email:  "1665834268@qq.com"
+)
+
+type (
+UpdateHistoryRequest {
+  UserId string `json:"user_id"`
+}
+UpdateHistoryResponse {
+  HistoryId string `json:"history_id"`
+}
+
+HistoryListRequest {
+
+}
+HistoryListResponse {
+  HistoryList []*History `json:"history_list"`
+}
+History {
+  HistoryId string `json:"history_id"`
+}
+)

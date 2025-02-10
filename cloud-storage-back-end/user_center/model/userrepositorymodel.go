@@ -22,6 +22,7 @@ type (
 		FindByRepositoryId(ctx context.Context, repositoryId int64) (*UserRepository, error)
 		FindAllInPage(ctx context.Context, parentId int64, userId int64, startIndex int64, pageSize int64) ([]*UserRepository, error)
 		FindAllFolderByParentId(ctx context.Context, parentId int64, userId int64) ([]*UserRepository, error)
+		FindAllFolderById(ctx context.Context, id int64, userId int64) ([]*UserRepository, error)
 		CountByParentIdAndName(ctx context.Context, parentId int64, userId int64, Name string) (int64, error)
 		CountByIdAndParentId(ctx context.Context, id int64, userId int64, parentId int64) (int64, error)
 	}
@@ -96,6 +97,24 @@ func (m *defaultUserRepositoryModel) FindAllFolderByParentId(ctx context.Context
 	var resp []*UserRepository
 	rowBuilder := m.RowBuilder()
 	query, values, err := rowBuilder.Where("parent_id = ?", parentId).Where("user_id = ?", userId).ToSql()
+	if err != nil {
+		return nil, err
+	}
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, model.ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserRepositoryModel) FindAllFolderById(ctx context.Context, id int64, userId int64) ([]*UserRepository, error) {
+	var resp []*UserRepository
+	rowBuilder := m.RowBuilder()
+	query, values, err := rowBuilder.Where("id = ?", id).Where("user_id = ?", userId).ToSql()
 	if err != nil {
 		return nil, err
 	}
