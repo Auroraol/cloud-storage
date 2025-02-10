@@ -6,6 +6,18 @@ const prefix = import.meta.env.VITE_APP_BASE_API
 
 // 用户文件相关接口
 export const userFileApi = {
+  // 用户文件和文件夹列表
+  getFileAndFolderList(data: Repository.UserFileAndFolderListRequestData) {
+    return request<Repository.UserFileAndFolderListResponseData>(
+      `${prefix}/user_center/v1/user/file/folder/list`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
   // 用户文件列表
   getFileList(data: Repository.UserFileListRequestData) {
     return request<Repository.UserFileListResponseData>(

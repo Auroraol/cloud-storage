@@ -7,6 +7,17 @@ export interface UserRepositorySaveRequestData {
 
 export type UserRepositorySaveResponseData = ApiResponseData<object>
 
+export interface UserFileAndFolderListRequestData {
+  id: number //查询的文件夹id
+  page: number //查询的第几页
+  size: number //每页页数
+}
+
+export type UserFileAndFolderListResponseData = ApiResponseData<{
+  list: UserFile[]
+  count: number
+}>
+
 export interface UserFileListRequestData {
   id: number //查询的文件夹id
   page: number //查询的第几页
