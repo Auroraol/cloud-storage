@@ -67,7 +67,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="文件名" min-width="200">
           <template #default="{ row }">
-            <div class="file-item" :data-id="row.id" @contextmenu.prevent="handleContextMenu(row, $event)">
+            <div class="file-item" @contextmenu.prevent="handleContextMenu(row, $event)">
               <!-- 文件图标/预览图 -->
               <template v-if="isPreviewable(row)">
                 <Icon :cover="row.fileCover" :width="32" />
@@ -176,13 +176,8 @@
       </ul>
     </div>
 
-    <!-- 修改遮罩层，添加 @contextmenu 事件处理 -->
-    <div
-      v-show="contextMenu.visible"
-      class="context-menu-mask"
-      @click="closeContextMenu"
-      @contextmenu.prevent="handleMaskContextMenu"
-    />
+    <!-- 添加点击其他区域关闭右键菜单 -->
+    <div v-show="contextMenu.visible" class="context-menu-mask" @click="closeContextMenu" @contextmenu.prevent />
   </div>
 </template>
 
@@ -800,25 +795,6 @@ const openMoveDialog = () => {
 onMounted(() => {
   loadFileList()
 })
-
-// 添加遮罩层右键事件处理函数
-const handleMaskContextMenu = (event: MouseEvent) => {
-  // 处理遮罩层点击事件
-  // console.log("遮罩层点击事件", event)
-  // 获取鼠标位置下的实际元素
-  const element = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
-
-  // 查找最近的 file-item 元素
-  const fileItem = element?.closest(".file-item")
-  if (fileItem) {
-    // 获取对应的行数据
-    const row = fileList.value.find((item) => item.id === Number(fileItem.getAttribute("data-id")))
-    console.log("行数据", row)
-    if (row) {
-      handleContextMenu(row, event)
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
