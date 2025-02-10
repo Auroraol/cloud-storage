@@ -54,6 +54,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: repository.UserFileDeleteHandler(serverCtx),
 			},
 			{
+				// 用户文件和文件夹列表
+				Method:  http.MethodPost,
+				Path:    "/user/file/folder/list",
+				Handler: repository.UserFileAndFolderListHandler(serverCtx),
+			},
+			{
 				// 用户文件列表
 				Method:  http.MethodPost,
 				Path:    "/user/file/list",

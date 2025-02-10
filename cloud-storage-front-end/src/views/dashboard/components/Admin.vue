@@ -69,7 +69,7 @@
           <template #default="{ row }">
             <div class="file-item" @contextmenu.prevent="handleContextMenu(row, $event)">
               <!-- 文件图标/预览图 -->
-              <template v-if="isPreviewable(row)">
+              <template v-if="isPreviewAble(row)">
                 <Icon :cover="row.fileCover" :width="32" />
               </template>
               <template v-else>
@@ -88,6 +88,11 @@
         <el-table-column prop="updateTime" label="修改时间" width="180">
           <template #default="{ row }">
             {{ formatDate(row.updateTime) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="120">
+          <template #default="{ row }">
+            <el-button @click="previewFile(row)">预览</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -155,6 +160,21 @@
       </template>
     </el-dialog>
 
+    <!-- 移动对话框 -->
+    <el-dialog v-model="moveDialog.visible" title="移动文件" width="30%">
+      <el-form :model="moveDialog.form" label-width="80px">
+        <el-form-item label="目标文件夹">
+          <el-select v-model="moveDialog.form.targetFolderId" placeholder="选择目标文件夹">
+            <el-option v-for="folder in folderList" :key="folder.id" :label="folder.name" :value="folder.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="moveDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="handleMove()">确定</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 右键菜单 -->
     <div
       v-show="contextMenu.visible"
@@ -173,11 +193,25 @@
           <el-icon><FolderAdd /></el-icon>
           移动到
         </li>
+        <li @click="handleDelete">
+          <el-icon><Delete /></el-icon>
+          删除
+        </li>
       </ul>
     </div>
 
     <!-- 添加点击其他区域关闭右键菜单 -->
     <div v-show="contextMenu.visible" class="context-menu-mask" @click="closeContextMenu" @contextmenu.prevent />
+
+    <!-- 文件预览对话框 -->
+    <el-dialog v-model:visible="previewDialog.visible" title="文件预览" width="80%">
+      <component :is="previewComponent" :url="previewUrl" :resource="previewResource" />
+      <template v-slot:footer>
+        <span>
+          <el-button @click="previewDialog.visible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -187,6 +221,10 @@ import { ElMessage } from "element-plus"
 import type { UploadRequestOptions, UploadRawFile } from "element-plus"
 import Icon from "@/components/FileIcon/Icon.vue"
 import { debounce } from "lodash-es"
+import Audio from "@/views/dashboard/components/file-preview/Audio.vue"
+import Image from "@/views/dashboard/components/file-preview/Image.vue"
+import Default from "@/views/dashboard/components/file-preview/Default.vue"
+import Office from "@/views/dashboard/components/file-preview/Office.vue"
 
 // api接口
 import { userFileApi } from "@/api/file/repository"
@@ -194,12 +232,13 @@ import type * as Repository from "@/api/file/types/repository"
 import { uploadFileApi } from "@/api/file"
 import {
   type FileUploadRequestData,
-  type ChunkUploadRequestData,
-  type FileUploadResponseData,
-  type ChunkUploadCompleteResponseData
+  type ChunkUploadRequestData
+  // type FileUploadResponseData,
+  // type ChunkUploadCompleteResponseData
 } from "@/api/file/types/upload"
 
 import { isNotEmpty } from "@/utils/isEmpty"
+import { el } from "element-plus/es/locale"
 
 interface FileListItem {
   id: number
@@ -207,7 +246,7 @@ interface FileListItem {
   updateTime: string
   fileSize?: number
   fileType?: number
-  isFolder: boolean // 使用isFolder替代type来判断是否为文件夹
+  isFolder: boolean
   fileCover?: string
 }
 
@@ -297,8 +336,19 @@ const contextMenu = reactive({
   row: null as FileListItem | null
 })
 
+// 移动对话框
+const moveDialog = reactive({
+  visible: false,
+  form: {
+    targetFolderId: -1
+  }
+})
+
+// 添加文件夹列表
+const folderList = ref<Array<{ id: number; name: string }>>([])
+
 // 判断文件是否可预览
-const isPreviewable = (file: FileListItem): boolean => {
+const isPreviewAble = (file: FileListItem): boolean => {
   if (file.isFolder) return false
   return file.fileType === 3 || file.fileType === 1
 }
@@ -363,47 +413,45 @@ const loadFileList = async () => {
   try {
     const parentId = currentPath.value[currentPath.value.length - 1]
 
-    // 获取文件夹列表
-    const folderResponse = await userFileApi.getFolderList({
-      id: parentId
-    })
-
     // 获取文件列表
-    const fileResponse = await userFileApi.getFileList({
+    const fileResponse = await userFileApi.getFileAndFolderList({
       id: parentId,
       page: currentPage.value,
       size: pageSize.value
     })
 
-    // console.log("文件列表:", fileResponse.data)
-    // console.log("文件夹列表:", folderResponse.data)
-    // 获取所有文件夹的大小
-    const folders = await Promise.all(
-      folderResponse.data.list.map(async (folder) => {
-        const folderSize = await getFolderSize(folder.id)
-        // console.log("文件夹大小:", folderSize)
-        return {
-          id: folder.id,
-          filename: folder.name,
-          fileType: 0,
-          fileSize: folderSize, // 使用计算得到的文件夹大小
-          updateTime: timestampToDate(folder.update_time) || new Date().toISOString(),
-          isFolder: true
+    // 处理文件和文件夹
+    const filesAndFolders = await Promise.all(
+      fileResponse.data.list.map(async (item) => {
+        // 文件夹的 RepositoryId 为 0
+        if (!item.repository_id) {
+          // 文件夹
+          const folderSize = await getFolderSize(item.id)
+          return {
+            id: item.id,
+            filename: item.name,
+            fileType: 0, // 文件夹类型
+            fileSize: folderSize, // 文件夹大小
+            updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
+            fileCover: "", // 文件夹没有封面
+            isFolder: true
+          }
+        } else {
+          // 文件
+          return {
+            id: item.id,
+            filename: item.name,
+            fileType: getFileType(item.ext),
+            fileSize: item.size,
+            updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
+            fileCover: item.path,
+            isFolder: false
+          }
         }
       })
     )
 
-    const files = fileResponse.data.list.map((file) => ({
-      id: file.id,
-      filename: file.name,
-      fileType: getFileType(file.ext),
-      fileSize: file.size,
-      updateTime: timestampToDate(file.update_time) || new Date().toISOString(),
-      fileCover: file.path,
-      isFolder: false
-    }))
-
-    fileList.value = [...folders, ...files]
+    fileList.value = filesAndFolders
     total.value = fileResponse.data.count
   } catch (error) {
     console.error("获取文件列表失败:", error)
@@ -544,8 +592,7 @@ const handleUploadSuccess = async (data: any, file: File) => {
   await userFileApi.saveRepository({
     parent_id: Number(parentId),
     repository_id: Number(data.repository_id),
-    name: ""
-    // name: folderName
+    name: file.name
   })
 
   // const historyItem: UploadHistoryItem = {
@@ -625,7 +672,7 @@ const confirmCreateFolder = async () => {
 
 // 处理文件/文件夹点击
 const handleRowClick = (row: FileListItem) => {
-  console.log("点击的行:", row)
+  // console.log("点击的行:", row)
   if (row.isFolder) {
     currentPath.value.push(row.id)
     pathHistory.value.push({
@@ -706,20 +753,22 @@ const handleDelete = async () => {
   }
 }
 
-const handleMove = async (targetFolderId: number) => {
-  if (selectedFiles.value.length === 0) {
-    ElMessage.warning("请选择要移动的文件")
+const handleMove = async () => {
+  if (moveDialog.form.targetFolderId === -1) {
+    ElMessage.warning("请选择目标文件夹")
     return
   }
 
   try {
     for (const file of selectedFiles.value) {
+      console.log("移动id:%d-->%d", file.id, moveDialog.form.targetFolderId)
       await userFileApi.moveFile({
         id: file.id,
-        parent_id: targetFolderId
+        parent_id: moveDialog.form.targetFolderId
       })
     }
     ElMessage.success("移动成功")
+    moveDialog.visible = false
     loadFileList()
   } catch (error) {
     console.error("移动失败:", error)
@@ -734,6 +783,7 @@ const handleRename = async (fileId: number, newName: string) => {
       name: newName
     })
     ElMessage.success("重命名成功")
+    renameDialog.visible = false
     loadFileList()
   } catch (error) {
     console.error("重命名失败:", error)
@@ -746,6 +796,9 @@ const handleContextMenu = (row: FileListItem, event: MouseEvent) => {
   console.log("右键点击事件", row, event)
   event.preventDefault()
   event.stopPropagation()
+
+  // 选中该行
+  selectedFiles.value = [row]
 
   // 如果菜单已经显示，先关闭它
   if (contextMenu.visible) {
@@ -770,11 +823,6 @@ const closeContextMenu = () => {
   document.removeEventListener("click", closeContextMenu)
 }
 
-// 在组件卸载时清理事件监听
-onUnmounted(() => {
-  closeContextMenu()
-})
-
 // 打开重命名对话框
 const openRenameDialog = () => {
   if (!contextMenu.row) return
@@ -787,13 +835,60 @@ const openRenameDialog = () => {
 // 打开移动对话框
 const openMoveDialog = () => {
   if (!contextMenu.row) return
-  // TODO: 实现移动对话框
+  moveDialog.form.targetFolderId = 0 // 默认选项
+  moveDialog.visible = true
   closeContextMenu()
+}
+
+// 获取文件夹列表
+const loadFolderList = async () => {
+  try {
+    // 获取文件夹列表
+    const response = await userFileApi.getFolderList({
+      id: 0
+    })
+    folderList.value = [
+      {
+        id: 0,
+        name: "/"
+      },
+      ...response.data.list
+    ]
+  } catch (error) {
+    console.error("获取文件夹列表失败:", error)
+  }
+}
+
+// 文件预览相关状态
+const previewDialog = ref({ visible: false })
+const previewUrl = ref("")
+const previewResource = ref(null)
+const previewComponent = ref(Default)
+
+const previewFile = (file) => {
+  previewUrl.value = file.url // 假设文件对象有一个 url 属性
+  previewResource.value = file // 传递文件资源
+  if (file.type === "audio") {
+    previewComponent.value = Audio
+  } else if (file.type === "image") {
+    previewComponent.value = Image
+  } else if (file.type === "office") {
+    previewComponent.value = Office
+  } else {
+    previewComponent.value = Default
+  }
+  previewDialog.value.visible = true
 }
 
 // 初始化
 onMounted(() => {
   loadFileList()
+  loadFolderList()
+})
+
+// 在组件卸载时清理事件监听
+onUnmounted(() => {
+  closeContextMenu()
 })
 </script>
 

@@ -79,6 +79,12 @@ service user_center {
 	post /user/repository/save (UserRepositorySaveRequest) returns (UserRepositorySaveResponse)
 
 	@doc (
+		summary: "用户文件和文件夹列表"
+	)
+	@handler UserFileAndFolderList
+	post /user/file/folder/list (UserFileAndFolderListRequest) returns (UserFileAndFolderListResponse)
+
+	@doc (
 		summary: "用户文件列表"
 	)
 	@handler UserFileList

@@ -4,6 +4,7 @@
     <inspection_tool class="GoDfaErrorMayBeNotNil" enabled="true" level="WARNING" enabled_by_default="true">
       <methods>
         <method importPath="github.com/Auroraol/cloud-storage/user_center/rpc/client/user" receiver="User" name="FindVolumeById" />
+        <method importPath="github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservice" receiver="UploadService" name="GetRepositoryPoolByRepositoryId" />
       </methods>
     </inspection_tool>
   </profile>

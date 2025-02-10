@@ -34,6 +34,7 @@ func (l *UserFolderListLogic) UserFolderList(req *types.UserFolderListRequest) (
 	}
 
 	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllFolderByParentId(l.ctx, req.Id, userId)
+	//allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllInPage(l.ctx, req.Id, userId, 0, 10)
 	if err != nil {
 		return nil, response.NewErrMsg("该文件夹下搜索文件夹失败！")
 	}

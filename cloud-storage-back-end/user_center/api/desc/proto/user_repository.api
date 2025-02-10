@@ -22,6 +22,18 @@ type UserRepositorySaveRequest {
 type UserRepositorySaveResponse {
 }
 
+// 文件和文件夹列表
+type UserFileAndFolderListRequest {
+    Id   int64 `json:"id"`   //查询的文件夹id
+    Page int64 `json:"page"` //查询的第几页
+    Size int64 `json:"size"` //每页页数
+}
+
+type UserFileAndFolderListResponse {
+    List  []*UserFile `json:"list"`
+    Count int64       `json:"count"`
+}
+
 // 文件列表
 type UserFileListRequest {
     Id   int64 `json:"id"`   //查询的文件夹id
@@ -59,6 +71,7 @@ type UserFolder {
     UpdateTime int64 `json:"update_time"`
 }
 
+// 文件名修改
 type UserFileNameUpdateRequest {
     Id   int64  `json:"id"`
     Name string `json:"name"`
@@ -67,6 +80,7 @@ type UserFileNameUpdateRequest {
 type UserFileNameUpdateResponse {
 }
 
+// 文件夹创建
 type UserFolderCreateRequest {
     ParentId int64  `json:"parent_id"`
     Name     string `json:"name"`
@@ -76,6 +90,7 @@ type UserFolderCreateResponse {
     Id int64 `json:"id"`
 }
 
+// 文件删除
 type UserFileDeleteRequest {
     Id int64 `json:"id"`
 }
@@ -85,7 +100,7 @@ type UserFileDeleteResponse {
 
 type UserFileMoveRequest {
     Id       int64 `json:"id"`
-    ParentId int64 `json:"parentId"`
+    ParentId int64 `json:"parent_id"`  // 父文件夹ID, repository_id=0
 }
 
 type UserFileMoveResponse {

@@ -101,6 +101,17 @@ type UserFile struct {
 	UpdateTime   int64  `json:"update_time"`
 }
 
+type UserFileAndFolderListRequest struct {
+	Id   int64 `json:"id"`   //查询的文件夹id
+	Page int64 `json:"page"` //查询的第几页
+	Size int64 `json:"size"` //每页页数
+}
+
+type UserFileAndFolderListResponse struct {
+	List  []*UserFile `json:"list"`
+	Count int64       `json:"count"`
+}
+
 type UserFileDeleteRequest struct {
 	Id int64 `json:"id"`
 }
@@ -109,9 +120,9 @@ type UserFileDeleteResponse struct {
 }
 
 type UserFileListRequest struct {
-	Id   int64 `json:"id"`            //查询的文件夹id
-	Page int64 `json:"page,optional"` //查询的第几页
-	Size int64 `json:"size,optional"` //每页页数
+	Id   int64 `json:"id"`   //查询的文件夹id
+	Page int64 `json:"page"` //查询的第几页
+	Size int64 `json:"size"` //每页页数
 }
 
 type UserFileListResponse struct {
@@ -121,7 +132,7 @@ type UserFileListResponse struct {
 
 type UserFileMoveRequest struct {
 	Id       int64 `json:"id"`
-	ParentId int64 `json:"parentId"`
+	ParentId int64 `json:"parent_id"` // 父文件夹ID, repository_id=0
 }
 
 type UserFileMoveResponse struct {

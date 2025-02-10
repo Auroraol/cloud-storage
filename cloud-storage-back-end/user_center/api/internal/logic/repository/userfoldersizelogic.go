@@ -35,7 +35,7 @@ func (l *UserFolderSizeLogic) UserFolderSize(req *types.UserFolderSizeRequest) (
 	}
 
 	// 查询同一目录下的文件/文件夹
-	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllFolderByParentId(l.ctx, req.Id, userId)
+	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllFolderAndByParentId(l.ctx, req.Id, userId)
 	if err != nil {
 		return nil, response.NewErrMsg("该文件夹下搜索文件夹失败！")
 	}

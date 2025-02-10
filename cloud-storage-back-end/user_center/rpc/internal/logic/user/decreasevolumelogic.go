@@ -25,7 +25,8 @@ func NewDecreaseVolumeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *De
 }
 
 func (l *DecreaseVolumeLogic) DecreaseVolume(in *pb.DecreaseVolumeReq) (*pb.DecreaseVolumeResp, error) {
-	res, err := l.svcCtx.UserModel.UpdateVolume(l.ctx, in.Id, in.Size)
+	// 减少用户容量
+	res, err := l.svcCtx.UserModel.UpdateVolume(l.ctx, in.Id, -in.Size)
 	if err != nil {
 		return nil, err
 	}

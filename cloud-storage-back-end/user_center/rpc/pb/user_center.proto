@@ -58,9 +58,9 @@ message CreateByShareReply{
 
 
 service User {
-  rpc decreaseVolume(DecreaseVolumeReq) returns (DecreaseVolumeResp);
+  rpc decreaseVolume(DecreaseVolumeReq) returns (DecreaseVolumeResp); // 减少存储
   rpc findVolumeById(FindVolumeReq) returns (FindVolumeResp);
-  rpc addVolume(AddVolumeReq) returns (AddVolumeResp);
+  rpc addVolume(AddVolumeReq) returns (AddVolumeResp); // 增加存储
 }
 
 service userRepository {

@@ -4,11 +4,9 @@ import (
 	"context"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
-
+	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
-
-	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -58,7 +56,7 @@ func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest) (resp *
 		newList = append(newList, &types.UserFile{
 			Id:           int64(userRepository.Id),
 			RepositoryId: int64(userRepository.RepositoryId),
-			Name:         repositoryInfo.Name,
+			Name:         userRepository.Name,
 			Ext:          repositoryInfo.Ext,
 			Path:         repositoryInfo.Path,
 			Size:         repositoryInfo.Size,
