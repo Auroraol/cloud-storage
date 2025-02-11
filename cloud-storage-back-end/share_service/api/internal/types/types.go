@@ -4,7 +4,8 @@
 package types
 
 type DetailRequest struct {
-	Id int64 `json:"id"`
+	Id   string `form:"id"`
+	Code string `form:"code"`
 }
 
 type DetailResponse struct {
@@ -16,28 +17,46 @@ type DetailResponse struct {
 }
 
 type ShareBasicCreateRequest struct {
-	UserRepositoryId int64 `json:"user_repository_id"` // 用户文件id
-	RepositoryId     int64 `json:"repository_id"`      // 文件详情id
-	ExpiredTime      int64 `json:"expired_time"`
+	UserRepositoryId int64  `json:"user_repository_id"` // 用户文件id
+	RepositoryId     int64  `json:"repository_id"`      // 文件详情id
+	ExpiredTime      int64  `json:"expired_time"`
+	Code             string `json:"code"` // 提取码
 }
 
 type ShareBasicCreateResponse struct {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
+}
+
+type ShareBasicDeleteRequest struct {
+	Id string `form:"id"`
+}
+
+type ShareBasicDeleteResponse struct {
+}
+
+type ShareBasicDetailReply struct {
+	Id           string `json:"id"`
+	RepositoryId string `json:"repository_id"`
+	Name         string `json:"name"`
+	Owner        string `json:"owner"`
+	Avatar       string `json:"avatar"`
+	Ext          string `json:"ext"`
+	Size         int64  `json:"size"`
+	Path         string `json:"path"`
+	ClickNum     int    `json:"click_num"`
+	ExpiredTime  int    `json:"expired_time"`
+	UpdateTime   string `json:"update_time"`
+	Code         string `json:"code"`
 }
 
 type ShareBasicListRequest struct {
+	Page     int64 `form:"page"`
+	PageSize int64 `form:"page_size"`
 }
 
 type ShareBasicListResponse struct {
-	List []*ShareBasicListResponseData `json:"list"`
-}
-
-type ShareBasicListResponseData struct {
-	Id          int64  `json:"id"`
-	Filename    string `json:"file_name"`
-	ExpireTime  int64  `json:"expire_time"`
-	UpdataTime  int64  `json:"update_time"`
-	BrowseCount int32  `json:"browse_count"`
+	List  []*ShareBasicDetailReply `json:"list"`
+	Total int64                    `json:"total"`
 }
 
 type ShareBasicSaveRequest struct {
@@ -46,5 +65,5 @@ type ShareBasicSaveRequest struct {
 }
 
 type ShareBasicSaveResponse struct {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 }

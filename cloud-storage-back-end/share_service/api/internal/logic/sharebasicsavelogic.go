@@ -8,6 +8,7 @@ import (
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservice"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepository"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -46,5 +47,5 @@ func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (
 	if err != nil {
 		return nil, err
 	}
-	return &types.ShareBasicSaveResponse{Id: idInfo.Id}, nil
+	return &types.ShareBasicSaveResponse{Id: strconv.FormatInt(idInfo.Id, 10)}, nil
 }

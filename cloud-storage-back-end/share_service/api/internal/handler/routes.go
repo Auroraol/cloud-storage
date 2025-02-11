@@ -15,8 +15,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 获取资源详情
-				Method:  http.MethodPost,
+				// 获取资源详情(用于打开分享链接)
+				Method:  http.MethodGet,
 				Path:    "/share/basic/detail",
 				Handler: ShareBasicDetailHandler(serverCtx),
 			},
@@ -31,6 +31,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/share/basic/create",
 				Handler: ShareBasicCreateHandler(serverCtx),
+			},
+			{
+				// 资源删除
+				Method:  http.MethodPost,
+				Path:    "/share/basic/delete",
+				Handler: ShareBasicDeleteHandler(serverCtx),
 			},
 			{
 				// 用户分享列表

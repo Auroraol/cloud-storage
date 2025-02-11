@@ -41,14 +41,16 @@ type (
 	}
 
 	ShareBasic struct {
-		Id               uint64    `db:"id"`
-		UserId           uint64    `db:"user_id"`
-		RepositoryId     uint64    `db:"repository_id"`      // 公共池中的唯一标识
-		UserRepositoryId uint64    `db:"user_repository_id"` // 用户池子中的唯一标识
-		ExpiredTime      int64     `db:"expired_time"`       // 失效时间，单位秒, 【0-永不失效】
-		ClickNum         int64     `db:"click_num"`          // 点击次数
-		CreateTime       time.Time `db:"create_time"`
-		UpdateTime       time.Time `db:"update_time"`
+		Id               uint64       `db:"id"`
+		UserId           uint64       `db:"user_id"`
+		RepositoryId     uint64       `db:"repository_id"`      // 公共池中的唯一标识
+		UserRepositoryId uint64       `db:"user_repository_id"` // 用户池子中的唯一标识
+		ExpiredTime      int64        `db:"expired_time"`       // 失效时间，单位秒, 【0-永不失效】
+		ClickNum         int64        `db:"click_num"`          // 点击次数
+		CreateTime       time.Time    `db:"create_time"`
+		Code             string       `db:"code"` // 提取码
+		UpdateTime       time.Time    `db:"update_time"`
+		DeletedAt        sql.NullTime `db:"deleted_at"`
 	}
 )
 
@@ -88,8 +90,8 @@ func (m *defaultShareBasicModel) FindOne(ctx context.Context, id uint64) (*Share
 func (m *defaultShareBasicModel) Insert(ctx context.Context, data *ShareBasic) (sql.Result, error) {
 	shareBasicIdKey := fmt.Sprintf("%s%v", cacheShareBasicIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, shareBasicRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.RepositoryId, data.UserRepositoryId, data.ExpiredTime, data.ClickNum)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, shareBasicRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.RepositoryId, data.UserRepositoryId, data.ExpiredTime, data.ClickNum, data.Code, data.DeletedAt)
 	}, shareBasicIdKey)
 	return ret, err
 }
@@ -98,7 +100,7 @@ func (m *defaultShareBasicModel) Update(ctx context.Context, data *ShareBasic) e
 	shareBasicIdKey := fmt.Sprintf("%s%v", cacheShareBasicIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, shareBasicRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UserId, data.RepositoryId, data.UserRepositoryId, data.ExpiredTime, data.ClickNum, data.Id)
+		return conn.ExecCtx(ctx, query, data.UserId, data.RepositoryId, data.UserRepositoryId, data.ExpiredTime, data.ClickNum, data.Code, data.DeletedAt, data.Id)
 	}, shareBasicIdKey)
 	return err
 }

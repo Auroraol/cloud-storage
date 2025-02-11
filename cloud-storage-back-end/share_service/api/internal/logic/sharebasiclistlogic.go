@@ -32,17 +32,51 @@ func (l *ShareBasicListLogic) ShareBasicList(req *types.ShareBasicListRequest) (
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
+	// 计算Offset和Limit
+	page := req.Page
+	pageSize := req.PageSize
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 5 // 默认每页5条记录
+	}
+	offset := (page - 1) * pageSize
+
 	// 获取分享列表
+	shareFile := make([]*types.ShareBasicDetailReply, 0)
+	var total int64
+
+	// 查询总记录数
+	err = l.svcCtx.Engine.
+		Table("share_basic").
+		Where("share_basic.user_id = ? AND share_basic.deleted_at IS NULL", userId).
+		Count(&total).Error
+	if err != nil {
+		logx.Errorw("查询分享列表总数失败", logx.Field("Detail", err.Error()))
+		return
+	}
+
+	// 分页查询
+	err = l.svcCtx.Engine.
+		Table("share_basic").
+		Select("share_basic.id, share_basic.repository_id, user_repository.name, repository_pool.ext, repository_pool.path, repository_pool.size, share_basic.click_num, User.username AS owner, User.avatar, share_basic.expired_time, share_basic.update_time, share_basic.code").
+		Joins("LEFT JOIN repository_pool ON repository_pool.identity = share_basic.repository_id").
+		Joins("LEFT JOIN user_repository ON user_repository.id = share_basic.user_repository_id").
+		Joins("LEFT JOIN User ON share_basic.user_id = User.id").
+		Where("share_basic.user_id = ? AND share_basic.deleted_at IS NULL", userId).
+		Order("share_basic.update_time DESC").
+		Offset(int(offset)).
+		Limit(int(pageSize)).
+		Find(&shareFile).Error
+
+	if err != nil {
+		logx.Errorw("查询分享列表失败", logx.Field("Detail", err.Error()))
+		return
+	}
 
 	return &types.ShareBasicListResponse{
-		List: []*types.ShareBasicListResponseData{
-			{
-				Id:          1,
-				UpdataTime:  1,
-				ExpireTime:  1,
-				Filename:    "test.txt",
-				BrowseCount: 1,
-			},
-		},
+		List:  shareFile,
+		Total: total,
 	}, nil
 }

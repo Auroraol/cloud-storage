@@ -1,6 +1,6 @@
 // 详情
 export interface DetailRequestData {
-  id: number
+  id: string
 }
 
 export type DetailResponseData = ApiResponseData<{
@@ -16,10 +16,11 @@ export interface ShareBasicCreateRequestData {
   user_repository_id: number
   repository_id: number
   expired_time: number
+  code: string
 }
 
 export type ShareBasicCreateResponseData = ApiResponseData<{
-  id: number
+  id: string
 }>
 
 // 保存
@@ -29,13 +30,13 @@ export interface ShareBasicSaveRequestData {
 }
 
 export type ShareBasicSaveResponseData = ApiResponseData<{
-  id: number
+  id: string
 }>
 
 // 列表
 export interface ShareListRequestData {
   page: number
-  size: number
+  page_size: number
 }
 
 export type ShareListResponseData = ApiResponseData<{
@@ -44,9 +45,26 @@ export type ShareListResponseData = ApiResponseData<{
 }>
 
 type Share = {
-  id: number
-  file_name: string
+  id: string
+  repository_id: number
+  name: string
+  ext: string
+  size: number
+  path: string
   expired_time: number
   update_time: number
-  browse_count: number
+  //
+  owner: string
+  avatar: string
+  //
+  click_num: number // 浏览次数
+  //
+  code: string
 }
+
+// 删除
+export interface ShareBasicDeleteRequestData {
+  id: string
+}
+
+export type ShareBasicDeleteResponseData = ApiResponseData<{}>

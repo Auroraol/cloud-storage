@@ -8,7 +8,8 @@ info (
 )
 
 type DetailRequest {
-	Id int64 `json:"id"`
+	Id string `form:"id"`
+    code string `form:"code"`
 }
 
 type DetailResponse {
@@ -23,10 +24,11 @@ type ShareBasicCreateRequest {
 	UserRepositoryId int64 `json:"user_repository_id"`  // 用户文件id
 	RepositoryId int64 `json:"repository_id"`           // 文件详情id
 	ExpiredTime int64 `json:"expired_time"`
+	Code string `json:"code"` // 提取码
 }
 
 type ShareBasicCreateResponse {
-	Id int64 `json:"id"`
+	Id string `json:"id"` // 空表示已存在
 }
 
 type ShareBasicSaveRequest {
@@ -35,21 +37,39 @@ type ShareBasicSaveRequest {
 }
 
 type ShareBasicSaveResponse {
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 }
 
 // 用户文件分享列表
 type ShareBasicListRequest {
+	Page     int64 `form:"page"`
+	PageSize int64 `form:"page_size"`
 }
 
 type ShareBasicListResponse {
-	List []*ShareBasicListResponseData `json:"list"`
+	List []*ShareBasicDetailReply `json:"list"`
+	Total int64 `json:"total"`
 }
 
-type ShareBasicListResponseData {
-	Id int64 `json:"id"`
-	Filename string `json:"file_name"`
-	ExpireTime int64 `json:"expire_time"`
-	UpdataTime int64 `json:"update_time"`
-	BrowseCount int32 `json:"browse_count"`
+type ShareBasicDetailReply {
+	Id           string `json:"id"`
+	RepositoryId string `json:"repository_id"`
+	Name               string `json:"name"`
+	Owner              string `json:"owner"`
+	Avatar             string `json:"avatar"`
+	Ext                string `json:"ext"`
+	Size               int64  `json:"size"`
+	Path               string `json:"path"`
+	ClickNum           int    `json:"click_num"`
+	ExpiredTime        int    `json:"expired_time"`
+	UpdateTime          string `json:"update_time"`
+	Code string `json:"code"`
+}
+
+// 取消
+type ShareBasicDeleteRequest{
+	Id string `form:"id"`
+}
+
+type ShareBasicDeleteResponse {
 }

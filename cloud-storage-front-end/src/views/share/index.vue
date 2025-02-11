@@ -2,8 +2,10 @@
   <div class="app-container">
     <div class="share-header">
       <div class="top">
-        <span class="title">全部文件</span>
-        <span class="count">已加载{{ tableDataNum }}个</span>
+        <el-checkbox class="all-selected" v-model="allSelected" @change="toggleSelectAll" />
+        <span class="title"> 全部文件 </span>
+        <span class="count">已加载{{ tableDataNum }}个 </span>
+        <el-icon class="refresh-icon" @click="refreshList"><RefreshIcon /></el-icon>
       </div>
       <div class="actions">
         <button @click="copyLink">复制链接</button>
@@ -13,25 +15,27 @@
     </div>
     <div class="share-body">
       <div class="left-container">
-        <div class="file-list" v-infinite-scroll="loadFiles" infinite-scroll-disabled="loading">
-          <el-table
-            ref="multipleTable"
-            :data="tableRows"
-            @selection-change="handleSelectionChange"
-            @row-click="handleRowClick"
-            class="custom-table"
-          >
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="filename" label="文件名" />
-            <el-table-column prop="createTime" label="分享时间" />
-            <el-table-column prop="expireTime" label="状态" />
-            <el-table-column prop="browseCount" label="浏览次数" />
-            <template #empty>
-              <div style="text-align: center; margin-top: 20px">
-                <div style="margin-top: -30px; font-size: 16px; font-weight: bold">您的分享为空 ~</div>
+        <div class="file-list-container" @scroll="handleScroll">
+          <div class="file-list">
+            <el-card v-for="item in fileList" 
+                     :key="item.id" 
+                     class="file-card"
+                     :class="{ 'is-selected': isSelected(item) }"
+                     shadow="hover"
+                     @click="selectFile(item)">
+              <div class="file-info">
+                <div class="file-header">
+                  <el-avatar :src="item.avatar" size="small" />
+                  <span class="owner-name">{{ item.owner }}</span>
+                </div>
+                <div class="file-name">{{ item.name }}</div>
+                <div class="file-meta"> 
+                  <span>大小: {{ formatFileSize(item.size) }} </span>
+                  <span>浏览次数: {{ item.click_num }}</span>
+                </div>
               </div>
-            </template>
-          </el-table>
+            </el-card>
+          </div>
           <div v-if="loading" class="loading">加载中...</div>
           <div v-if="noMore" class="no-more">没有更多文件了</div>
         </div>
@@ -58,13 +62,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, onMounted, watch } from "vue"
+import { ref, reactive, computed, onMounted, watch, onUnmounted } from "vue"
 import { ElMessage } from "element-plus"
 import FileDialog from "@/components/FileDialog/index.vue"
 import useClipboard from "vue-clipboard3"
 import ShareDetail from "./detail.vue"
 import { shareApi } from "@/api/share/share"
 import type * as Share from "@/api/share/types/share"
+import { formatFileSize } from "@/utils/format/formatFileSize"
+import { formatTime } from "@/utils/format/formatTime"
+import dayjs from 'dayjs'
+import { time } from "console"
+import { Refresh as RefreshIcon } from '@element-plus/icons-vue'
 
 interface ShareItem {
   id: number
@@ -73,25 +82,26 @@ interface ShareItem {
   ext: string
   size: number
   path: string
+  expired_time: number
+  update_time: number
+  //
+  owner: string
+  avatar: string
+  //
+  click_num: number // 浏览次数
+  //
   code: string
-  browseCount: number
-  saveCount: number
-  downloadCount: number
-  expireTime: Date
-  createTime: Date
-
-  filename: string
+  selected?: boolean
 }
 
-const shareTableRef = ref()
 const selectFiles = ref<ShareItem[]>([])
+const allSelected = ref(false)
 const shareIds = ref<string>("")
 const tableDataNum = ref<number>(0)
 const loading = ref(false)
 const noMore = ref(false)
 const page = ref(1)
-const pageSize = ref(10) // 每页加载的文件数量
-const shareUrl = ref<string>(document.location.origin + "/share/")
+const pageSize = ref(5) // 每页加载的文件数量
 
 const dialogConfig = reactive({
   show: false,
@@ -110,32 +120,30 @@ const dialogConfig = reactive({
 
 const fileList = ref<ShareItem[]>([])
 
-const paginatedFileList = computed(() => {
-  const start = (page.value - 1) * pageSize.value
-  return fileList.value.slice(start, start + pageSize.value)
-})
+// const paginatedFileList = computed(() => {
+//   const start = (page.value - 1) * pageSize.value
+//   return fileList.value.slice(start, start + pageSize.value)
+// })
 
-const tableRows = computed(() => {
-  return paginatedFileList.value.map((file) => ({
-    ...file,
-    createTime: formatDate(file.createTime.toISOString()),
-    expireTime: formatDate(file.expireTime.toISOString())
-  }))
-})
+// const tableRows = computed(() => {
+//   return paginatedFileList.value.map((file) => ({
+//     ...file,
+//   }))
+// })
 
-const handleSelectionChange = (val) => {
-  selectFiles.value = val
-}
+// const handleSelectionChange = (val) => {
+//   selectFiles.value = val
+// }
 
-const multipleTable = ref()
-const handleRowClick = (row) => {
-  selectFiles.value = [row]
-  //通过ref绑定来操作bom元素
-  multipleTable.value.toggleRowSelection(row)
-}
+// const multipleTable = ref()
+// const handleRowClick = (row) => {
+//   selectFiles.value = [row]
+//   //通过ref绑定来操作bom元素
+//   multipleTable.value.toggleRowSelection(row)
+// }
 
 const selectedFileIds = computed(() => {
-  return selectFiles.value.map((file) => file.fileId).join(",")
+  return selectFiles.value.map((file) => file.id).join(",")
 })
 
 const cancelShare = () => {
@@ -146,36 +154,14 @@ const cancelShare = () => {
 
 const deleteShare = async () => {
   try {
-    // 这里需要后端提供删除分享的 API
-    // await shareApi.deleteShare({ id: shareIds.value })
+    await shareApi.deleteShare({ id: shareIds.value})
 
     ElMessage.success("取消分享成功")
     dialogConfig.show = false
-    reloadTable()
+    refreshList()
   } catch (error) {
     ElMessage.error("取消分享失败")
   }
-}
-
-const formatDate = (date: string): string => {
-  if (!date) return "-"
-  try {
-    const dateObj = new Date(date)
-    const year = dateObj.getFullYear()
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0")
-    const day = String(dateObj.getDate()).padStart(2, "0")
-    const hours = String(dateObj.getHours()).padStart(2, "0")
-    const minutes = String(dateObj.getMinutes()).padStart(2, "0")
-    const seconds = String(dateObj.getSeconds()).padStart(2, "0")
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-  } catch {
-    return "-"
-  }
-}
-
-const reloadTable = () => {
-  shareTableRef.value?.reload()
 }
 
 // 复制链接
@@ -184,9 +170,9 @@ const copyLink = () => {
     ElMessage.warning("请先选择文件")
     return
   }
+  const baseUrl = import.meta.env.VITE_API_URL_3
+  const links = selectFiles.value.map((file) => `链接: ${baseUrl}/share_service/v1/share/basic/detail?id=${file.id}&code=${file.code}`).join("\n")
 
-  // 链接: https://pan.baidu.com/s/1OtdlYyBNGL0NPpIiLgyG3A 提取码: 93vd
-  const links = selectFiles.value.map((file) => `链接: ${shareUrl.value}${file.fileId} 提取码: ${file.code}`).join("\n")
   navigator.clipboard
     .writeText(links)
     .then(() => {
@@ -209,7 +195,7 @@ const exportLink = () => {
     selectFiles.value
       .map(
         (file) =>
-          `${file.filename},${file.createTime.toISOString()},${file.expireTime.toISOString()},${file.browseCount},${file.saveCount},${file.downloadCount},${file.code}`
+          `${file.name},${formatTime(file.update_time)},${formatExpiredTime(file.update_time,file.expired_time)},${file.click_num},${file.code}`
       )
       .join("\n")
 
@@ -217,81 +203,66 @@ const exportLink = () => {
   const link = document.createElement("a")
   link.setAttribute("href", encodedUri)
   link.setAttribute("download", "exported_files.csv")
-  document.body.appendChild(link) // Required for FF
-
+  document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
   ElMessage.success("文件已导出为CSV格式")
 }
 
+// 计算过期时间
+const formatExpiredTime = (time,expiredTime) => {
+  if (!expiredTime) return '-'
+  const expirationDate = dayjs(time).add(expiredTime, 'second') // 将当前时间加上过期时间（秒）
+  return expirationDate.format('YYYY-MM-DD HH:mm:ss') 
+}
+const fileListContainer = ref<HTMLElement | null>(null)
+
+// 处理滚动事件
+const handleScroll = (e: Event) => {
+  const target = e.target as HTMLElement
+  const scrollHeight = target.scrollHeight
+  const scrollTop = target.scrollTop
+  const clientHeight = target.clientHeight
+  
+  // 当滚动到距离底部100px时加载更多
+  if (scrollHeight - scrollTop - clientHeight < 100 && !loading.value && !noMore.value) {
+    console.log('Loading more files...')
+    loadFiles()
+  }
+}
+
+// 加载文件
 const loadFiles = async () => {
   if (loading.value || noMore.value) return
   loading.value = true
+  console.log('Loading more files...') 
 
   try {
-    const response = await shareApi.getShareList({ page: page.value, size: pageSize.value })
+    const response = await shareApi.getShareList({ 
+      page: page.value, 
+      page_size: pageSize.value 
+    })
     const { list } = response.data
-    console.log("list", list)
 
-    if (list.length > 0) {
-      list.forEach((item) => {
-        const newItem = {
-          ...item,
-          // fileId: item.id,
-          filename: item.file_name
-        }
-        fileList.value.push(newItem)
-      })
-
-      tableDataNum.value += 1
+    if (list && list.length > 0) {
+      fileList.value.push(...list)
+      tableDataNum.value = fileList.value.length
       page.value += 1
     } else {
       noMore.value = true
-      ElMessage.warning("没有更多文件了")
     }
   } catch (error) {
+    console.error('Failed to load files:', error)
     ElMessage.error("加载文件失败")
   } finally {
     loading.value = false
   }
 }
 
-const observer = new IntersectionObserver((entries) => {
-  if (entries[0].isIntersecting) {
-    loadFiles()
-  }
-})
-
 onMounted(() => {
-  loadFiles() // 初始加载
-  const loadingElement = document.querySelector(".loading")
-  if (loadingElement) {
-    observer.observe(loadingElement)
-  }
+  // 初始加载
+  loadFiles()
 })
-
-watch(tableRows, (newVal) => {
-  if (newVal.length === 0) {
-    ElMessage.warning("没有文件")
-  }
-})
-
-// 创建新分享
-const createShare = async (repositoryId: number) => {
-  try {
-    const response = await shareApi.createShare({
-      user_repository_id: repositoryId,
-      expired_time: 7 * 24 * 60 * 60 // 7天过期时间
-    })
-
-    if (response.data) {
-      ElMessage.success("创建分享成功")
-      reloadTable()
-    }
-  } catch (error) {
-    ElMessage.error("创建分享失败")
-  }
-}
 
 // 保存分享
 const saveShare = async (repositoryId: number, parentId: number) => {
@@ -307,6 +278,49 @@ const saveShare = async (repositoryId: number, parentId: number) => {
   } catch (error) {
     ElMessage.error("保存分享失败")
   }
+}
+
+watch(fileList, (newVal) => {
+  console.log('fileList changed:', newVal)
+}, { deep: true })
+
+// 修改选择文件相关的方法
+const isSelected = (file: ShareItem) => {
+  return selectFiles.value.some(item => item.id === file.id)
+}
+
+// 选择某一行文件
+const selectFile = (file: ShareItem) => {
+  const index = selectFiles.value.findIndex(item => item.id === file.id)
+  if (index === -1) {
+    console.log("selectFile", file)
+    selectFiles.value = [file] // 只保留当前选中的文件
+  } else {
+    selectFiles.value = [] // 取消选择
+  }
+  // 更新全选状态
+  allSelected.value = selectFiles.value.length === fileList.value.length
+}
+
+// 监控文件列表变化，更新全选状态
+watch(fileList, (newVal) => {
+  allSelected.value = newVal.length > 0 && newVal.length === selectFiles.value.length
+})
+
+// 修改 toggleSelectAll 方法
+const toggleSelectAll = () => {
+  if (allSelected.value) {
+    selectFiles.value = [...fileList.value]
+  } else {
+    selectFiles.value = []
+  }
+}
+
+// 刷新列表的函数
+const refreshList = () => {
+  page.value = 1; // 重置页码
+  fileList.value = []; // 清空当前文件列表
+  loadFiles(); // 重新加载文件
 }
 </script>
 
@@ -329,10 +343,25 @@ const saveShare = async (repositoryId: number, parentId: number) => {
   border-radius: 8px;
 
   .top {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     line-height: 36px;
     color: #333;
     font-weight: bold;
+    font-size: 14px;
+  }
+
+  .title {
+    margin-right: 10px;
+  }
+
+  .all-selected {
+    margin-right: 10px;
+  }
+
+  .refresh-icon {
+    cursor: pointer;
+    margin-left: 2px;
   }
 
   .actions {
@@ -348,6 +377,7 @@ const saveShare = async (repositoryId: number, parentId: number) => {
       color: #ffffff;
       cursor: pointer;
       transition: background-color 0.3s;
+      font-size: 14px;
 
       &:hover {
         background-color: #0056b3;
@@ -365,34 +395,20 @@ const saveShare = async (repositoryId: number, parentId: number) => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    // padding: 20px;
 
-    .file-list {
+    .file-list-container {
       flex: 1;
       overflow-y: auto;
-      min-height: 300px;
+      height: calc(100vh - 180px);
+      padding: 20px;
+      background-color: #f9f9f9;
       border: 1px solid #dcdcdc;
       border-radius: 8px;
-      background-color: #f9f9f9;
-      padding: 10px;
 
-      .custom-table {
-        border: none;
-        .el-table__header {
-          background-color: #f0f4f8;
-          border-bottom: 2px solid #007bff;
-        }
-        .el-table__body {
-          tr {
-            &:hover {
-              background-color: #e6f7ff;
-            }
-            td {
-              padding: 12px;
-              border-bottom: 1px solid #dcdcdc;
-            }
-          }
-        }
+      .file-list {
+        display: flex;
+        flex-direction: column; /* 每个文件占一行 */
+        gap: 10px; /* 文件之间的间距 */
       }
     }
   }
@@ -404,19 +420,112 @@ const saveShare = async (repositoryId: number, parentId: number) => {
   display: inline-block;
   position: relative;
   height: 100%;
-  // margin-left: 20px;
-  // background-color: #f9f9f9;
-  // background-color: #f0f4f8;
   border-radius: 8px;
-  // padding: 16px;
   font-size: 14px;
   border: 1px solid #dcdcdc;
-  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .delete-info {
   padding: 10px;
   color: #333;
   text-align: center;
+}
+
+.file-card {
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+
+  &.is-selected {
+    border-color: #409EFF;
+    background-color: #ecf5ff;
+  }
+}
+
+.file-card:hover {
+  transform: translateY(-5px);
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+
+  .el-avatar {
+    flex-shrink: 0; // 防止头像被压缩
+    border: 1px solid #eee;
+  }
+}
+
+.owner-name {
+  font-weight: 500;
+  flex: 1; // 让名字占据剩余空间
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-name {
+  font-size: 16px;
+  word-break: break-all;
+  line-height: 1.4;
+  margin: 4px 0;
+}
+
+.file-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  font-size: 14px;
+  align-items: center; // 垂直居中对齐
+  padding: 4px 0;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+.no-more {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+}
+
+
+//滚动条样式
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background-color: rgb(218, 218, 218);
+  transition: all 0.2s;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: rgb(172, 172, 172);
+  }
 }
 </style>

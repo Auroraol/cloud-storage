@@ -36,5 +36,15 @@ export const shareApi = {
       method: RequestEnum.POST,
       data
     })
+  },
+
+  // 删除分享
+  deleteShare(params: Share.ShareBasicDeleteRequestData) {
+    return request<Share.ShareBasicDeleteResponseData>(`${prefix}/share_service/v1/share/basic/delete`, {
+      method: RequestEnum.POST,
+      params
+    })
   }
 }
+
+

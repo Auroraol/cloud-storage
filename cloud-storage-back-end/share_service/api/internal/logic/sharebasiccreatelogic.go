@@ -7,6 +7,7 @@ import (
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/share_service/model"
 	"github.com/bwmarrin/snowflake"
+	"strconv"
 
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
@@ -35,6 +36,17 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 	//	logx.Errorf("failed to find repository id by id: %w", err)
 	//	return nil, err
 	//}
+	one, err := l.svcCtx.ShareBasicModel.FindOneByIdentity(l.ctx, uint64(req.RepositoryId))
+	if err != nil {
+		logx.Errorf("failed to find repository id by id: %w", err)
+		return nil, err
+	}
+	if one != nil {
+		logx.Error("该文件已分享！")
+		return &types.ShareBasicCreateResponse{
+			Id: "",
+		}, nil
+	}
 	node, err := snowflake.NewNode(1)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create snowflake node: %w", err)
@@ -50,10 +62,11 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 		RepositoryId:     uint64(req.RepositoryId),
 		UserRepositoryId: uint64(req.UserRepositoryId),
 		ExpiredTime:      req.ExpiredTime,
+		Code:             req.Code,
 	})
 	if err != nil {
-		logx.Errorf("failed to insert share basic: %w", err)
+		logx.Errorf("failed to insert share basic: %v", err)
 		return nil, err
 	}
-	return &types.ShareBasicCreateResponse{Id: newId}, nil
+	return &types.ShareBasicCreateResponse{Id: strconv.FormatInt(newId, 10)}, nil
 }

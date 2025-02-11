@@ -11,19 +11,28 @@
       <!-- 单文件 -->
       <div class="detail-content" v-if="selectFile">
         <div class="filename">
-          <template v-if="(selectFile.fileType === 3 || selectFile.fileType === 1) && selectFile.status === 2">
-            <Icon :cover="selectFile.fileCover" />
+          <template v-if="selectFile.ext">
+            <Icon :cover="selectFile.path" />
           </template>
           <template v-else>
-            <Icon v-if="selectFile.folderType === 0" :file-type="selectFile.fileType" />
-            <Icon v-else icon-name="folder_2" />
+            <Icon :file-type="0" :width="32" />
           </template>
-          <span class="text">{{ selectFile.filename }}</span>
+          <span class="text">{{ selectFile.name }}</span>
         </div>
         <template v-for="(item, index) in details" :key="index">
           <div class="content-item" v-if="item.label !== 'divider'">
             <div class="label">{{ item.label }}</div>
-            <div class="value">{{ selectFile[item.key] !== undefined ? selectFile[item.key] : 0 }}</div>
+            <div class="value">
+              <template v-if="item.key === 'update_time'">
+                {{ formatTime(selectFile[item.key]) }}
+              </template>
+              <template v-else-if="item.key === 'expired_time'">
+                {{formatExpiredTime(selectFile[item.key]) }}
+              </template>
+              <template v-else>
+                {{ selectFile[item.key] !== undefined ? selectFile[item.key] : 0 }}
+              </template>
+            </div>
           </div>
           <div class="divider" v-else />
         </template>
@@ -43,7 +52,9 @@ export default {
 </script>
 <script setup>
 import { computed } from "vue"
+import dayjs from 'dayjs'
 import Icon from "@/components/FileIcon/Icon.vue"
+import { formatTime } from "@/utils/format/formatTime"
 
 const props = defineProps({
   selectFileProps: {
@@ -53,17 +64,27 @@ const props = defineProps({
 })
 
 const selectFile = computed(() => {
+  // console.log("selectFileProps", props.selectFileProps[0])
   return props.selectFileProps.length === 1 ? props.selectFileProps[0] : null
 })
 
 const details = [
-  { label: "分享时间", key: "createTime" },
-  { label: "有效期", key: "expireTime" },
+  { label: "分享时间", key: "update_time" },
+  { label: "有效期", key: "expired_time" },
   { label: "提取码", key: "code" },
-  { label: "浏览", key: "browseCount" },
+  { label: "浏览", key: "click_num" },
   { label: "保存", key: "saveCount" },
   { label: "下载", key: "downloadCount" }
 ]
+
+
+// 计算过期时间
+const formatExpiredTime = (expiredTime) => {
+  if (!expiredTime) return '-'
+  const expirationDate = dayjs(selectFile.value.update_time).add(expiredTime, 'second') // 将当前时间加上过期时间（秒）
+  return expirationDate.format('YYYY-MM-DD HH:mm:ss') 
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -116,6 +137,10 @@ const details = [
     margin-bottom: 12px;
     display: flex;
     align-items: center; // 图标和文字对齐
+  }
+
+  .text {
+    margin-left: 8px;
   }
   .content-item {
     padding: 10px 0;

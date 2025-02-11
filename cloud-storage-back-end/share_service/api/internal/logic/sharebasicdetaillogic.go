@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 	"github.com/Auroraol/cloud-storage/common/cache"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservice"
@@ -34,13 +35,19 @@ func NewShareBasicDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *ShareBasicDetailLogic) ShareBasicDetail(req *types.DetailRequest) (resp *types.DetailResponse, err error) {
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
+	id, err := strconv.ParseInt(req.Id, 10, 64)
+	if err != nil {
+		logx.Error("转换数字失败！")
+		return nil, err
+	}
 	//先查询缓存中有没有该数据
-	redisQueryKey := cache.CacheShareKey + strconv.FormatInt(req.Id, 10)
+	redisQueryKey := cache.CacheShareKey + strconv.FormatInt(id, 10)
 	ifExists, err := l.svcCtx.RedisClient.Exists(redisQueryKey)
 	if err != nil {
 		return nil, err
 	}
 	if ifExists == true {
+		// 有
 		jsonStr, err := l.svcCtx.RedisClient.Get(redisQueryKey)
 		if err != nil {
 			return nil, err
@@ -55,7 +62,7 @@ func (l *ShareBasicDetailLogic) ShareBasicDetail(req *types.DetailRequest) (resp
 			return nil, err
 		}
 		//增加点击数
-		err = l.svcCtx.ShareBasicModel.AddOneClick(l.ctx, req.Id)
+		err = l.svcCtx.ShareBasicModel.AddOneClick(l.ctx, id)
 		if err != nil {
 			return nil, response.NewErrMsg("增加点击数失败！")
 		}
@@ -73,11 +80,11 @@ func (l *ShareBasicDetailLogic) ShareBasicDetail(req *types.DetailRequest) (resp
 		recover()
 		redisLock.Release()
 	}()
-	shareInfo, err := l.svcCtx.ShareBasicModel.FindOne(l.ctx, uint64(req.Id))
-	switch err {
-	case nil:
+	shareInfo, err := l.svcCtx.ShareBasicModel.FindOne(l.ctx, uint64(id))
+	switch {
+	case err == nil:
 		break
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		//缓存空数据
 		err = l.svcCtx.RedisClient.Setex(redisQueryKey, "", cache.RedisLockExpireSeconds)
 		if err != nil {
@@ -113,7 +120,7 @@ func (l *ShareBasicDetailLogic) ShareBasicDetail(req *types.DetailRequest) (resp
 	}
 	l.svcCtx.RedisClient.Setex(redisQueryKey, jsonStr, cache.RedisLockExpireSeconds)
 	//增加点击数
-	err = l.svcCtx.ShareBasicModel.AddOneClick(l.ctx, req.Id)
+	err = l.svcCtx.ShareBasicModel.AddOneClick(l.ctx, id)
 	if err != nil {
 		return nil, response.NewErrMsg("增加点击数失败！")
 	}

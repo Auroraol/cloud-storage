@@ -20,7 +20,7 @@ onMounted(() => {
   const winState: WinStateDTO = {
     // width: 1024,
     width: 1224,
-    height: 797,
+    height: 800,
     center: true,
     maxable: true,
     resizable: true

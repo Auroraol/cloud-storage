@@ -19,10 +19,10 @@ import (
 )
 service share_service {
 	@doc (
-		summary: "获取资源详情"
+		summary: "获取资源详情(用于打开分享链接)"
 	)
 	@handler ShareBasicDetail
-	post /share/basic/detail (DetailRequest) returns (DetailResponse)
+	get /share/basic/detail (DetailRequest) returns (DetailResponse)
 }
 
 //need login
@@ -48,6 +48,12 @@ service share_service {
 	)
 	@handler ShareBasicSave
 	post /share/basic/save (ShareBasicSaveRequest) returns (ShareBasicSaveResponse)
+
+	@doc (
+		summary: "资源删除"
+	)
+	@handler ShareBasicDelete
+	post /share/basic/delete (ShareBasicDeleteRequest) returns (ShareBasicDeleteResponse)
 }
 
 // goctl api go --api *.api --dir ./..

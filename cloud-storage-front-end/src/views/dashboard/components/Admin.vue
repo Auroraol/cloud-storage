@@ -933,18 +933,25 @@ const handleShare = async () => {
   }
 
   try {
+    // 生成随机提取码(6位数)
+    const codes_str = Math.random().toString(36).substring(2, 8)
     // 创建分享
     const response = await shareApi.createShare({
-      repository_id: contextMenu.row.id,
-      user_repository_id: contextMenu.row.repository_id,
-      expired_time: 7 * 24 * 60 * 60 // 7天过期时间(秒)
+      repository_id: contextMenu.row.repository_id,
+      user_repository_id: contextMenu.row.id,
+      expired_time: 7 * 24 * 60 * 60, // 7天过期时间(秒)
+      code: codes_str
     })
 
+    if (response.data.id === "") {
+      ElMessage.warning("文件已分享")
+      return
+    }
+
     if (response.data) {
-      // 生成分享链接
-      // TODO
-      const baseUrl = window.location.origin
-      const shareLink = `${baseUrl}/share/${response.data.id}`
+      // console.log("response.data", response.data)
+      const baseUrl = import.meta.env.VITE_API_URL_3
+      const shareLink = `${baseUrl}/share_service/v1/share/basic/detail?id=${response.data.id}&code=${codes_str}`
 
       // 显示分享对话框
       shareDialog.link = shareLink
@@ -1085,7 +1092,7 @@ onUnmounted(() => {
   }
 
   .pagination {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: flex-end;
   }
