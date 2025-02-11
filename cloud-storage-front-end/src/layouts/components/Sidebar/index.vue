@@ -44,10 +44,14 @@ const tipLineWidth = computed(() => {
   return !isTop.value ? "2px" : "0px"
 })
 
-const cloud = computed(() => {
-  return {
-    percentage: 19.9
-  }
+import { useUserStore } from "@/store/modules/user"
+import { formatFileSize } from "@/utils/format/formatFileSize"
+
+const userStore = useUserStore()
+const capacity = computed(() => userStore.capacity)
+const capacityPercentage = computed(() => {
+  const percentage = (capacity.value.now_volume / capacity.value.total_volume) * 100
+  return percentage.toFixed(2)
 })
 </script>
 
@@ -69,12 +73,17 @@ const cloud = computed(() => {
       </el-menu>
       <!-- 存储占用 -->
       <div class="storage-occupancy">
-        <el-progress type="circle" class="storage-occupancy-progress" :percentage="parseFloat(cloud.percentage)" />
+        <el-progress type="circle" class="storage-occupancy-progress" :percentage="capacityPercentage" />
         <div class="storage-occupancy-tip">
-          <el-tooltip effect="dark" content="存储占用：上传文件后会消耗存储并无法回退" placement="top">
+          <el-tooltip effect="dark" content="存储占用：上传文件后会消耗存储" placement="top">
             <div style="color: #696969">存储占用情况</div>
           </el-tooltip>
-          <div style="color: #696969; margin-top: 5px">1933.0G/2055.0G 94%</div>
+          <div style="color: #696969; margin-top: 5px">
+            <span style="white-space: nowrap">
+              {{ formatFileSize(capacity.now_volume) }}/{{ formatFileSize(capacity.total_volume) }}
+            </span>
+            {{ capacityPercentage }}%
+          </div>
         </div>
       </div>
     </el-scrollbar>
@@ -168,7 +177,7 @@ const cloud = computed(() => {
   }
   .storage-occupancy-tip {
     position: absolute;
-    top: 60%;
+    top: 61%;
     left: 50%;
     transform: translate(-50%, 50%);
     text-align: center; // 使文字居中

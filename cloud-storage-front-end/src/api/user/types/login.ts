@@ -32,6 +32,8 @@ export type UserInfoResponseData = ApiResponseData<{
   brief: string // 简介|个性签名
   info: string // 新增信息
   roles: string[] // 角色
+  now_volume: number // 当前容量
+  total_volume: number // 总容量
 }>
 
 /** 获取短信验证码的响应数据 */

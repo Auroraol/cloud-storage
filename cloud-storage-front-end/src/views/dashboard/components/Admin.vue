@@ -234,6 +234,8 @@ import {
 } from "@/api/file/types/upload"
 
 import { isNotEmpty } from "@/utils/isEmpty"
+import { formatFileSize } from "@/utils/format/formatFileSize"
+
 // 添加 ref 用于获取输入框元素
 const renameInput = ref<HTMLInputElement>()
 
@@ -254,19 +256,6 @@ interface UploadHistoryItem {
   status: "success" | "error"
   url?: string
   key?: string
-}
-
-// 格式化文件大小
-const formatFileSize = (size: number): string => {
-  if (!size || isNaN(size)) return "0 B"
-  const units = ["B", "KB", "MB", "GB", "TB"]
-  let index = 0
-  let fileSize = size
-  while (fileSize >= 1024 && index < units.length - 1) {
-    fileSize /= 1024
-    index++
-  }
-  return `${fileSize.toFixed(2)} ${units[index]}`
 }
 
 // 格式化日期的函数

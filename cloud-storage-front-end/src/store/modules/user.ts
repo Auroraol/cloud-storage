@@ -20,6 +20,13 @@ export const useUserStore = defineStore("user", () => {
   const username = ref<string>("")
   const avatar = ref<string>("")
   const userInfo = ref<any>({})
+  const capacity = ref<{
+    now_volume: number
+    total_volume: number
+  }>({
+    now_volume: 0,
+    total_volume: 0
+  })
 
   const tagsViewStore = useTagsViewStore()
   const settingsStore = useSettingsStore()
@@ -47,6 +54,9 @@ export const useUserStore = defineStore("user", () => {
     avatar.value = data.avatar
     // 用户详情
     userInfo.value = data
+    // 容量
+    capacity.value.now_volume = data.now_volume
+    capacity.value.total_volume = data.total_volume
   }
 
   /** 模拟角色变化 */
@@ -89,7 +99,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, roles, username, avatar, userInfo, login, getInfo, changeRoles, logout, resetToken }
+  return { token, roles, username, avatar, userInfo, capacity, login, getInfo, changeRoles, logout, resetToken }
 })
 
 /**
