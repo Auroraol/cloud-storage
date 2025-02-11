@@ -77,7 +77,7 @@ export type UserFileDeleteResponseData = ApiResponseData<object>
 
 export interface UserFileMoveRequestData {
   id: number
-  parent_id: number
+  parent_id: number // 父文件夹ID
 }
 
 export type UserFileMoveResponseData = ApiResponseData<object>

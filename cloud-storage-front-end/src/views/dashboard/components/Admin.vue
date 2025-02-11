@@ -204,14 +204,14 @@
     <div v-show="contextMenu.visible" class="context-menu-mask" @click="closeContextMenu" @contextmenu.prevent />
 
     <!-- 文件预览对话框 -->
-    <el-dialog v-model:visible="previewDialog.visible" title="文件预览" width="80%">
+    <!-- <el-dialog v-model:visible="previewDialog.visible" title="文件预览" width="80%">
       <component :is="previewComponent" :url="previewUrl" :resource="previewResource" />
       <template v-slot:footer>
         <span>
           <el-button @click="previewDialog.visible = false">关闭</el-button>
         </span>
       </template>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -221,10 +221,10 @@ import { ElMessage } from "element-plus"
 import type { UploadRequestOptions, UploadRawFile } from "element-plus"
 import Icon from "@/components/FileIcon/Icon.vue"
 import { debounce } from "lodash-es"
-import Audio from "@/views/dashboard/components/file-preview/Audio.vue"
-import Image from "@/views/dashboard/components/file-preview/Image.vue"
-import Default from "@/views/dashboard/components/file-preview/Default.vue"
-import Office from "@/views/dashboard/components/file-preview/Office.vue"
+// import Audio from "@/views/dashboard/components/file-preview/Audio.vue"
+// import Image from "@/views/dashboard/components/file-preview/Image.vue"
+// import Default from "@/views/dashboard/components/file-preview/Default.vue"
+// import Office from "@/views/dashboard/components/file-preview/Office.vue"
 
 // api接口
 import { userFileApi } from "@/api/file/repository"
@@ -238,7 +238,6 @@ import {
 } from "@/api/file/types/upload"
 
 import { isNotEmpty } from "@/utils/isEmpty"
-import { el } from "element-plus/es/locale"
 
 interface FileListItem {
   id: number
@@ -407,7 +406,7 @@ const getFolderSize = async (folderId: number): Promise<number> => {
   }
 }
 
-// 修改获取文件列表的函数
+// 获取文件列表的函数
 const loadFileList = async () => {
   loading.value = true
   try {
@@ -420,6 +419,7 @@ const loadFileList = async () => {
       size: pageSize.value
     })
 
+    console.log("文件列表", fileResponse.data)
     // 处理文件和文件夹
     const filesAndFolders = await Promise.all(
       fileResponse.data.list.map(async (item) => {
@@ -863,19 +863,19 @@ const loadFolderList = async () => {
 const previewDialog = ref({ visible: false })
 const previewUrl = ref("")
 const previewResource = ref(null)
-const previewComponent = ref(Default)
+// const previewComponent = ref(Default)
 
 const previewFile = (file) => {
   previewUrl.value = file.url // 假设文件对象有一个 url 属性
   previewResource.value = file // 传递文件资源
   if (file.type === "audio") {
-    previewComponent.value = Audio
+    // previewComponent.value = Audio
   } else if (file.type === "image") {
-    previewComponent.value = Image
+    // previewComponent.value = Image
   } else if (file.type === "office") {
-    previewComponent.value = Office
+    // previewComponent.value = Office
   } else {
-    previewComponent.value = Default
+    // previewComponent.value = Default
   }
   previewDialog.value.visible = true
 }

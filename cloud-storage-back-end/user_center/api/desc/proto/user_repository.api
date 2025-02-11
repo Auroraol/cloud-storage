@@ -36,9 +36,7 @@ type UserFileAndFolderListResponse {
 
 // 文件列表
 type UserFileListRequest {
-    Id   int64 `json:"id"`   //查询的文件夹id
-    Page int64 `json:"page"` //查询的第几页
-    Size int64 `json:"size"` //每页页数
+    Id   int64 `json:"id"`   //查询的文件夹id, 对应数据表字段parentId
 }
 
 type UserFileListResponse {

@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/Auroraol/cloud-storage/upload_service/model"
 	"github.com/Masterminds/squirrel"
@@ -27,6 +28,7 @@ type (
 		FindAllFolderById(ctx context.Context, id int64, userId int64) ([]*UserRepository, error)
 		CountByParentIdAndName(ctx context.Context, parentId int64, userId int64, Name string) (int64, error)
 		CountByIdAndParentId(ctx context.Context, id int64, userId int64, parentId int64) (int64, error)
+		CountTotalByIdAndParentId(ctx context.Context, userId int64, parentId int64) (int64, error)
 	}
 
 	customUserRepositoryModel struct {
@@ -197,6 +199,22 @@ func (m *defaultUserRepositoryModel) CountByIdAndParentId(ctx context.Context, i
 	case nil:
 		return resp, nil
 	case sqlc.ErrNotFound:
+		return 0, model.ErrNotFound
+	default:
+		return 0, err
+	}
+}
+
+// 计算目录下文件数量
+func (m *defaultUserRepositoryModel) CountTotalByIdAndParentId(ctx context.Context, userId int64, parentId int64) (int64, error) {
+	countBuilder := m.CountBuilder("id")
+	query, values, err := countBuilder.Where("parent_id = ?", parentId).Where("user_id = ?", userId).ToSql()
+	var resp int64
+	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
+	switch {
+	case err == nil:
+		return resp, nil
+	case errors.Is(err, sqlc.ErrNotFound):
 		return 0, model.ErrNotFound
 	default:
 		return 0, err

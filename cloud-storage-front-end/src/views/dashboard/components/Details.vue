@@ -50,8 +50,8 @@
       >
         分享
       </n-button>
-      
-      <n-popconfirm 
+
+      <n-popconfirm
         v-if="user().user && user().user?.username !== 'guest'"
         positive-text="确定" negative-text="算了"
         @positive-click="useCdn"
