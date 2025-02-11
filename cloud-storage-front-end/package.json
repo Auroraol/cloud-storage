@@ -131,7 +131,10 @@
     "vue-router": "4.4.5",
     "vxe-table": "4.6.23",
     "vxe-table-plugin-element": "4.0.4",
-    "xe-utils": "3.5.31"
+    "xe-utils": "3.5.31",
+    "@vue-office/docx": "^1.2.0",
+    "vue3-audio-player": "^1.0.6",
+    "dplayer": "^1.27.1"
   },
   "devDependencies": {
     "@types/lodash-es": "4.17.12",

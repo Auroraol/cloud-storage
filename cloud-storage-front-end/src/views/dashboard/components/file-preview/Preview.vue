@@ -1,133 +1,93 @@
 <template>
-  <div class="preview" >
-    <!-- <Transition name="preview"> -->
-    <div class="preview-content" ref="previewRef">
-      <div class="preview-title">
-        {{ props.resource.name }}
+  <div class="preview">
+    <Transition name="preview">
+      <div class="preview-content" ref="previewRef">
+        <div class="preview-title">
+          {{ props.resource.name }}
+        </div>
+        <div class="preview-body">
+          <component
+            v-if="url"
+            style="width: 100%; height: 100%"
+            :is="viewType"
+            :resource="props.resource"
+            :maximize="maximize"
+            :url="url"
+          />
+        </div>
       </div>
-      <div class="preview-body">
-        <component
-          v-if="url"
-          style="width: 100%; height: 100%;"
-          :is="viewType"
-          :resource="props.resource"
-          :maximize="maximize"
-          :url="url"
-        />
-      </div>
-    </div>
-    <!-- </Transition> -->
-    <div class="overlay" v-if="maximize" @click="close"></div>
-
-    <div v-if="viewType !== Default" class="maximize-btn">
-      <n-button tertiary circle @click="open">
-        <template #icon>
-          <c-icon name="fa-expand" color="#999" />
-        </template>
-      </n-button>
-    </div>
+    </Transition>
   </div>
 </template>
-
-<script setup>
+<script lang="ts">
+export default {
+  name: "Preview"
+}
+</script>
+<script setup lang="ts">
 import { computed, watch, ref } from "vue"
 import Default from "./Default.vue"
 import YImage from "./Image.vue"
-import YImageM from "./Image-m.vue"
-import YText from "./Text.vue"
 import YVideo from "./Video.vue"
 import YAudio from "./Audio.vue"
 import YOffice from "./Office.vue"
-import { preview } from "@/http/Explore"
-import store from "@/store/temp"
+import YText from "./Text.vue"
+// import { preview } from "@/http/Explore"
+// import store from "@/store/temp"
+
+const previewRef = ref(null)
+const maximize = ref(false)
 
 const props = defineProps({
-  api: {
-    type: Function,
-    required: false,
-    default: preview
-  },
   resource: {
     type: Object,
     required: true
   }
-});
+})
 
-const filetype = ref(null);
-store().getFiletype().then(res => {
-  filetype.value = res;
-});
+const fileTypes = {
+  image: ["jpg", "jpeg", "png", "gif", "bmp", "webp"],
+  video: ["mp4", "webm", "ogg"],
+  audio: ["mp3", "wav", "ogg"],
+  office: ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf"],
+  text: ["txt", "md", "json", "js", "css", "html"]
+}
 
-const isMobile = window.sessionStorage.getItem("isMobile");
-
-const url = ref("");
-
-watch(() => props.resource, () => {
-  url.value = "";
-  getUrl(props.resource.id);
-});
-
-const getUrl = async (id) => {
-  let u = "";
-  await props.api(id).then(url => {
-    u = url;
-    console.log(url);
-  });
-  url.value = u;
-  return u;
-};
-
-getUrl(props.resource.id);
-
+// 计算属性
+const url = computed(() => props.resource.url || "")
 const viewType = computed({
   get: () => {
-    let type = props.resource.type;
-    let v = getView(type);
-    if (v === Default) {
-      let dot = props.resource.name.indexOf(".");
-      if (dot === -1) return v;
-      type = props.resource.name.substring(dot + 1);
-      v = getView(type);
+    let type = props.resource.type
+    if (type.indexOf(".") !== -1) {
+      type = type.substring(type.indexOf(".") + 1)
     }
-    return v;
+    let v = getView(type)
+    if (v === Default) {
+      const dot = props.resource.name.indexOf(".")
+      if (dot === -1) return v
+      type = props.resource.name.substring(dot + 1)
+      v = getView(type)
+    }
+    return v
   },
-  set: () => { }
-});
+  set: () => {}
+})
 
-const previewRef = ref(null);
-const maximize = ref(false);
-const offsetTop = ref(0);
-const offsetLeft = ref(0);
-const open = function() {
-  const el = previewRef.value;
-  const { top, left } = el.getBoundingClientRect(el);
-  // el.style.top = `${top}px`;
-  // el.style.left = `${left}px`;
-  el.classList.toggle("fixed");
-  maximize.value = true;
-}
-
-const close = function() {
-  const el = previewRef.value;
-  // el.style.transition = `unset`;
-  el.classList.toggle("fixed");
-  maximize.value = false;
-}
-
-function getView(type) {
-  if (filetype.value === null) return Default;
-  if (filetype.value.image.indexOf(type) !== -1) {
-    return isMobile ? YImageM : YImage;
-  } else if (filetype.value.text.indexOf(type) !== -1) {
-    return YText;
-  } else if (filetype.value.video.indexOf(type) !== -1) {
-    return YVideo;
-  } else if (filetype.value.audio.indexOf(type) !== -1) {
-    return YAudio;
-  } else if (filetype.value.office.indexOf(type) !== -1) {
-    return YOffice;
+// 获取相应的预览组件
+function getView(type: string) {
+  console.log("type: ", type)
+  if (fileTypes.image.includes(type)) {
+    return YImage
+  } else if (fileTypes.video.includes(type)) {
+    return YVideo
+  } else if (fileTypes.audio.includes(type)) {
+    return YAudio
+  } else if (fileTypes.office.includes(type)) {
+    return YOffice
+  } else if (fileTypes.text.includes(type)) {
+    return YText
   } else {
-    return Default;
+    return Default
   }
 }
 </script>
@@ -176,7 +136,7 @@ function getView(type) {
     width: 80vw;
     height: calc(80vh + 30px);
     padding: 10px 20px;
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 10px;
 
     .preview-title {
@@ -187,7 +147,6 @@ function getView(type) {
       overflow-y: auto;
     }
   }
-
 
   .overlay {
     position: fixed;
@@ -205,7 +164,6 @@ function getView(type) {
     right: 0;
     padding: 5px;
   }
-
 }
 // .preview-enter-from {
 //   top: 0;

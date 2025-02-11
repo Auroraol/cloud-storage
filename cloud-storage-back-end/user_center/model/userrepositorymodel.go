@@ -83,7 +83,7 @@ func (m *defaultUserRepositoryModel) FindByRepositoryId(ctx context.Context, rep
 func (m *defaultUserRepositoryModel) FindAllInPage(ctx context.Context, parentId int64, userId int64, startIndex int64, pageSize int64) ([]*UserRepository, error) {
 	var resp []*UserRepository
 	rowBuilder := m.RowBuilder()
-	query, values, err := rowBuilder.Where("parent_id = ?", parentId).Where("user_id = ?", userId).Offset(uint64(startIndex)).Limit(uint64(pageSize)).ToSql()
+	query, values, err := rowBuilder.Where("parent_id = ?", parentId).Where("user_id = ?", userId).OrderBy("repository_id").Offset(uint64(startIndex)).Limit(uint64(pageSize)).ToSql()
 	if err != nil {
 		return nil, err
 	}

@@ -90,11 +90,6 @@
             {{ formatDate(row.updateTime) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
-          <template #default="{ row }">
-            <el-button @click="previewFile(row)">预览</el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </div>
 
@@ -151,7 +146,11 @@
     <el-dialog v-model="renameDialog.visible" title="重命名" width="30%">
       <el-form :model="renameDialog.form" label-width="80px">
         <el-form-item label="新名称">
-          <el-input v-model="renameDialog.form.name" />
+          <el-input
+            ref="renameInput"
+            v-model="renameDialog.form.name"
+            @keyup.enter="handleRename(renameDialog.fileId, renameDialog.form.name)"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -204,27 +203,24 @@
     <div v-show="contextMenu.visible" class="context-menu-mask" @click="closeContextMenu" @contextmenu.prevent />
 
     <!-- 文件预览对话框 -->
-    <!-- <el-dialog v-model:visible="previewDialog.visible" title="文件预览" width="80%">
-      <component :is="previewComponent" :url="previewUrl" :resource="previewResource" />
-      <template v-slot:footer>
+    <el-dialog v-model="previewDialog.visible" title="文件预览" width="80%">
+      <Preview :resource="previewResource" style="height: 330px" />
+      <template #footer>
         <span>
           <el-button @click="previewDialog.visible = false">关闭</el-button>
         </span>
       </template>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, computed, onUnmounted } from "vue"
+import { ref, reactive, onMounted, computed, onUnmounted, nextTick } from "vue"
 import { ElMessage } from "element-plus"
 import type { UploadRequestOptions, UploadRawFile } from "element-plus"
 import Icon from "@/components/FileIcon/Icon.vue"
 import { debounce } from "lodash-es"
-// import Audio from "@/views/dashboard/components/file-preview/Audio.vue"
-// import Image from "@/views/dashboard/components/file-preview/Image.vue"
-// import Default from "@/views/dashboard/components/file-preview/Default.vue"
-// import Office from "@/views/dashboard/components/file-preview/Office.vue"
+import Preview from "@/views/dashboard/components/file-preview/Preview.vue"
 
 // api接口
 import { userFileApi } from "@/api/file/repository"
@@ -238,6 +234,8 @@ import {
 } from "@/api/file/types/upload"
 
 import { isNotEmpty } from "@/utils/isEmpty"
+// 添加 ref 用于获取输入框元素
+const renameInput = ref<HTMLInputElement>()
 
 interface FileListItem {
   id: number
@@ -247,6 +245,7 @@ interface FileListItem {
   fileType?: number
   isFolder: boolean
   fileCover?: string
+  ext: string // 扩展名
 }
 
 interface UploadHistoryItem {
@@ -353,7 +352,7 @@ const isPreviewAble = (file: FileListItem): boolean => {
 }
 
 // 根据文件扩展名判断文件类型
-const getFileType = (ext: string): number => {
+const getFileTypeNumber = (ext: string): number => {
   if (!ext) return 0 // 文件夹返回0
   const extMap = {
     // 图片
@@ -434,18 +433,20 @@ const loadFileList = async () => {
             fileSize: folderSize, // 文件夹大小
             updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
             fileCover: "", // 文件夹没有封面
-            isFolder: true
+            isFolder: true,
+            ext: ""
           }
         } else {
           // 文件
           return {
             id: item.id,
             filename: item.name,
-            fileType: getFileType(item.ext),
+            fileType: getFileTypeNumber(item.ext),
             fileSize: item.size,
             updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
             fileCover: item.path,
-            isFolder: false
+            isFolder: false,
+            ext: item.ext
           }
         }
       })
@@ -587,7 +588,7 @@ const handleUploadSuccess = async (data: any, file: File) => {
   // console.log(parentId, data.repository_id, file.name)
 
   // 保存文件关联信息
-  const parentId = currentPath.value[currentPath.value.length - 1] || 0
+  const parentId = currentPath.value[currentPath.value.length - 1]
   console.log("parentId: ", parentId)
   await userFileApi.saveRepository({
     parent_id: Number(parentId),
@@ -674,6 +675,7 @@ const confirmCreateFolder = async () => {
 const handleRowClick = (row: FileListItem) => {
   // console.log("点击的行:", row)
   if (row.isFolder) {
+    // 文件夹跳转
     currentPath.value.push(row.id)
     pathHistory.value.push({
       id: row.id,
@@ -681,6 +683,9 @@ const handleRowClick = (row: FileListItem) => {
     })
     currentPage.value = 1
     loadFileList()
+  } else {
+    // 文件预览
+    previewFile(row)
   }
 }
 
@@ -823,12 +828,23 @@ const closeContextMenu = () => {
   document.removeEventListener("click", closeContextMenu)
 }
 
-// 打开重命名对话框
+// 修改打开重命名对话框的函数
 const openRenameDialog = () => {
   if (!contextMenu.row) return
   renameDialog.fileId = contextMenu.row.id
   renameDialog.form.name = contextMenu.row.filename
   renameDialog.visible = true
+
+  // 使用 nextTick 确保对话框完全渲染后再聚焦
+  nextTick(() => {
+    // 获取 el-input 组件的输入框元素并聚焦
+    const input = renameInput.value?.$el.querySelector("input")
+    if (input) {
+      input.focus()
+      input.select() // 可选：自动选中所有文本
+    }
+  })
+
   closeContextMenu()
 }
 
@@ -861,24 +877,32 @@ const loadFolderList = async () => {
 
 // 文件预览相关状态
 const previewDialog = ref({ visible: false })
-const previewUrl = ref("")
-const previewResource = ref(null)
-// const previewComponent = ref(Default)
+const previewResource = ref({
+  id: 0,
+  name: "",
+  type: "",
+  url: "",
+  size: 0
+})
 
-const previewFile = (file) => {
-  previewUrl.value = file.url // 假设文件对象有一个 url 属性
-  previewResource.value = file // 传递文件资源
-  if (file.type === "audio") {
-    // previewComponent.value = Audio
-  } else if (file.type === "image") {
-    // previewComponent.value = Image
-  } else if (file.type === "office") {
-    // previewComponent.value = Office
-  } else {
-    // previewComponent.value = Default
+const previewFile = (file: FileListItem) => {
+  // 构建预览资源对象
+  previewResource.value = {
+    id: file.id,
+    name: file.filename,
+    // type: getFileExtension(file.filename),
+    type: file.ext,
+    url: file.fileCover || "", // 这里使用文件的访问路径
+    size: file.fileSize || 0
   }
   previewDialog.value.visible = true
 }
+
+// // 获取文件扩展名
+// const getFileExtension = (filename: string): string => {
+//   const parts = filename.split(".")
+//   return parts.length > 1 ? parts.pop()?.toLowerCase() || "" : ""
+// }
 
 // 初始化
 onMounted(() => {

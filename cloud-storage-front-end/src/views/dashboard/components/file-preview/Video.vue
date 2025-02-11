@@ -1,39 +1,38 @@
 <template>
   <div class="preview-video flex-center">
-    <div id="dplayer"></div>
+    <div id="dplayer" />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-import DPlayer from 'dplayer';
+import { onMounted } from "vue"
+import DPlayer from "dplayer"
 
 const props = defineProps({
   resource: Object,
   url: String
-});
+})
 
 onMounted(() => {
   const dp = new DPlayer({
-    container: document.getElementById('dplayer'),
+    container: document.getElementById("dplayer"),
     video: {
       url: props.url,
       theme: "#d8eadc"
-    },
-  });
+    }
+  })
 })
 
 function getType(type) {
   switch (type) {
     case "mp4":
-      return "video/mp4";
+      return "video/mp4"
     case "avi":
-      return "video/webm";
+      return "video/webm"
     default:
-      return "video/mp4";
+      return "video/mp4"
   }
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -45,8 +44,6 @@ function getType(type) {
     max-width: 70vw;
   }
 }
-
-
 
 /* @media screen and (max-width: 1400px) {
   .video-box {
