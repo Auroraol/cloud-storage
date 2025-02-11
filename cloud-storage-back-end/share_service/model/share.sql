@@ -1,4 +1,4 @@
-CREATE TABLE `share_basic` (
+CREATE TABLE IF NOT EXISTS `share_basic` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint unsigned NOT NULL DEFAULT '0',
   `repository_id` bigint unsigned NOT NULL DEFAULT '0' COMMENT '公共池中的唯一标识',

@@ -24,7 +24,7 @@ func NewFindRepositoryIdByIdLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *FindRepositoryIdByIdLogic) FindRepositoryIdById(in *pb.FindRepositoryIdReq) (*pb.FindRepositoryIdReply, error) {
-	userRepositoryInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(in.Id))
+	userRepositoryInfo, err := l.svcCtx.UserRepositoryModel.FindByRepositoryId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
 	}

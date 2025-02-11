@@ -192,6 +192,10 @@
           <el-icon><FolderAdd /></el-icon>
           移动到
         </li>
+        <li @click="handleShare">
+          <el-icon><Share /></el-icon>
+          分享
+        </li>
         <li @click="handleDelete">
           <el-icon><Delete /></el-icon>
           删除
@@ -210,6 +214,20 @@
           <el-button @click="previewDialog.visible = false">关闭</el-button>
         </span>
       </template>
+    </el-dialog>
+
+    <!-- 添加分享结果对话框 -->
+    <el-dialog v-model="shareDialog.visible" title="分享成功" width="30%">
+      <div class="share-info">
+        <p>分享链接已创建，有效期7天</p>
+        <div class="share-link">
+          <el-input v-model="shareDialog.link" readonly>
+            <template #append>
+              <el-button @click="copyShareLink">复制</el-button>
+            </template>
+          </el-input>
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -235,6 +253,12 @@ import {
 
 import { isNotEmpty } from "@/utils/isEmpty"
 import { formatFileSize } from "@/utils/format/formatFileSize"
+import { useUserStore } from "@/store/modules/user"
+import { shareApi } from "@/api/share/share"
+import { Share } from "@element-plus/icons-vue"
+
+const userStore = useUserStore()
+const capacity = computed(() => userStore.capacity)
 
 // 添加 ref 用于获取输入框元素
 const renameInput = ref<HTMLInputElement>()
@@ -248,6 +272,7 @@ interface FileListItem {
   isFolder: boolean
   fileCover?: string
   ext: string // 扩展名
+  repository_id: number // 文件详情id
 }
 
 interface UploadHistoryItem {
@@ -423,7 +448,8 @@ const loadFileList = async () => {
             updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
             fileCover: "", // 文件夹没有封面
             isFolder: true,
-            ext: ""
+            ext: "",
+            repository_id: 0
           }
         } else {
           // 文件
@@ -435,7 +461,8 @@ const loadFileList = async () => {
             updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
             fileCover: item.path,
             isFolder: false,
-            ext: item.ext
+            ext: item.ext,
+            repository_id: item.repository_id
           }
         }
       })
@@ -467,6 +494,13 @@ const chunks = ref<Blob[]>([])
 const currentChunkIndex = ref(0)
 const uploadId = ref("")
 const uploadedETags = ref<string[]>([])
+
+// 添加分享对话框状态
+const shareDialog = reactive({
+  visible: false,
+  link: "",
+  code: ""
+})
 
 // 处理文件上传
 const handleFileUpload = async (options: UploadRequestOptions) => {
@@ -585,6 +619,8 @@ const handleUploadSuccess = async (data: any, file: File) => {
     name: file.name
   })
 
+  // 更新容量显示
+  capacity.value.now_volume += file.size
   // const historyItem: UploadHistoryItem = {
   //   filename: file.name,
   //   size: file.size,
@@ -740,6 +776,8 @@ const handleDelete = async () => {
       })
     }
     ElMessage.success("删除成功")
+    // 更新容量显示
+    capacity.value.now_volume -= selectedFiles.value.reduce((total, file) => total + (file.fileSize || 0), 0)
     loadFileList()
   } catch (error) {
     console.error("删除失败:", error)
@@ -887,11 +925,49 @@ const previewFile = (file: FileListItem) => {
   previewDialog.value.visible = true
 }
 
-// // 获取文件扩展名
-// const getFileExtension = (filename: string): string => {
-//   const parts = filename.split(".")
-//   return parts.length > 1 ? parts.pop()?.toLowerCase() || "" : ""
-// }
+// 处理分享
+const handleShare = async () => {
+  if (!contextMenu.row) {
+    ElMessage.warning("请选择要分享的文件")
+    return
+  }
+
+  try {
+    // 创建分享
+    const response = await shareApi.createShare({
+      repository_id: contextMenu.row.id,
+      user_repository_id: contextMenu.row.repository_id,
+      expired_time: 7 * 24 * 60 * 60 // 7天过期时间(秒)
+    })
+
+    if (response.data) {
+      // 生成分享链接
+      // TODO
+      const baseUrl = window.location.origin
+      const shareLink = `${baseUrl}/share/${response.data.id}`
+
+      // 显示分享对话框
+      shareDialog.link = shareLink
+      shareDialog.visible = true
+    }
+
+    closeContextMenu()
+  } catch (error) {
+    console.error("创建分享失败:", error)
+    ElMessage.error("创建分享失败")
+  }
+}
+
+// 复制分享链接
+const copyShareLink = async () => {
+  try {
+    await navigator.clipboard.writeText(shareDialog.link)
+    ElMessage.success("链接已复制到剪贴板")
+  } catch (err) {
+    console.error("复制失败:", err)
+    ElMessage.error("复制失败")
+  }
+}
 
 // 初始化
 onMounted(() => {
@@ -1055,6 +1131,24 @@ onUnmounted(() => {
     right: 0;
     bottom: 0;
     z-index: 1999;
+  }
+
+  .share-info {
+    padding: 20px;
+
+    .share-link {
+      margin-top: 15px;
+
+      :deep(.el-input-group__append) {
+        padding: 0;
+
+        .el-button {
+          margin: 0;
+          border: none;
+          height: 100%;
+        }
+      }
+    }
   }
 }
 </style>

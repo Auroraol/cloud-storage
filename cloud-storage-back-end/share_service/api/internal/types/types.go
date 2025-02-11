@@ -16,17 +16,33 @@ type DetailResponse struct {
 }
 
 type ShareBasicCreateRequest struct {
-	UserRepositoryId int64 `json:"user_repository_id"`
-	ExpiredTime      int64 `json:"expiredTime"`
+	UserRepositoryId int64 `json:"user_repository_id"` // 用户文件id
+	RepositoryId     int64 `json:"repository_id"`      // 文件详情id
+	ExpiredTime      int64 `json:"expired_time"`
 }
 
 type ShareBasicCreateResponse struct {
 	Id int64 `json:"id"`
 }
 
+type ShareBasicListRequest struct {
+}
+
+type ShareBasicListResponse struct {
+	List []*ShareBasicListResponseData `json:"list"`
+}
+
+type ShareBasicListResponseData struct {
+	Id          int64  `json:"id"`
+	Filename    string `json:"file_name"`
+	ExpireTime  int64  `json:"expire_time"`
+	UpdataTime  int64  `json:"update_time"`
+	BrowseCount int32  `json:"browse_count"`
+}
+
 type ShareBasicSaveRequest struct {
 	RepositoryId int64 `json:"repository_id"` //分享的文件id
-	ParentId     int64 `json:"parentId"`      //保存在该parentId目录下
+	ParentId     int64 `json:"parent_id"`     //保存在该parentId目录下
 }
 
 type ShareBasicSaveResponse struct {

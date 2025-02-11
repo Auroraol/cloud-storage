@@ -65,7 +65,7 @@ service User {
 
 service userRepository {
   rpc getUserRepositoryNameByRepositoryId(RepositoryIdReq) returns(UserRepositoryNameReply);
-  rpc findRepositoryIdById(FindRepositoryIdReq) returns(FindRepositoryIdReply);
+  rpc findRepositoryIdById(FindRepositoryIdReq) returns(FindRepositoryIdReply); // 没有使用
   rpc createByShare(CreateByShareReq) returns(CreateByShareReply);
 }
 

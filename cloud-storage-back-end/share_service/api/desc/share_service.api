@@ -38,6 +38,12 @@ service share_service {
 	post /share/basic/create (ShareBasicCreateRequest) returns (ShareBasicCreateResponse)
 
 	@doc (
+		summary: "用户分享列表"
+	)
+	@handler ShareBasicList
+	get /share/basic/list (ShareBasicListRequest) returns (ShareBasicListResponse)
+
+	@doc (
 		summary: "资源保存"
 	)
 	@handler ShareBasicSave

@@ -33,6 +33,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ShareBasicCreateHandler(serverCtx),
 			},
 			{
+				// 用户分享列表
+				Method:  http.MethodGet,
+				Path:    "/share/basic/list",
+				Handler: ShareBasicListHandler(serverCtx),
+			},
+			{
 				// 资源保存
 				Method:  http.MethodPost,
 				Path:    "/share/basic/save",

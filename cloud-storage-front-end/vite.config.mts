@@ -56,8 +56,8 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^${viteEnv.VITE_APP_BASE_API}`), "") // 移除 BASE_API 前缀后，转发到文件上传服务
         },
-        // 文件下载服务
-        [`${viteEnv.VITE_APP_BASE_API}/download_service`]: {
+        // 分享服务
+        [`${viteEnv.VITE_APP_BASE_API}/share_service`]: {
           target: viteEnv.VITE_API_URL_3,
           changeOrigin: true,
           ws: true,

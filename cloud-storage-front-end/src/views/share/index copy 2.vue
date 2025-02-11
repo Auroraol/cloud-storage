@@ -79,8 +79,6 @@ interface ShareItem {
   downloadCount: number
   expireTime: Date
   createTime: Date
-
-  filename: string
 }
 
 const shareTableRef = ref()
@@ -229,20 +227,22 @@ const loadFiles = async () => {
   loading.value = true
 
   try {
-    const response = await shareApi.getShareList({ page: page.value, size: pageSize.value })
-    const { list } = response.data
-    console.log("list", list)
+    const response = await shareApi.getShareDetail({
+      id: page.value // 使用页码作为 id 参数
+    })
 
-    if (list.length > 0) {
-      list.forEach((item) => {
-        const newItem = {
-          ...item,
-          // fileId: item.id,
-          filename: item.file_name
-        }
-        fileList.value.push(newItem)
-      })
+    if (response.data) {
+      const newItem = {
+        ...response.data,
+        browseCount: 0,
+        saveCount: 0,
+        downloadCount: 0,
+        code: "XXXX", // 从响应中获取
+        expireTime: new Date(),
+        createTime: new Date()
+      }
 
+      fileList.value.push(newItem)
       tableDataNum.value += 1
       page.value += 1
     } else {

@@ -20,8 +20,9 @@ type DetailResponse {
 }
 
 type ShareBasicCreateRequest {
-	UserRepositoryId int64 `json:"user_repository_id"`
-	ExpiredTime      int64 `json:"expiredTime"`
+	UserRepositoryId int64 `json:"user_repository_id"`  // 用户文件id
+	RepositoryId int64 `json:"repository_id"`           // 文件详情id
+	ExpiredTime int64 `json:"expired_time"`
 }
 
 type ShareBasicCreateResponse {
@@ -30,9 +31,25 @@ type ShareBasicCreateResponse {
 
 type ShareBasicSaveRequest {
 	RepositoryId int64 `json:"repository_id"` //分享的文件id
-	ParentId     int64 `json:"parentId"`     //保存在该parentId目录下
+	ParentId     int64 `json:"parent_id"`     //保存在该parentId目录下
 }
 
 type ShareBasicSaveResponse {
 	Id int64 `json:"id"`
+}
+
+// 用户文件分享列表
+type ShareBasicListRequest {
+}
+
+type ShareBasicListResponse {
+	List []*ShareBasicListResponseData `json:"list"`
+}
+
+type ShareBasicListResponseData {
+	Id int64 `json:"id"`
+	Filename string `json:"file_name"`
+	ExpireTime int64 `json:"expire_time"`
+	UpdataTime int64 `json:"update_time"`
+	BrowseCount int32 `json:"browse_count"`
 }

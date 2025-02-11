@@ -69,10 +69,10 @@ func (m *defaultUserRepositoryModel) FindByRepositoryId(ctx context.Context, rep
 	query, values, err := rowBuilder.Where("repository_id = ?", repositoryId).ToSql()
 	var resp UserRepository
 	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, model.ErrNotFound
 	default:
 		return nil, err

@@ -157,7 +157,7 @@ const reloadTable = () => {
 }
 
 const handleTableRowSelect = (params) => {
- selectFiles.value = [params.row] // 将选中的行作为数组传递
+  selectFiles.value = [params.row] // 将选中的行作为数组传递
 }
 
 const handleRowClick = (params) => {
