@@ -13,6 +13,7 @@ type ServiceContext struct {
 	UserCenterRpc       user.User
 	RepositoryPoolModel model.RepositoryPoolModel
 	//RedisClient         *redis.Redis
+	UploadHistoryModel model.UploadHistoryModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -22,7 +23,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserCenterRpc: user.NewUser(
 			zrpc.MustNewClient(c.UserCenterRpcConf)),
 		RepositoryPoolModel: model.NewRepositoryPoolModel(conn, c.CacheRedis),
-
+		UploadHistoryModel:  model.NewUploadHistoryModel(conn, c.CacheRedis),
 		//RedisClient: redis.New(c.Redis.Host, func(r *redis.Redis) {
 		//	r.Type = c.Redis.Type
 		//	r.Pass = c.Redis.Pass

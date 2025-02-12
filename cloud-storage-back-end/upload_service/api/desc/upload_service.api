@@ -72,17 +72,22 @@ service upload_service {
 )
 service upload_service {
 	@doc (
-		summary:     "更新历史上传记录"
+		summary: "更新历史上传记录"
 	)
 	@handler UpdateHistory
 	post /file/history/update (UpdateHistoryRequest) returns (UpdateHistoryResponse)
 
 	@doc (
-		summary:     "历史记录列表"
+		summary: "分页查询历史记录列表"
 	)
 	@handler HistoryList
-	get /file/history/list (HistoryListRequest) returns (HistoryListResponse)
-}
+	post /file/history/list (HistoryListRequest) returns (HistoryListResponse)
 
+	@doc (
+		summary: "删除所有历史记录"
+	)
+	@handler HistoryDeleteByIdList
+	post /file/history/delete/all (HistoryDeleteAllRequest) returns (HistoryDeleteAllResponse)
+}
 
 // goctl api go --api *.api --dir ./..

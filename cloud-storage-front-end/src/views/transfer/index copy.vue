@@ -1,8 +1,7 @@
 <template>
   <div class="upload-view">
     <div class="header">
-      <el-button type="primary" @click="clear">清空记录</el-button>
-      <el-button type="primary" @click="loadHistoryFiles">刷新记录</el-button>
+      <el-button type="primary" @click="clearAll">清空全部记录</el-button>
       <div class="tabs">
         <span class="tab" :class="{ active: activeTab === 'uploading' }" @click="activeTab = 'uploading'">
           上传中({{ uploadingCount }})
@@ -20,7 +19,6 @@
           <span>文件</span>
           <span>大小</span>
           <span>状态</span>
-          <span>操作</span>
         </div>
 
         <div class="list-items">
@@ -29,9 +27,6 @@
               <span class="file-name">{{ file.name }}</span>
               <span class="file-size">{{ file.size }}</span>
               <span class="file-status">{{ file.status }}</span>
-              <span class="file-action">
-                <el-button type="danger" @click="deleteFile(file.id)">删除</el-button>
-              </span>
             </div>
           </div>
         </div>
@@ -54,7 +49,9 @@
           >
             <div class="item-main completed-item">
               <el-checkbox v-model="file.selected" />
-              <span class="file-name">{{ file.name }}</span>
+              <div class="file-info">
+                <span class="file-name">{{ file.name }}</span>
+              </div>
               <span class="file-size">{{ file.size }}</span>
               <span class="file-date">{{ file.date }}</span>
             </div>
@@ -62,89 +59,56 @@
         </div>
       </template>
     </div>
-
-    <!-- 添加分页 -->
-    <div class="pagination">
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :total="total"
-        :page-sizes="[10, 20, 50, 100]"
-        layout="total, sizes, prev, pager, next"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from "vue"
-import { historyFileApi } from "@/api/file/history"
-import { formatFileSize } from "@/utils/format/formatFileSize"
-import { formatTime } from "@/utils/format/formatTime"
+import { ref, computed } from "vue"
 
 interface UploadFile {
-  id: string
+  id: number
   name: string
-  size: number
+  size: string
   date: string
   status: "uploading" | "completed"
   selected: boolean
-  repository_id: number
 }
 
-// 实际数据
-const uploadedFiles = ref<UploadFile[]>([])
-const loading = ref(false)
-
-// 添加分页相关
-const currentPage = ref(0)
-const pageSize = ref(10)
-const total = ref(0)
-
-// 加载历史记录
-const loadHistoryFiles = async () => {
-  loading.value = true
-  try {
-    const response = await historyFileApi.getHistoryFileList({
-      page: currentPage.value,
-      size: pageSize.value
-    })
-
-    console.log("获取历史记录列表:", response.data.history_list)
-    uploadedFiles.value = response.data.history_list.map((item) => ({
-      id: item.id,
-      name: item.file_name,
-      size: formatFileSize(item.size),
-      date: formatTime(item.update_time),
-      status: item.status === 1 ? "completed" : "uploading",
-      selected: false,
-      repository_id: item.repository_id
-    }))
-
-    total.value = response.data.total
-  } catch (error) {
-    console.error("获取历史记录列表失败:", error)
-  } finally {
-    loading.value = false
+// 模拟数据
+const uploadedFiles = ref<UploadFile[]>([
+  {
+    id: 1,
+    name: "文件1.txt",
+    size: "150 KB",
+    date: "2023-10-01",
+    status: "uploading",
+    selected: false
+  },
+  {
+    id: 2,
+    name: "文件2.jpg",
+    size: "2.5 MB",
+    date: "2023-10-02",
+    status: "completed",
+    selected: false
+  },
+  {
+    id: 3,
+    name: "文件3.pdf",
+    size: "1.2 MB",
+    date: "2023-10-03",
+    status: "uploading",
+    selected: false
+  },
+  {
+    id: 4,
+    name: "文件4.docx",
+    size: "300 KB",
+    date: "2023-10-04",
+    status: "completed",
+    selected: false
   }
-}
-
-// 添加分页处理
-const handleSizeChange = (val: number) => {
-  pageSize.value = val
-  loadHistoryFiles()
-}
-
-const handleCurrentChange = (val: number) => {
-  currentPage.value = val
-  loadHistoryFiles()
-}
-
-onMounted(() => {
-  loadHistoryFiles()
-})
+])
 
 const activeTab = ref<"uploading" | "completed">("uploading")
 // const uploadedFiles = ref<UploadFile[]>([])
@@ -168,29 +132,24 @@ const handleSelectAll = (val: boolean) => {
   })
 }
 
-const clear = async () => {
-  try {
-    // 删除勾选的文件
-    if (uploadedFiles.value.length > 0) {
-      console.log("删除所有文件", uploadedFiles.value)
-      const ids = uploadedFiles.value.filter((file) => file.selected).map((file) => file.id.toString())
-      await historyFileApi.deleteHistoryFile({ ids })
-      uploadedFiles.value = uploadedFiles.value.filter((file) => !file.selected) // 清空本地记录
-      await loadHistoryFiles() // 重新加载历史记录
-    }
-  } catch (error) {
-    console.error("删除历史记录失败:", error)
-  }
+const clearAll = () => {
+  uploadedFiles.value = []
 }
 
-// 添加删除单行文件的函数
-const deleteFile = async (fileId: number | string) => {
-  try {
-    console.log("删除文件:", fileId)
-    await historyFileApi.deleteHistoryFile({ ids: [fileId.toString()] })
-    uploadedFiles.value = uploadedFiles.value.filter((file) => file.id !== fileId.toString()) // 从本地记录中删除
-  } catch (error) {
-    console.error("删除历史记录失败:", error)
+const handleFileUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (file) {
+    const newFile: UploadFile = {
+      id: uploadedFiles.value.length + 1,
+      name: file.name,
+      size: `${(file.size / 1024).toFixed(2)} KB`,
+      date: new Date().toLocaleDateString(),
+      status: "completed",
+      selected: false,
+      aiStatus: "未编辑"
+    }
+    uploadedFiles.value.push(newFile)
   }
 }
 </script>
@@ -202,16 +161,14 @@ const deleteFile = async (fileId: number | string) => {
 
 .header {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  gap: 0;
 }
 
 .tabs {
   display: flex;
   gap: 20px;
-  margin-left: auto;
 }
 
 .tab {
@@ -232,12 +189,12 @@ const deleteFile = async (fileId: number | string) => {
 }
 
 .list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 120px 120px 120px;
   padding: 12px 16px;
   border-bottom: 1px solid #ebeef5;
   color: #909399;
+  align-items: center;
 }
 
 .list-items {
@@ -259,16 +216,17 @@ const deleteFile = async (fileId: number | string) => {
 }
 
 .item-main {
-  display: flex;
+  display: grid;
+  grid-template-columns: 24px 1fr 120px 120px 120px;
+  gap: 8px;
   align-items: center;
-  justify-content: space-between;
 }
 
 .file-info {
-  /* display: flex;
+  display: flex;
   align-items: center;
   gap: 8px;
-  overflow: hidden; */
+  overflow: hidden;
 }
 
 .file-icon {
@@ -277,10 +235,10 @@ const deleteFile = async (fileId: number | string) => {
 }
 
 .file-name {
-  /* overflow: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex: 1; */
+  flex: 1;
 }
 
 .file-size,
@@ -292,7 +250,7 @@ const deleteFile = async (fileId: number | string) => {
 
 .uploading-header {
   display: grid;
-  grid-template-columns: 1fr 120px 120px 120px;
+  grid-template-columns: 1fr 120px 120px;
   padding: 12px 16px;
   border-bottom: 1px solid #ebeef5;
   color: #909399;
@@ -310,10 +268,9 @@ const deleteFile = async (fileId: number | string) => {
 
 .uploading-item {
   display: grid;
-  grid-template-columns: 1fr 120px 120px 120px;
+  grid-template-columns: 1fr 120px 120px;
   gap: 8px;
   align-items: center;
-  width: 100%;
 }
 
 .completed-item {
@@ -321,15 +278,5 @@ const deleteFile = async (fileId: number | string) => {
   grid-template-columns: 24px 1fr 120px 120px;
   gap: 8px;
   align-items: center;
-}
-
-.file-action {
-  text-align: left;
-}
-
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
 }
 </style>

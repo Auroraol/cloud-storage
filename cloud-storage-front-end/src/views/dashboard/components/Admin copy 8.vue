@@ -98,8 +98,20 @@
       <div class="file-info">
         <span class="filename">当前上传文件: {{ currentFile.name }}</span>
         <span class="filesize">{{ formatFileSize(currentFile.size) }}</span>
-        <div class="status-text">
-          {{ statusText }}
+      </div>
+      <div class="status-text">
+        {{ statusText }}
+      </div>
+    </div>
+
+    <!-- 上传历史 -->
+    <div class="upload-history">
+      <div v-for="(item, index) in uploadHistory" :key="index" class="history-item">
+        <div class="file-info">
+          {{ item.filename }}
+        </div>
+        <div class="file-status">
+          {{ item.status === "success" ? "上传成功" : "上传失败" }}
         </div>
       </div>
     </div>
@@ -244,8 +256,6 @@ import { formatFileSize } from "@/utils/format/formatFileSize"
 import { useUserStore } from "@/store/modules/user"
 import { shareApi } from "@/api/share/share"
 import { Share } from "@element-plus/icons-vue"
-import { historyFileApi } from "@/api/file/history"
-import type * as History from "@/api/file/types/history"
 
 const userStore = useUserStore()
 const capacity = computed(() => userStore.capacity)
@@ -506,7 +516,7 @@ const handleFileUpload = async (options: UploadRequestOptions) => {
     statusText.value = "准备上传..."
 
     // 根据文件大小选择上传方式
-    if (file.size > 1 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       await handleChunkUpload(file)
     } else {
       await handleNormalUpload(file)
@@ -598,42 +608,36 @@ const handleUploadSuccess = async (data: any, file: File) => {
   uploadStatus.value = "success"
   uploadProgress.value = 100
   statusText.value = "上传成功"
+  // console.log(parentId, data.repository_id, file.name)
 
   // 保存文件关联信息
   const parentId = currentPath.value[currentPath.value.length - 1]
   console.log("parentId: ", parentId)
+  await userFileApi.saveRepository({
+    parent_id: Number(parentId),
+    repository_id: Number(data.repository_id),
+    name: file.name
+  })
 
-  try {
-    // 保存到仓库
-    await userFileApi.saveRepository({
-      parent_id: Number(parentId),
-      repository_id: Number(data.repository_id),
-      name: file.name
-    })
+  // 更新容量显示
+  capacity.value.now_volume += file.size
+  // const historyItem: UploadHistoryItem = {
+  //   filename: file.name,
+  //   size: file.size,
+  //   status: "success",
+  //   url: data.url,
+  //   key: data.key
+  // }
+  // uploadHistory.value.unshift(historyItem)
 
-    // 添加上传历史记录
-    await historyFileApi.uploadHistoryFile({
-      repository_id: Number(data.repository_id),
-      file_name: file.name,
-      size: file.size,
-      status: 1 // 上传成功
-    })
-
-    // 更新容量显示
-    capacity.value.now_volume += file.size
-
-    handleRefresh()
-    ElMessage.success("文件上传成功")
-  } catch (error) {
-    console.error("保存文件信息失败:", error)
-    ElMessage.error("保存文件信息失败")
-  }
+  handleRefresh()
+  ElMessage.success("文件上传成功")
 
   resetUploadState()
 }
 
 // 处理上传错误
-const handleUploadError = async (error: any, file: File) => {
+const handleUploadError = (error: any, file: File) => {
   uploadStatus.value = "error"
   statusText.value = "上传失败"
 
@@ -643,18 +647,6 @@ const handleUploadError = async (error: any, file: File) => {
     status: "error"
   }
   uploadHistory.value.unshift(historyItem)
-
-  try {
-    // 添加上传历史记录
-    await historyFileApi.uploadHistoryFile({
-      repository_id: -1,
-      file_name: file.name,
-      size: file.size,
-      status: 0 // 上传失败
-    })
-  } catch (error) {
-    console.error("添加上传历史记录失败:", error)
-  }
 
   console.error("Upload error:", error)
   ElMessage.error("文件上传失败")

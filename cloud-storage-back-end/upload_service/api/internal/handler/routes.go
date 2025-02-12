@@ -6,7 +6,8 @@ package handler
 import (
 	"net/http"
 
-	Chunk "github.com/Auroraol/cloud-storage/upload_service/api/internal/handler/Chunk"
+	chunk "github.com/Auroraol/cloud-storage/upload_service/api/internal/handler/chunk"
+	history "github.com/Auroraol/cloud-storage/upload_service/api/internal/handler/history"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -32,25 +33,50 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				// 完成分片上传
 				Method:  http.MethodPost,
 				Path:    "/file/multipart/complete",
-				Handler: Chunk.CompleteMultipartUploadHandler(serverCtx),
+				Handler: chunk.CompleteMultipartUploadHandler(serverCtx),
 			},
 			{
 				// 初始化分片上传
 				Method:  http.MethodPost,
 				Path:    "/file/multipart/init",
-				Handler: Chunk.InitiateMultipartUploadHandler(serverCtx),
+				Handler: chunk.InitiateMultipartUploadHandler(serverCtx),
 			},
 			{
 				// 查询分片上传状态
 				Method:  http.MethodGet,
 				Path:    "/file/multipart/status",
-				Handler: Chunk.ListUploadedPartsHandler(serverCtx),
+				Handler: chunk.ListUploadedPartsHandler(serverCtx),
 			},
 			{
 				// 上传分片
 				Method:  http.MethodPost,
 				Path:    "/file/multipart/upload",
-				Handler: Chunk.UploadPartHandler(serverCtx),
+				Handler: chunk.UploadPartHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/upload_service/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 删除所有历史记录
+				Method:  http.MethodPost,
+				Path:    "/file/history/delete/all",
+				Handler: history.HistoryDeleteByIdListHandler(serverCtx),
+			},
+			{
+				// 分页查询历史记录列表
+				Method:  http.MethodPost,
+				Path:    "/file/history/list",
+				Handler: history.HistoryListHandler(serverCtx),
+			},
+			{
+				// 更新历史上传记录
+				Method:  http.MethodPost,
+				Path:    "/file/history/update",
+				Handler: history.UpdateHistoryHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

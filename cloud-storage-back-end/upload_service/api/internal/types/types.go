@@ -46,6 +46,32 @@ type FileUploadResponse struct {
 	RepositoryId int64  `json:"repository_id"` // repository表设置的主建id
 }
 
+type History struct {
+	Id           string `json:"id"`
+	FileName     string `json:"file_name"`
+	Size         int64  `json:"size"`
+	Status       int64  `json:"status"`
+	UpdateTime   string `json:"update_time"`
+	RepositoryId int64  `json:"repository_id, omitempty"`
+}
+
+type HistoryDeleteAllRequest struct {
+	Ids []string `json:"ids"`
+}
+
+type HistoryDeleteAllResponse struct {
+}
+
+type HistoryListRequest struct {
+	Page int64 `json:"page"` //查询的第几页
+	Size int64 `json:"size"` //每页页数
+}
+
+type HistoryListResponse struct {
+	HistoryList []*History `json:"history_list"`
+	Total       int64      `json:"total"`
+}
+
 type ListPartsRequest struct {
 	UploadId string `form:"upload_id"` // 上传ID
 	Key      string `form:"key"`       // 文件键
@@ -61,4 +87,15 @@ type PartInfo struct {
 	PartNumber int    `json:"part_number"` // 分片编号
 	Size       int64  `json:"size"`        // 分片大小
 	ETag       string `json:"etag"`        // 分片ETag
+}
+
+type UpdateHistoryRequest struct {
+	FileName     string `json:"file_name"`
+	Size         int64  `json:"size"`
+	Status       int64  `json:"status"`
+	RepositoryId int64  `json:"repository_id, omitempty"`
+}
+
+type UpdateHistoryResponse struct {
+	Id string `json:"id"` // 文件上传历史记录ID
 }

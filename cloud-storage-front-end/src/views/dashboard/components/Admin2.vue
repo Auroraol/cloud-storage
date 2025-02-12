@@ -332,7 +332,6 @@ const fileList = ref<FileListItem[]>([
   }
 ])
 
-
 // // 获取文件列表
 // onMounted(async () => {
 //   const { data } = await userFileApi.getFileList({
@@ -503,7 +502,7 @@ const handleUploadSuccess = async (data: any, file: File) => {
   uploadStatus.value = "success"
   uploadProgress.value = 100
   statusText.value = "上传成功"
-  console.log(parentId, data.repository_id, file.name)
+  // console.log(parentId, data.repository_id, file.name)
   // 保存文件关联信息
   const parentId = currentPath.value[currentPath.value.length - 1] || 0
   await userFileApi.saveRepository({
@@ -636,7 +635,7 @@ const handleRefresh = async () => {
     })
     // console.log(data)
     // 转换后端数据格式为前端所需格式
-    fileList.value = data.list.map(file => ({
+    fileList.value = data.list.map((file) => ({
       id: file.id,
       filename: file.name,
       fileType: getFileType(file.ext), // 需要添加文件类型判断函数
@@ -669,7 +668,8 @@ const handleDownload = async () => {
 
 const handleRowClick = async (params: any) => {
   const { row } = params
-  if (row.fileType === 0) { // 文件夹
+  if (row.fileType === 0) {
+    // 文件夹
     currentPath.value.push(row.id)
     await handleRefresh()
   } else {
@@ -690,14 +690,14 @@ const handleBatchDelete = async () => {
       cancelButtonText: "取消",
       type: "warning"
     })
-    
+
     // 逐个删除选中的文件
     for (const row of selectedRows) {
       await userFileApi.deleteFile({
         id: row.id
       })
     }
-    
+
     ElMessage.success("删除成功")
     handleRefresh()
   } catch {
@@ -716,7 +716,7 @@ const handleBatchMove = async () => {
     const { data } = await userFileApi.getFolderList({
       id: currentPath.value[currentPath.value.length - 1] || 0
     })
-    
+
     // 显示文件夹选择对话框
     const { value: targetFolderId } = await ElMessageBox.prompt("请选择目标文件夹", "移动到", {
       confirmButtonText: "确定",
@@ -728,12 +728,12 @@ const handleBatchMove = async () => {
         if (!value) return "请选择目标文件夹"
         return true
       },
-      inputOptions: data.list.map(folder => ({
+      inputOptions: data.list.map((folder) => ({
         label: folder.name,
         value: folder.id
       }))
     })
-    
+
     if (targetFolderId) {
       // 逐个移动选中的文件
       for (const row of selectedRows) {

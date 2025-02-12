@@ -8,20 +8,38 @@ info (
 )
 
 type (
-UpdateHistoryRequest {
-  UserId string `json:"user_id"`
-}
-UpdateHistoryResponse {
-  HistoryId string `json:"history_id"`
-}
+    UpdateHistoryRequest {
+        FileName string `json:"file_name"`
+        Size int64 `json:"size"`
+        Status int64 `json:"status"`
+        RepositoryId int64 `json:"repository_id, omitempty"`
+    }
+    UpdateHistoryResponse {
+        Id string `json:"id"` // 文件上传历史记录ID
+    }
 
-HistoryListRequest {
+    HistoryListRequest {
+        Page int64 `json:"page"` //查询的第几页
+        Size int64 `json:"size"` //每页页数
+    }
 
-}
-HistoryListResponse {
-  HistoryList []*History `json:"history_list"`
-}
-History {
-  HistoryId string `json:"history_id"`
-}
+    HistoryListResponse {
+        HistoryList []*History `json:"history_list"`
+        Total int64 `json:"total"`
+    }
+
+    History {
+        Id string `json:"id"`
+        FileName string `json:"file_name"`
+        Size int64 `json:"size"`
+        Status int64 `json:"status"`
+        UpdateTime string `json:"update_time"`
+        RepositoryId int64 `json:"repository_id, omitempty"`
+    }
+
+    HistoryDeleteAllRequest {
+        Ids []string `json:"ids"`
+    }
+    HistoryDeleteAllResponse {
+    }
 )
