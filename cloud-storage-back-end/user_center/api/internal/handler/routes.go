@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	oauth "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/oauth"
+	recycle "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/recycle"
 	repository "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/repository"
 	user "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/user"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
@@ -42,6 +43,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: oauth.CodeSendHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/user_center/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 用户回收站文件删除
+				Method:  http.MethodPost,
+				Path:    "/user/recycle/delete",
+				Handler: recycle.UserRecycleDeleteHandler(serverCtx),
+			},
+			{
+				// 用户回收站列表
+				Method:  http.MethodPost,
+				Path:    "/user/recycle/list",
+				Handler: recycle.UserRecycleListHandler(serverCtx),
+			},
+			{
+				// 用户回收站文件恢复
+				Method:  http.MethodPost,
+				Path:    "/user/recycle/restore",
+				Handler: recycle.UserRecycleRestoreHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/user_center/v1"),
 	)
 

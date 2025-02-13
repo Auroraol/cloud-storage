@@ -1,34 +1,36 @@
-import { request, post, get } from "@/utils/network/axios"
-import { RequestEnum } from "@/utils/network/httpEnum" // 引入请求枚举
+import { request } from "@/utils/network/axios"
+import type * as Recycle from "./types/recycle"
+import { RequestEnum } from "@/utils/network/httpEnum"
 
 const prefix = import.meta.env.VITE_APP_BASE_API
 
-/**
- * @description: 回收站文件列表
- * @param {Object} params
- */
-export function loadDataListApi(params) {
-  return get(`${prefix}/loadRecycleList/`, params, true) // 修改为使用 get 方法
-}
+// 回收站相关接口
+export const recycleApi = {
+  // 用户回收站列表
+  getRecycleList(data: Recycle.UserRecycleListRequest) {
+    return request<Recycle.UserRecycleListResponse>(
+      `${prefix}/user_center/v1/user/recycle/list`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
 
-/**
- * @description: 恢复文件
- * @param {Object} params
- */
-export function recoveryFileApi(params) {
-  return request(
-    `${prefix}/recoverFile/${params}`,
-    {
-      method: RequestEnum.PUT
-    },
-    true
-  )
-}
+  // 用户回收站文件删除
+  deleteRecycle(data: Recycle.UserRecycleDeleteRequest) {
+    return request<Recycle.UserRecycleDeleteResponse>(`${prefix}/user_center/v1/user/recycle/delete`, {
+      method: RequestEnum.POST,
+      data
+    })
+  },
 
-/**
- * @description: 删除文件
- * @param {Object} params
- */
-export function delFileApi(params) {
-  return post(`${prefix}/delFile/${params}`, true)
+  // 用户回收站文件恢复
+  restoreRecycle(data: Recycle.UserRecycleRestoreRequest) {
+    return request<Recycle.UserRecycleRestoreResponse>(`${prefix}/user_center/v1/user/recycle/restore`, {
+      method: RequestEnum.POST,
+      data
+    })
+  }
 }

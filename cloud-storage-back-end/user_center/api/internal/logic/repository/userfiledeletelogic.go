@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
 	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
@@ -29,14 +30,17 @@ func NewUserFileDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Us
 }
 
 func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (resp *types.UserFileDeleteResponse, err error) {
-	// 先删 user_repository (文件夹/文件)
+	// 先获取文件信息
 	userFileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
 		return nil, err
 	}
-	err = l.svcCtx.UserRepositoryModel.Delete(l.ctx, userFileInfo.Id) // 删除 user_repository记录
+
+	// 更新status为已删除状态,而不是真正删除
+	userFileInfo.Status = 1 // 1表示已删除
+	err = l.svcCtx.UserRepositoryModel.Update(l.ctx, userFileInfo)
 	if err != nil {
-		return nil, response.NewErrMsg("更新个人存储池失败")
+		return nil, response.NewErrMsg("更新文件状态失败")
 	}
 
 	userId := token.GetUidFromCtx(l.ctx)
@@ -44,10 +48,9 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
-	// 文件夹
+	// 如果是文件夹,递归更新子文件和文件夹的状态
 	if userFileInfo.RepositoryId == 0 {
-		// 递归删除文件夹下的所有文件和子文件夹
-		err = l.deleteFolderContents(l.ctx, int64(userFileInfo.Id), userId)
+		err = l.updateFolderContentsStatus(l.ctx, int64(userFileInfo.Id), userId)
 		if err != nil {
 			return nil, err
 		}
@@ -75,17 +78,24 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 	return &types.UserFileDeleteResponse{}, nil
 }
 
-func (l *UserFileDeleteLogic) deleteFolderContents(ctx context.Context, parentId int64, userId int64) error {
-	// 获取文件夹下的所有子文件和子文件夹
-	children, err := l.svcCtx.UserRepositoryModel.FindAllFolderByParentId(ctx, parentId, userId)
+// 新增递归更新文件夹内容状态的方法
+func (l *UserFileDeleteLogic) updateFolderContentsStatus(ctx context.Context, parentId int64, userId int64) error {
+	children, err := l.svcCtx.UserRepositoryModel.FindAllFolderAndByParentId(ctx, parentId, userId)
 	if err != nil {
 		return err
 	}
 
 	for _, child := range children {
+		// 更新子项的状态为已删除
+		child.Status = 1
+		err = l.svcCtx.UserRepositoryModel.Update(ctx, child)
+		if err != nil {
+			logx.Errorf("更新子项状态失败: %v", err)
+			return err
+		}
 		if child.RepositoryId == 0 {
-			// 如果是文件夹，递归删除其内容
-			err = l.deleteFolderContents(ctx, int64(child.Id), userId)
+			// 如果是文件夹,递归更新其内容
+			err = l.updateFolderContentsStatus(ctx, int64(child.Id), userId)
 			if err != nil {
 				return err
 			}
@@ -109,12 +119,6 @@ func (l *UserFileDeleteLogic) deleteFolderContents(ctx context.Context, parentId
 			if err != nil {
 				return err
 			}
-		}
-
-		// 删除子文件或子文件夹
-		err = l.svcCtx.UserRepositoryModel.Delete(ctx, child.Id)
-		if err != nil {
-			return err
 		}
 	}
 	return nil

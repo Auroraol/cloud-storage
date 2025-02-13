@@ -193,6 +193,43 @@ type UserPasswordReq struct {
 type UserPasswordResp struct {
 }
 
+type UserRecycleDeleteRequest struct {
+	Id int64 `json:"id"` // 回收站文件id
+}
+
+type UserRecycleDeleteResponse struct {
+	Success bool `json:"success"` // 是否成功
+}
+
+type UserRecycleFile struct {
+	Id           int64  `json:"id"`
+	RepositoryId int64  `json:"repository_id"`
+	Name         string `json:"name"` // 文件名
+	Ext          string `json:"ext"`
+	Path         string `json:"path"`
+	Size         int64  `json:"size"`
+	UpdateTime   int64  `json:"update_time"`
+}
+
+type UserRecycleListRequest struct {
+	Id   int64 `json:"id"`   //查询的文件夹id
+	Page int64 `json:"page"` //查询的第几页
+	Size int64 `json:"size"` //每页页数
+}
+
+type UserRecycleListResponse struct {
+	List  []*UserRecycleFile `json:"list"`
+	Total int64              `json:"total"` // 总数
+}
+
+type UserRecycleRestoreRequest struct {
+	Id int64 `json:"id"` // 回收站文件id
+}
+
+type UserRecycleRestoreResponse struct {
+	Success bool `json:"success"` // 是否成功
+}
+
 type UserRepositorySaveRequest struct {
 	ParentId     int64  `json:"parent_id"`
 	RepositoryId int64  `json:"repository_id"`

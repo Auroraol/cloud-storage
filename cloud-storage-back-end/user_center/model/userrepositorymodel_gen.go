@@ -44,8 +44,9 @@ type (
 		Id           uint64    `db:"id"`
 		UserId       uint64    `db:"user_id"`
 		ParentId     uint64    `db:"parent_id"`
-		RepositoryId uint64    `db:"repository_id"` // 0则为文件夹
-		Name         string    `db:"name"`
+		RepositoryId uint64    `db:"repository_id"` // 0则为文件夹, 其他为文件id
+		Name         string    `db:"name"`          // 文件夹名称
+		Status       int64     `db:"status"`        // 文件状态(0正常1已删除2禁用)
 		CreateTime   time.Time `db:"create_time"`
 		UpdateTime   time.Time `db:"update_time"`
 	}
@@ -87,8 +88,8 @@ func (m *defaultUserRepositoryModel) FindOne(ctx context.Context, id uint64) (*U
 func (m *defaultUserRepositoryModel) Insert(ctx context.Context, data *UserRepository) (sql.Result, error) {
 	userRepositoryIdKey := fmt.Sprintf("%s%v", cacheUserRepositoryIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, userRepositoryRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.ParentId, data.RepositoryId, data.Name)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, userRepositoryRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.ParentId, data.RepositoryId, data.Name, data.Status)
 	}, userRepositoryIdKey)
 	return ret, err
 }
@@ -97,7 +98,7 @@ func (m *defaultUserRepositoryModel) Update(ctx context.Context, data *UserRepos
 	userRepositoryIdKey := fmt.Sprintf("%s%v", cacheUserRepositoryIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRepositoryRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UserId, data.ParentId, data.RepositoryId, data.Name, data.Id)
+		return conn.ExecCtx(ctx, query, data.UserId, data.ParentId, data.RepositoryId, data.Name, data.Status, data.Id)
 	}, userRepositoryIdKey)
 	return err
 }

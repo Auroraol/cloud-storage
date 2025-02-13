@@ -241,6 +241,7 @@ import {
 
 import { isNotEmpty } from "@/utils/isEmpty"
 import { formatFileSize } from "@/utils/format/formatFileSize"
+import { timestampToDate } from "@/utils/format/formatTime"
 import { useUserStore } from "@/store/modules/user"
 import { shareApi } from "@/api/share/share"
 import { Share } from "@element-plus/icons-vue"
@@ -465,11 +466,6 @@ const loadFileList = async () => {
     ElMessage.error("获取文件列表失败")
   }
   loading.value = false
-}
-
-// 时间戳转日期
-const timestampToDate = (timestamp: number): string => {
-  return new Date(timestamp * 1000).toLocaleString()
 }
 
 // 上传状态
@@ -784,9 +780,9 @@ const handleDelete = async () => {
       })
     }
     ElMessage.success("删除成功")
+    loadFileList()
     // 更新容量显示
     capacity.value.now_volume -= selectedFiles.value.reduce((total, file) => total + (file.fileSize || 0), 0)
-    loadFileList()
   } catch (error) {
     console.error("删除失败:", error)
     ElMessage.error("删除失败")
@@ -891,24 +887,24 @@ const openMoveDialog = () => {
   closeContextMenu()
 }
 
-// 获取文件夹列表
-const loadFolderList = async () => {
-  try {
-    // 获取文件夹列表
-    const response = await userFileApi.getFolderList({
-      id: 0
-    })
-    folderList.value = [
-      {
-        id: 0,
-        name: "/"
-      },
-      ...response.data.list
-    ]
-  } catch (error) {
-    console.error("获取文件夹列表失败:", error)
-  }
-}
+// // 获取文件夹列表
+// const loadFolderList = async () => {
+//   try {
+//     // 获取文件夹列表
+//     const response = await userFileApi.getFolderList({
+//       id: 0
+//     })
+//     folderList.value = [
+//       {
+//         id: 0,
+//         name: "/"
+//       },
+//       ...response.data.list
+//     ]
+//   } catch (error) {
+//     console.error("获取文件夹列表失败:", error)
+//   }
+// }
 
 // 文件预览相关状态
 const previewDialog = ref({ visible: false })
@@ -987,7 +983,7 @@ const copyShareLink = async () => {
 // 初始化
 onMounted(() => {
   loadFileList()
-  loadFolderList()
+  // loadFolderList()
 })
 
 // 在组件卸载时清理事件监听

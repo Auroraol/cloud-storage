@@ -11,6 +11,7 @@ info (
 import (
 	"proto/user.api"
 	"proto/user_repository.api"
+	"proto/recycle.api"
 )
 
 //============================> usercenter v1 <============================
@@ -125,6 +126,31 @@ service user_center {
 	)
 	@handler UserFolderSize
 	get /user/folder/size (UserFolderSizeRequest) returns (UserFolderSizeResponse)
+}
+
+@server (
+	prefix: user_center/v1
+	group:  recycle
+	jwt:    JwtAuth
+)
+service user_center {
+	@doc (
+		summary: "用户回收站列表"
+	)
+	@handler UserRecycleList
+	post /user/recycle/list (UserRecycleListRequest) returns (UserRecycleListResponse)
+
+	@doc (
+		summary: "用户回收站文件删除"
+	)
+	@handler UserRecycleDelete
+	post /user/recycle/delete (UserRecycleDeleteRequest) returns (UserRecycleDeleteResponse)
+
+	@doc (
+		summary: "用户回收站文件恢复"
+	)
+	@handler UserRecycleRestore
+	post /user/recycle/restore (UserRecycleRestoreRequest) returns (UserRecycleRestoreResponse)
 }
 
 // goctl api go --api *.api --dir ./..

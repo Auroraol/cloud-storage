@@ -1,0 +1,38 @@
+
+type UserRecycleListRequest {
+    Id   int64 `json:"id"`   //查询的文件夹id
+    Page int64 `json:"page"` //查询的第几页
+    Size int64 `json:"size"` //每页页数
+}
+
+type UserRecycleListResponse {
+    List  []*UserRecycleFile `json:"list"`
+    Total int64         `json:"total"`  // 总数
+}
+
+type UserRecycleFile {
+    Id           int64  `json:"id"`
+    RepositoryId int64  `json:"repository_id"`
+    Name         string `json:"name"` // 文件名
+    Ext          string `json:"ext"`
+    Path         string `json:"path"`
+    Size         int64  `json:"size"`
+    UpdateTime   int64  `json:"update_time"`
+}
+
+type UserRecycleDeleteRequest {
+    Id int64 `json:"id"` // 回收站文件id
+}
+
+type UserRecycleDeleteResponse {
+    Success bool `json:"success"` // 是否成功
+}
+
+type UserRecycleRestoreRequest {
+    Id int64 `json:"id"` // 回收站文件id
+}
+
+type UserRecycleRestoreResponse {
+    Success bool `json:"success"` // 是否成功
+}
+

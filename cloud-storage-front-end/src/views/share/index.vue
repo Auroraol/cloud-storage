@@ -17,19 +17,21 @@
       <div class="left-container">
         <div class="file-list-container" @scroll="handleScroll">
           <div class="file-list">
-            <el-card v-for="item in fileList" 
-                     :key="item.id" 
-                     class="file-card"
-                     :class="{ 'is-selected': isSelected(item) }"
-                     shadow="hover"
-                     @click="selectFile(item)">
+            <el-card
+              v-for="item in fileList"
+              :key="item.id"
+              class="file-card"
+              :class="{ 'is-selected': isSelected(item) }"
+              shadow="hover"
+              @click="selectFile(item)"
+            >
               <div class="file-info">
                 <div class="file-header">
                   <el-avatar :src="item.avatar" size="small" />
                   <span class="owner-name">{{ item.owner }}</span>
                 </div>
                 <div class="file-name">{{ item.name }}</div>
-                <div class="file-meta"> 
+                <div class="file-meta">
                   <span>大小: {{ formatFileSize(item.size) }} </span>
                   <span>浏览次数: {{ item.click_num }}</span>
                 </div>
@@ -71,9 +73,9 @@ import { shareApi } from "@/api/share/share"
 import type * as Share from "@/api/share/types/share"
 import { formatFileSize } from "@/utils/format/formatFileSize"
 import { formatTime } from "@/utils/format/formatTime"
-import dayjs from 'dayjs'
+import dayjs from "dayjs"
 import { time } from "console"
-import { Refresh as RefreshIcon } from '@element-plus/icons-vue'
+import { Refresh as RefreshIcon } from "@element-plus/icons-vue"
 
 interface ShareItem {
   id: number
@@ -154,7 +156,7 @@ const cancelShare = () => {
 
 const deleteShare = async () => {
   try {
-    await shareApi.deleteShare({ id: shareIds.value})
+    await shareApi.deleteShare({ id: shareIds.value })
 
     ElMessage.success("取消分享成功")
     dialogConfig.show = false
@@ -171,7 +173,9 @@ const copyLink = () => {
     return
   }
   const baseUrl = import.meta.env.VITE_API_URL_3
-  const links = selectFiles.value.map((file) => `链接: ${baseUrl}/share_service/v1/share/basic/detail?id=${file.id}&code=${file.code}`).join("\n")
+  const links = selectFiles.value
+    .map((file) => `链接: ${baseUrl}/share_service/v1/share/basic/detail?id=${file.id}&code=${file.code}`)
+    .join("\n")
 
   navigator.clipboard
     .writeText(links)
@@ -195,7 +199,7 @@ const exportLink = () => {
     selectFiles.value
       .map(
         (file) =>
-          `${file.name},${formatTime(file.update_time)},${formatExpiredTime(file.update_time,file.expired_time)},${file.click_num},${file.code}`
+          `${file.name},${formatTime(file.update_time)},${formatExpiredTime(file.update_time, file.expired_time)},${file.click_num},${file.code}`
       )
       .join("\n")
 
@@ -210,10 +214,10 @@ const exportLink = () => {
 }
 
 // 计算过期时间
-const formatExpiredTime = (time,expiredTime) => {
-  if (!expiredTime) return '-'
-  const expirationDate = dayjs(time).add(expiredTime, 'second') // 将当前时间加上过期时间（秒）
-  return expirationDate.format('YYYY-MM-DD HH:mm:ss') 
+const formatExpiredTime = (time, expiredTime) => {
+  if (!expiredTime) return "-"
+  const expirationDate = dayjs(time).add(expiredTime, "second") // 将当前时间加上过期时间（秒）
+  return expirationDate.format("YYYY-MM-DD HH:mm:ss")
 }
 const fileListContainer = ref<HTMLElement | null>(null)
 
@@ -223,10 +227,10 @@ const handleScroll = (e: Event) => {
   const scrollHeight = target.scrollHeight
   const scrollTop = target.scrollTop
   const clientHeight = target.clientHeight
-  
+
   // 当滚动到距离底部100px时加载更多
   if (scrollHeight - scrollTop - clientHeight < 100 && !loading.value && !noMore.value) {
-    console.log('Loading more files...')
+    console.log("Loading more files...")
     loadFiles()
   }
 }
@@ -235,12 +239,12 @@ const handleScroll = (e: Event) => {
 const loadFiles = async () => {
   if (loading.value || noMore.value) return
   loading.value = true
-  console.log('Loading more files...') 
+  console.log("Loading more files...")
 
   try {
-    const response = await shareApi.getShareList({ 
-      page: page.value, 
-      page_size: pageSize.value 
+    const response = await shareApi.getShareList({
+      page: page.value,
+      page_size: pageSize.value
     })
     const { list } = response.data
 
@@ -252,7 +256,7 @@ const loadFiles = async () => {
       noMore.value = true
     }
   } catch (error) {
-    console.error('Failed to load files:', error)
+    console.error("Failed to load files:", error)
     ElMessage.error("加载文件失败")
   } finally {
     loading.value = false
@@ -280,18 +284,22 @@ const saveShare = async (repositoryId: number, parentId: number) => {
   }
 }
 
-watch(fileList, (newVal) => {
-  console.log('fileList changed:', newVal)
-}, { deep: true })
+watch(
+  fileList,
+  (newVal) => {
+    console.log("fileList changed:", newVal)
+  },
+  { deep: true }
+)
 
 // 修改选择文件相关的方法
 const isSelected = (file: ShareItem) => {
-  return selectFiles.value.some(item => item.id === file.id)
+  return selectFiles.value.some((item) => item.id === file.id)
 }
 
 // 选择某一行文件
 const selectFile = (file: ShareItem) => {
-  const index = selectFiles.value.findIndex(item => item.id === file.id)
+  const index = selectFiles.value.findIndex((item) => item.id === file.id)
   if (index === -1) {
     console.log("selectFile", file)
     selectFiles.value = [file] // 只保留当前选中的文件
@@ -318,9 +326,9 @@ const toggleSelectAll = () => {
 
 // 刷新列表的函数
 const refreshList = () => {
-  page.value = 1; // 重置页码
-  fileList.value = []; // 清空当前文件列表
-  loadFiles(); // 重新加载文件
+  page.value = 1 // 重置页码
+  fileList.value = [] // 清空当前文件列表
+  loadFiles() // 重新加载文件
 }
 </script>
 
@@ -437,7 +445,7 @@ const refreshList = () => {
   border: 2px solid transparent;
 
   &.is-selected {
-    border-color: #409EFF;
+    border-color: #409eff;
     background-color: #ecf5ff;
   }
 }
@@ -505,7 +513,6 @@ const refreshList = () => {
   color: #999;
   padding: 20px;
 }
-
 
 //滚动条样式
 ::-webkit-scrollbar {

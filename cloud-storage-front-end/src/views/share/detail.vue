@@ -27,7 +27,7 @@
                 {{ formatTime(selectFile[item.key]) }}
               </template>
               <template v-else-if="item.key === 'expired_time'">
-                {{formatExpiredTime(selectFile[item.key]) }}
+                {{ formatExpiredTime(selectFile[item.key]) }}
               </template>
               <template v-else>
                 {{ selectFile[item.key] !== undefined ? selectFile[item.key] : 0 }}
@@ -52,7 +52,7 @@ export default {
 </script>
 <script setup>
 import { computed } from "vue"
-import dayjs from 'dayjs'
+import dayjs from "dayjs"
 import Icon from "@/components/FileIcon/Icon.vue"
 import { formatTime } from "@/utils/format/formatTime"
 
@@ -77,14 +77,12 @@ const details = [
   { label: "下载", key: "downloadCount" }
 ]
 
-
 // 计算过期时间
 const formatExpiredTime = (expiredTime) => {
-  if (!expiredTime) return '-'
-  const expirationDate = dayjs(selectFile.value.update_time).add(expiredTime, 'second') // 将当前时间加上过期时间（秒）
-  return expirationDate.format('YYYY-MM-DD HH:mm:ss') 
+  if (!expiredTime) return "-"
+  const expirationDate = dayjs(selectFile.value.update_time).add(expiredTime, "second") // 将当前时间加上过期时间（秒）
+  return expirationDate.format("YYYY-MM-DD HH:mm:ss")
 }
-
 </script>
 
 <style lang="scss" scoped>

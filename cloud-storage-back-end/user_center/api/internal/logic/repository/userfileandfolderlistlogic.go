@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/time"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -44,9 +45,9 @@ func (l *UserFileAndFolderListLogic) UserFileAndFolderList(req *types.UserFileAn
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
-	// 获取所有文件/文件夹信息
-	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllInPage(l.ctx, req.Id, userId, startIndex, pageSize)
-	total, err := l.svcCtx.UserRepositoryModel.CountTotalByIdAndParentId(l.ctx, userId, req.Id)
+	// 获取所有正常状态的文件/文件夹信息
+	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllNormalInPage(l.ctx, req.Id, userId, startIndex, pageSize)
+	total, err := l.svcCtx.UserRepositoryModel.CountTotalNormalByIdAndParentId(l.ctx, userId, req.Id)
 	if err != nil {
 		logx.Infof("获取用户文件列表失败 err:%v", err)
 	}

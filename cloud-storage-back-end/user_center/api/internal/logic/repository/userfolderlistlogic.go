@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/time"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -33,8 +34,8 @@ func (l *UserFolderListLogic) UserFolderList(req *types.UserFolderListRequest) (
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
-	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllFolderByParentId(l.ctx, req.Id, userId)
-	//allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllInPage(l.ctx, req.Id, userId, 0, 10)
+	// 只查询正常状态的文件夹
+	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllNormalFolderByParentId(l.ctx, req.Id, userId)
 	if err != nil {
 		return nil, response.NewErrMsg("该文件夹下搜索文件夹失败！")
 	}
