@@ -45,10 +45,10 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="{ row }">
-              <el-button type="primary" @click="handleRestore(row)">
+              <el-button type="primary" @click.stop="handleRestore(row)">
                 <el-icon><RefreshRight /></el-icon>还原
               </el-button>
-              <el-button type="danger" @click="handleDelete(row)">
+              <el-button type="danger" @click.stop="handleDelete(row)">
                 <el-icon><Delete /></el-icon>删除
               </el-button>
             </template>
@@ -303,6 +303,7 @@ const handleRestore = async (row: FileListItem) => {
     const res = await recycleApi.restoreRecycle({ id: row.id })
     if (res.data.success) {
       ElMessage.success("还原成功")
+
       fetchRecycleList()
     }
   } catch (error) {

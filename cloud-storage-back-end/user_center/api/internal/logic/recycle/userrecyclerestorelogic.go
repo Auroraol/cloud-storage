@@ -9,6 +9,8 @@ import (
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
 
+	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
+	userCenterPb "github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -51,6 +53,22 @@ func (l *UserRecycleRestoreLogic) UserRecycleRestore(req *types.UserRecycleResto
 		return nil, response.NewErrMsg("恢复文件失败")
 	}
 
+	// 如果是文件，更新用户存储容量
+	if fileInfo.RepositoryId != 0 {
+		repositoryInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadServicePb.RepositoryReq{
+			RepositoryId: int64(fileInfo.RepositoryId),
+		})
+		if err == nil {
+			_, err = l.svcCtx.UserCenterRpc.AddVolume(l.ctx, &userCenterPb.AddVolumeReq{
+				Id:   userId,
+				Size: repositoryInfo.Size,
+			})
+			if err != nil {
+				logx.Errorf("更新用户存储容量失败 err:%v", err)
+			}
+		}
+	}
+
 	// 如果是文件夹，递归恢复其下的所有文件和文件夹
 	if fileInfo.RepositoryId == 0 {
 		err = l.restoreFolderContents(l.ctx, int64(fileInfo.Id), userId)
@@ -77,7 +95,21 @@ func (l *UserRecycleRestoreLogic) restoreFolderContents(ctx context.Context, par
 			return err
 		}
 
-		if child.RepositoryId == 0 {
+		// 如果是文件，更新用户存储容量
+		if child.RepositoryId != 0 {
+			repositoryInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(ctx, &uploadServicePb.RepositoryReq{
+				RepositoryId: int64(child.RepositoryId),
+			})
+			if err == nil {
+				_, err = l.svcCtx.UserCenterRpc.AddVolume(ctx, &userCenterPb.AddVolumeReq{
+					Id:   userId,
+					Size: repositoryInfo.Size,
+				})
+				if err != nil {
+					logx.Errorf("更新用户存储容量失败 err:%v", err)
+				}
+			}
+		} else if child.RepositoryId == 0 {
 			err = l.restoreFolderContents(ctx, int64(child.Id), userId)
 			if err != nil {
 				return err
