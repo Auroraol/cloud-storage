@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `logfile`(
     `id` INT UNSIGNED AUTO_INCREMENT COMMENT '日志文件ID',
+    `user_id` INT NOT NULL,
     `name` VARCHAR(200) NOT NULL COMMENT '日志文件名',
     `host` LONGTEXT NOT NULL COMMENT '主机信息',
     `path` VARCHAR(1024) NOT NULL COMMENT '日志文件路径',

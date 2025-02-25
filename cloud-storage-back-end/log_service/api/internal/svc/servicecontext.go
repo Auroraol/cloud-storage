@@ -7,13 +7,16 @@ import (
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	AuditModel model.AuditModel
+	Config       config.Config
+	AuditModel   model.AuditModel
+	LogfileModel model.LogfileModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Options.Dsn)
 	return &ServiceContext{
-		Config: c, AuditModel: model.NewAuditModel(conn, c.CacheRedis),
+		Config:       c,
+		AuditModel:   model.NewAuditModel(conn, c.CacheRedis),
+		LogfileModel: model.NewLogfileModel(conn, c.CacheRedis),
 	}
 }
