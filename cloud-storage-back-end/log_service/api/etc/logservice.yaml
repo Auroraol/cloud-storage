@@ -1,15 +1,26 @@
 Name: log_service
 Host: 0.0.0.0
-Port: 8888
+Port: 1007
 
-#jwtAuth
+# jwtAuth
 JwtAuth:
-  AccessSecret: 123e4567-e89b-12d3-a456-426614174000
-  AccessExpire: 31536000
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 33333  #9小时
 
-Mysql:
-  DataSource: root:root@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8mb4&parseTime=True&loc=
+# 数据库
+Options:
+  DBType: mysql
+  Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
+  MaxOpenConns: 100
+  MaxIdleConns: 10
+  ConnMaxIdleTime: 300 # in seconds
+  ConnMaxLifetime: 1800 # in seconds
 
+# 缓存
+CacheRedis:
+  - Host: "101.37.165.220:6379"
+    Type: node
+    Pass: "741106"
 
 #  redis:
 #    host: 192.168.200.134

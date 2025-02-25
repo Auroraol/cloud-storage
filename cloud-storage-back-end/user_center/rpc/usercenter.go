@@ -3,11 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/config"
-	userServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/user"
-	userrepositoryServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/userrepository"
+	userrepositoryrpcServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/userrepositoryrpc"
+	userservicerpcServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/userservicerpc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 
@@ -21,17 +20,15 @@ import (
 var configFile = flag.String("f", "user_center/rpc/etc/usercenter.yaml", "the config file")
 
 func main() {
-	flag.Parse() // 打印当前工作目录
-	fmt.Printf("Current working directory: %s\n", getCurrentDir())
-	fmt.Printf("Config file path: %s\n", *configFile)
+	flag.Parse()
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		pb.RegisterUserServer(grpcServer, userServer.NewUserServer(ctx))
-		pb.RegisterUserRepositoryServer(grpcServer, userrepositoryServer.NewUserRepositoryServer(ctx))
+		pb.RegisterUserServiceRpcServer(grpcServer, userservicerpcServer.NewUserServiceRpcServer(ctx))
+		pb.RegisterUserRepositoryRpcServer(grpcServer, userrepositoryrpcServer.NewUserRepositoryRpcServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
@@ -41,12 +38,4 @@ func main() {
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
-}
-
-func getCurrentDir() string {
-	dir, err := os.Getwd()
-	return "Failed to get current directory"
-	if err != nil {
-	}
-	return dir
 }

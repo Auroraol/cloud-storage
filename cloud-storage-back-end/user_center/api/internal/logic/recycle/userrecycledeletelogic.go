@@ -2,9 +2,9 @@ package recycle
 
 import (
 	"context"
-
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
 	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 	userCenterPb "github.com/Auroraol/cloud-storage/user_center/rpc/pb"
 
@@ -71,6 +71,11 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 		return nil, response.NewErrMsg("删除文件失败")
 	}
 
+	l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+		UserId:  userId,
+		Content: "删除回收站文件",
+		Flag:    2,
+	})
 	return &types.UserRecycleDeleteResponse{}, nil
 }
 
@@ -104,6 +109,11 @@ func (l *UserRecycleDeleteLogic) deleteFolderContents(ctx context.Context, paren
 		if err != nil {
 			return err
 		}
+		l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+			UserId:  userId,
+			Content: "更新用户存储容量",
+			Flag:    3,
+		})
 	}
 	return nil
 }

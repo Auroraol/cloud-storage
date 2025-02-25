@@ -65,7 +65,7 @@ type (
 func newUserModel(conn sqlx.SqlConn) *defaultUserModel {
 	return &defaultUserModel{
 		conn:  conn,
-		table: "`User`",
+		table: "`user`",
 	}
 }
 

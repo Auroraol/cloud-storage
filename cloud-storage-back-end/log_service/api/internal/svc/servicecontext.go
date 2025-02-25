@@ -1,23 +1,19 @@
 package svc
 
 import (
-	"cloud-storage/log_service/api/internal/config"
-	"cloud-storage/log_service/api/internal/db"
-	"cloud-storage/log_service/model"
-	"gorm.io/gorm"
+	"github.com/Auroraol/cloud-storage/log_service/api/internal/config"
+	"github.com/Auroraol/cloud-storage/log_service/model"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {
-	Config config.Config
-	DB     *gorm.DB
+	Config     config.Config
+	AuditModel model.AuditModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-
-	db := db.InitGorm(c.Mysql.DataSource) // init自定义的
-	db.AutoMigrate(&model.LogfileModel{})
+	conn := sqlx.NewMysql(c.Options.Dsn)
 	return &ServiceContext{
-		Config: c,
-		DB:     db,
+		Config: c, AuditModel: model.NewAuditModel(conn, c.CacheRedis),
 	}
 }

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"github.com/Auroraol/cloud-storage/common/cache"
 	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservice"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepository"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservicerpc"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -94,13 +94,13 @@ func (l *ShareBasicDetailLogic) ShareBasicDetail(req *types.DetailRequest) (resp
 	default:
 		return nil, err
 	}
-	userRepositoryName, err := l.svcCtx.UserCenterRepositoryRpc.GetUserRepositoryNameByRepositoryId(l.ctx, &userrepository.RepositoryIdReq{
+	userRepositoryName, err := l.svcCtx.UserCenterRepositoryRpc.GetUserRepositoryNameByRepositoryId(l.ctx, &userrepositoryrpc.RepositoryIdReq{
 		RepositoryId: int64(shareInfo.RepositoryId),
 	})
 	if err != nil {
 		return nil, response.NewErrMsg("无法获得用户储存库的信息！")
 	}
-	RepositoryPool, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadservice.RepositoryReq{
+	RepositoryPool, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadservicerpc.RepositoryReq{
 		RepositoryId: int64(shareInfo.RepositoryId),
 	})
 	if err != nil {

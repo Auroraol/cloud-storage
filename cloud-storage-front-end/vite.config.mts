@@ -62,6 +62,13 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^${viteEnv.VITE_APP_BASE_API}`), "")
+        },
+        // 日志服务
+        [`${viteEnv.VITE_APP_BASE_API}/log_service`]: {
+          target: viteEnv.VITE_API_URL_3,
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^${viteEnv.VITE_APP_BASE_API}`), "")
         }
       }
     },

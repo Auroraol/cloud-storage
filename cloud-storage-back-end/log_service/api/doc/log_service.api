@@ -3,8 +3,8 @@ syntax = "v1"
 info (
 	title:   "日志服务"
 	desc:    "日志服务"
-	author: "lfj"
-	email: "1665834268@qq.com"
+	author:  "lfj"
+	email:   "1665834268@qq.com"
 	version: "v1"
 )
 
@@ -12,6 +12,7 @@ import (
 	"proto/read.api"
 	"proto/path.api"
 	"proto/logfiles.api"
+	"proto/audit.api"
 )
 
 //============================> log_service v1 <============================
@@ -51,5 +52,17 @@ service log_service {
 // @doc "日志图表 "
 // @handler charts
 // post /charts (GetChartsReq) returns (GetChartsRes)
+}
+
+//need login
+@server (
+	prefix: log_service/v1
+	group:  audit
+	jwt:    JwtAuth
+)
+service log_service {
+	@doc "分页获得操作日志"
+	@handler operation
+	post /operation (GetOperationLogReq) returns (GetOperationLogRes)
 }
 

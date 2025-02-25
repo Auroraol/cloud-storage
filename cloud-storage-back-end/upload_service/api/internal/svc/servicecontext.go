@@ -3,14 +3,14 @@ package svc
 import (
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/config"
 	"github.com/Auroraol/cloud-storage/upload_service/model"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/user"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userservicerpc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
 	Config              config.Config
-	UserCenterRpc       user.User
+	UserCenterRpc       userservicerpc.UserServiceRpc
 	RepositoryPoolModel model.RepositoryPoolModel
 	//RedisClient         *redis.Redis
 	UploadHistoryModel model.UploadHistoryModel
@@ -20,7 +20,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Options.Dsn)
 	return &ServiceContext{
 		Config: c,
-		UserCenterRpc: user.NewUser(
+		UserCenterRpc: userservicerpc.NewUserServiceRpc(
 			zrpc.MustNewClient(c.UserCenterRpcConf)),
 		RepositoryPoolModel: model.NewRepositoryPoolModel(conn, c.CacheRedis),
 		UploadHistoryModel:  model.NewUploadHistoryModel(conn, c.CacheRedis),

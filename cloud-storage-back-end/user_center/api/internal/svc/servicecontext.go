@@ -1,10 +1,11 @@
 package svc
 
 import (
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservice"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/config"
 	"github.com/Auroraol/cloud-storage/user_center/model"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/user"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userservicerpc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -13,8 +14,9 @@ type ServiceContext struct {
 	Config              config.Config
 	UserModel           model.UserModel
 	UserRepositoryModel model.UserRepositoryModel
-	UploadServiceRpc    uploadservice.UploadService
-	UserCenterRpc       user.User
+	UploadServiceRpc    uploadservicerpc.UploadServiceRpc
+	UserCenterRpc       userservicerpc.UserServiceRpc
+	AuditLogServiceRpc  auditservicerpc.AuditServiceRpc
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -23,9 +25,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:              c,
 		UserModel:           model.NewUserModel(mysqlConn),
 		UserRepositoryModel: model.NewUserRepositoryModel(mysqlConn, c.CacheRedis),
-		UploadServiceRpc: uploadservice.NewUploadService(
+		UploadServiceRpc: uploadservicerpc.NewUploadServiceRpc(
 			zrpc.MustNewClient(c.UploadServiceRpcConf)),
-		UserCenterRpc: user.NewUser(
+		UserCenterRpc: userservicerpc.NewUserServiceRpc(
 			zrpc.MustNewClient(c.UserCenterRpcConf)),
+		AuditLogServiceRpc: auditservicerpc.NewAuditServiceRpc(
+			zrpc.MustNewClient(c.AuditServiceRpcConf)),
 	}
 }

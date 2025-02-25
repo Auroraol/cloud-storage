@@ -6,7 +6,8 @@ package handler
 import (
 	"net/http"
 
-	"cloud-storage/log_service/api/internal/svc"
+	audit "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/audit"
+	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -31,6 +32,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/read",
 				Handler: readHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/log_service/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 分页获得操作日志
+				Method:  http.MethodPost,
+				Path:    "/operation",
+				Handler: audit.OperationHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

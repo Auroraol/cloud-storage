@@ -42,6 +42,17 @@ type GetLogfileRes struct {
 	MonitorChoice int      `json:"monitor_choice"`
 }
 
+type GetOperationLogReq struct {
+	Page     int `json:"page"`
+	PageSize int `json:"page_size"`
+	Flag     int `json:"flag"` //操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件
+}
+
+type GetOperationLogRes struct {
+	Total         int            `json:"total"`
+	OperationLogs []OperationLog `json:"operation_logs"`
+}
+
 type GetPathsFileReq struct {
 	LogFileName string `form:"path"` // log path
 	Path        string `form:"path"` // log path
@@ -50,4 +61,11 @@ type GetPathsFileReq struct {
 
 type GetPathsFileRes struct {
 	PathsFile []string `json:"contents"`
+}
+
+type OperationLog struct {
+	Content   string `json:"content"`
+	FileSize  int    `json:"file_size"`
+	CreatedAt string `json:"created_at"`
+	Flag      int    `json:"flag"`
 }

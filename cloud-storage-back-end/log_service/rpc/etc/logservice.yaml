@@ -1,0 +1,18 @@
+Name: log_service-rpc
+ListenOn: 0.0.0.0:2007
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: log_service.rpc
+
+# 数据库
+Options:
+  DBType: mysql
+  Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
+
+# 缓存
+CacheRedis:
+  - Host: "101.37.165.220:6379"
+    Type: node
+    Pass: "741106"
+

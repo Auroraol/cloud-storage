@@ -80,7 +80,7 @@
 import { ref, reactive } from "vue"
 import { ElMessage } from "element-plus"
 import { getAuditLogsApi } from "@/api/audit"
-import type { LogRecord } from "@/api/audit/types"
+import type { LogRecord } from "@/api/audit/types/audit"
 // import { useUserStore } from "@/stores/user"
 
 interface LogRecord {

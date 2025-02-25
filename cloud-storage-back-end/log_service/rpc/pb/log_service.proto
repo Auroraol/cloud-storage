@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+message OperationLogReq {
+  int64 userId = 1;
+  string content = 2;
+  int32 fileSize = 3;   //文件大小
+  int32 flag = 4; // 操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件
+}
+
+message OperationLogResp {
+  int64 id = 1;
+}
+
+service AuditServiceRpc {
+  // 创建操作记录
+  rpc CreateOperationLog (OperationLogReq) returns (OperationLogResp);
+}
+
+// goctl rpc protoc log_service.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m

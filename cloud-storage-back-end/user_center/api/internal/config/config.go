@@ -17,4 +17,5 @@ type Config struct {
 	CacheRedis           cache.CacheConf
 	UploadServiceRpcConf zrpc.RpcClientConf
 	UserCenterRpcConf    zrpc.RpcClientConf
+	AuditServiceRpcConf  zrpc.RpcClientConf
 }

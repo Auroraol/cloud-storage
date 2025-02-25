@@ -6,8 +6,8 @@ import (
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservice"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepository"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservicerpc"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -29,7 +29,7 @@ func NewShareBasicSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sh
 }
 
 func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (resp *types.ShareBasicSaveResponse, err error) {
-	nameInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadservice.RepositoryReq{RepositoryId: req.RepositoryId})
+	nameInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadservicerpc.RepositoryReq{RepositoryId: req.RepositoryId})
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
-	idInfo, err := l.svcCtx.UserCenterRepositoryRpc.CreateByShare(l.ctx, &userrepository.CreateByShareReq{
+	idInfo, err := l.svcCtx.UserCenterRepositoryRpc.CreateByShare(l.ctx, &userrepositoryrpc.CreateByShareReq{
 		UserId:       userId,
 		ParentId:     req.ParentId,
 		RepositoryId: req.RepositoryId,

@@ -1,24 +1,23 @@
-import { request } from "@/utils/service"
-import type { LogQueryParams, LogQueryResponse, StatisticsData } from "./types"
+import { request } from "@/utils/network/axios"
+import { RequestEnum } from "@/utils/network/httpEnum"
+import type * as Audit from "./types/audit"
+import { dataTool } from "echarts"
+const prefix = import.meta.env.VITE_APP_BASE_API
 
-/**
- * 获取审计日志列表
- * @param params 查询参数
- */
-export function getAuditLogsApi(params: Omit<LogQueryParams, "userId">) {
-  return request<LogQueryResponse>({
-    url: "/audit/logs",
-    method: "post",
-    data: params
-  })
-}
-
-/**
- * 获取用户审计统计数据
- */
-export function getAuditStatisticsApi() {
-  return request<StatisticsData>({
-    url: "/audit/statistics",
-    method: "get"
-  })
+// 审计相关接口
+export const auditApi = {
+  // 获取审计列表
+  getAuditList(data) {
+    return request<Audit.LogQueryResponse>(`${prefix}/log_service/v1/share/operation`, {
+      method: RequestEnum.POST,
+      data: data
+    })
+  },
+  // 获取审计列表
+  getAuditStatistics(data) {
+    return request<Audit.StatisticsData>(`${prefix}/log_service/v1/share/operation`, {
+      method: RequestEnum.POST,
+      data: data
+    })
+  }
 }

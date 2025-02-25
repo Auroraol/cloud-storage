@@ -1,11 +1,13 @@
 package main
 
 import (
-	"cloud-storage/log_service/api/internal/config"
-	"cloud-storage/log_service/api/internal/handler"
-	"cloud-storage/log_service/api/internal/svc"
 	"flag"
 	"fmt"
+
+	"github.com/Auroraol/cloud-storage/log_service/api/internal/config"
+	"github.com/Auroraol/cloud-storage/log_service/api/internal/handler"
+	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
+
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -14,6 +16,7 @@ var configFile = flag.String("f", "log_service/api/etc/logservice.yaml", "the co
 
 func main() {
 	flag.Parse()
+
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 

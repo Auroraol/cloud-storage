@@ -38,8 +38,12 @@ UserCenterRpcConf:
       - 127.0.0.1:2379
     Key: user_center.rpc
 
-
-
+#rpc service
+AuditServiceRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: log_service.rpc
 ##监控
 #Prometheus:
 #  Host: 0.0.0.0

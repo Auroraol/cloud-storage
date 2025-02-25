@@ -24,7 +24,7 @@ message DeleteByIdResp {
   int64 size = 1;
 }
 
-service UploadService {
+service UploadServiceRpc {
   rpc getRepositoryPoolByRepositoryId(RepositoryReq) returns (RepositoryResp);  // 获取文件信息
   rpc deleteById(DeleteByIdReq) returns (DeleteByIdResp);
 }
