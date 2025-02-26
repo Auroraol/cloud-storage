@@ -7,6 +7,7 @@ import (
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/share_service/model"
 	"github.com/bwmarrin/snowflake"
+	"github.com/pkg/errors"
 	"strconv"
 
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
@@ -37,7 +38,7 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 	//	return nil, err
 	//}
 	one, err := l.svcCtx.ShareBasicModel.FindOneByIdentity(l.ctx, uint64(req.RepositoryId))
-	if err != nil {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		logx.Errorf("failed to find repository id by id: %w", err)
 		return nil, err
 	}

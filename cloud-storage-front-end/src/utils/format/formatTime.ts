@@ -16,7 +16,7 @@ export const timestampToDate = (timestamp: number): string => {
 }
 
 // 2025-02-11T16:00:00.000Z 转成时间戳
-export const dateToTimestamp = (date: string): number => {
+export const dateToTimestamp = (date: number): number => {
   if (!date) return 0
   return dayjs(date).unix()
 }

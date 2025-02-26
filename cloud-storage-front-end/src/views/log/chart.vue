@@ -7,7 +7,7 @@
           <!-- 实时监控配置 -->
           <div class="chart-config">
             <el-form :inline="true" :model="realtimeConfig">
-              <el-form-item label="监控项">
+              <el-form-item label="监控项" style="width: 350px">
                 <el-select v-model="realtimeConfig.metrics" multiple placeholder="请选择监控项">
                   <el-option v-for="item in metricOptions" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>

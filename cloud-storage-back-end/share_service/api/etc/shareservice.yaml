@@ -11,11 +11,7 @@ JwtAuth:
 Options:
   DBType: mysql
   Dsn:    root:741106@tcp(101.37.165.220:3306)/cloud_storage?charset=utf8&parseTime=True&loc=Local
-  MaxOpenConns: 100
-  MaxIdleConns: 10
-  ConnMaxIdleTime: 300 # in seconds
-  ConnMaxLifetime: 1800 # in seconds
-
+  
 # 缓存
 CacheRedis:
   - Host: "101.37.165.220:6379"

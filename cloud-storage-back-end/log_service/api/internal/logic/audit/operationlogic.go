@@ -39,15 +39,7 @@ func (l *OperationLogic) Operation(req *types.GetOperationLogReq) (resp *types.G
 	// 获取总数
 	auditModel := l.svcCtx.AuditModel
 	var total int64
-
-	//if req.StartTime > 0 && req.EndTime > 0 {
-	// 按时间范围查询总数
 	total, err = auditModel.CountByTimeRange(l.ctx, int32(req.Flag), req.StartTime, req.EndTime)
-	//} else {
-	// 普通查询总数
-	//total, err = auditModel.Count(l.ctx, int(req.Flag))
-	//}
-
 	if err != nil {
 		return nil, fmt.Errorf("获取总数失败: %v", err)
 	}
@@ -62,15 +54,8 @@ func (l *OperationLogic) Operation(req *types.GetOperationLogReq) (resp *types.G
 	// 分页查询
 	offset := (req.Page - 1) * req.PageSize
 	var audits []*model.Audit
-
-	//if req.StartTime > 0 && req.EndTime > 0 {
 	// 按时间范围分页查询
 	audits, err = auditModel.FindByTimeRange(l.ctx, offset, req.PageSize, int32(req.Flag), req.StartTime, req.EndTime)
-	//} else {
-	//	// 普通分页查询
-	//	audits, err = auditModel.FindByPage(l.ctx, offset, req.PageSize, int(req.Flag))
-	//}
-
 	if err != nil {
 		return nil, fmt.Errorf("分页查询失败: %v", err)
 	}

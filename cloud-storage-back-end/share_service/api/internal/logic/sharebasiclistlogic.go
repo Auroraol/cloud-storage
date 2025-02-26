@@ -60,10 +60,10 @@ func (l *ShareBasicListLogic) ShareBasicList(req *types.ShareBasicListRequest) (
 	// 分页查询
 	err = l.svcCtx.Engine.
 		Table("share_basic").
-		Select("share_basic.id, share_basic.repository_id, user_repository.name, repository_pool.ext, repository_pool.path, repository_pool.size, share_basic.click_num, User.username AS owner, User.avatar, share_basic.expired_time, share_basic.update_time, share_basic.code").
+		Select("share_basic.id, share_basic.repository_id, user_repository.name, repository_pool.ext, repository_pool.path, repository_pool.size, share_basic.click_num, user.username AS owner, user.avatar, share_basic.expired_time, share_basic.update_time, share_basic.code").
 		Joins("LEFT JOIN repository_pool ON repository_pool.identity = share_basic.repository_id").
 		Joins("LEFT JOIN user_repository ON user_repository.id = share_basic.user_repository_id").
-		Joins("LEFT JOIN User ON share_basic.user_id = User.id").
+		Joins("LEFT JOIN user ON share_basic.user_id = user.id").
 		Where("share_basic.user_id = ? AND share_basic.deleted_at IS NULL", userId).
 		Order("share_basic.update_time DESC").
 		Offset(int(offset)).

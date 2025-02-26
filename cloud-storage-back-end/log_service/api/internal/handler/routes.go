@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	audit "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/audit"
+	monitor "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/monitor"
+	ssh "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/ssh"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -33,6 +35,36 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/operation",
 				Handler: audit.OperationHandler(serverCtx),
+			},
+			{
+				// 实时监控
+				Method:  http.MethodPost,
+				Path:    "/monitor/realtime",
+				Handler: monitor.RealTimeMonitorHandler(serverCtx),
+			},
+			{
+				// 历史分析
+				Method:  http.MethodPost,
+				Path:    "/monitor/history",
+				Handler: monitor.HistoryAnalysisHandler(serverCtx),
+			},
+			{
+				// SSH连接
+				Method:  http.MethodPost,
+				Path:    "/ssh/connect",
+				Handler: ssh.ConnectHandler(serverCtx),
+			},
+			{
+				// 获取日志文件列表
+				Method:  http.MethodPost,
+				Path:    "/ssh/logfiles",
+				Handler: ssh.GetLogFilesHandler(serverCtx),
+			},
+			{
+				// 读取日志文件
+				Method:  http.MethodPost,
+				Path:    "/ssh/readlog",
+				Handler: ssh.ReadLogFileHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

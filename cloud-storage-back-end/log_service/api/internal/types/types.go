@@ -73,3 +73,98 @@ type OperationLog struct {
 	FileName  string `json:"file_name"`
 	FileId    string `json:"file_id"`
 }
+
+// 实时监控请求
+type RealTimeMonitorReq struct {
+	Host         string   `json:"host"`         // 主机地址
+	LogFile      string   `json:"log_file"`     // 日志文件名
+	MonitorItems []string `json:"monitor_items"` // 监控项（请求数、错误数、响应时间）
+	TimeRange    int      `json:"time_range"`   // 时间范围（1小时、6小时、12小时、24小时）
+}
+
+// 实时监控响应
+type RealTimeMonitorRes struct {
+	Data      []MonitorData `json:"data"`      // 监控数据
+	Total     int           `json:"total"`     // 总数
+	Success   bool          `json:"success"`   // 是否成功
+}
+
+// 监控数据
+type MonitorData struct {
+	Timestamp int64  `json:"timestamp"` // 时间戳
+	Value     int    `json:"value"`     // 值
+	Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
+}
+
+// 历史分析请求
+type HistoryAnalysisReq struct {
+	Host        string `json:"host"`        // 主机地址
+	LogFile     string `json:"log_file"`    // 日志文件名
+	StartTime   int64  `json:"start_time"`  // 开始时间
+	EndTime     int64  `json:"end_time"`    // 结束时间
+	Keywords    string `json:"keywords"`    // 关键字
+	Page        int    `json:"page"`        // 页码
+	PageSize    int    `json:"page_size"`   // 每页大小
+	AggregateBy string `json:"aggregate_by"` // 聚合方式（按分钟、按小时、按天）
+}
+
+// 历史分析响应
+type HistoryAnalysisRes struct {
+	Data      []LogEntry `json:"data"`      // 日志条目
+	Total     int        `json:"total"`     // 总数
+	Page      int        `json:"page"`      // 页码
+	PageSize  int        `json:"page_size"` // 每页大小
+	Success   bool       `json:"success"`   // 是否成功
+}
+
+// 日志条目
+type LogEntry struct {
+	Timestamp int64  `json:"timestamp"` // 时间戳
+	Content   string `json:"content"`   // 内容
+	Level     string `json:"level"`     // 级别
+	Source    string `json:"source"`    // 来源
+}
+
+// SSH连接请求
+type SSHConnectReq struct {
+	Host           string `json:"host"`           // 主机地址
+	User           string `json:"user"`           // 用户名
+	Password       string `json:"password"`       // 密码
+	PrivateKeyPath string `json:"private_key_path"` // 私钥路径
+}
+
+// SSH连接响应
+type SSHConnectRes struct {
+	Success bool   `json:"success"` // 是否成功
+	Message string `json:"message"` // 消息
+}
+
+// 获取日志文件列表请求
+type GetLogFilesReq struct {
+	Host string `json:"host"` // 主机地址
+	Path string `json:"path"` // 日志路径
+}
+
+// 获取日志文件列表响应
+type GetLogFilesRes struct {
+	Files   []string `json:"files"`   // 文件列表
+	Success bool     `json:"success"` // 是否成功
+}
+
+// 读取日志文件请求
+type ReadLogFileReq struct {
+	Host     string `json:"host"`     // 主机地址
+	Path     string `json:"path"`     // 日志路径
+	Match    string `json:"match"`    // 匹配字符串
+	Page     int    `json:"page"`     // 页码
+	PageSize int    `json:"page_size"` // 每页大小
+}
+
+// 读取日志文件响应
+type ReadLogFileRes struct {
+	Contents   []string `json:"contents"`    // 内容
+	TotalLines int      `json:"total_lines"` // 总行数
+	Page       int      `json:"page"`        // 页码
+	PageSize   int      `json:"page_size"`   // 每页大小
+	Success    bool     `json:"success"`     // 是否成功
+}

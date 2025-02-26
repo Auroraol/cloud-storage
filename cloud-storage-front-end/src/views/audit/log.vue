@@ -39,7 +39,7 @@
       </el-form>
     </div>
 
-    <el-table :data="logList" border style="width: 100%">
+    <el-table :data="logList" v-loading="loading" border style="width: 100%">
       <el-table-column prop="operationType" label="操作类型">
         <template #default="{ row }">
           <el-tag :type="getOperationTypeTag(row.flag)">
@@ -106,6 +106,8 @@ const searchForm = reactive({
   timeRange: [] as Date[]
 })
 
+const loading = ref(true)
+
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
@@ -115,17 +117,10 @@ const currentDetail = ref<LogRecord | null>(null)
 
 const handleSearch = async () => {
   try {
-    console.log("searchForm", searchForm.timeRange)
-    console.log("searchForm.timeRange[0]", searchForm.timeRange[0])
-    console.log("searchForm.timeRange[1]", searchForm.timeRange[1])
-    console.log(
-      "dateToTimestamp(searchForm.timeRange[0]?.toISOString())",
-      dateToTimestamp(searchForm.timeRange[0]?.toISOString())
-    )
     const res = await auditApi.getAuditList({
       flag: Number(searchForm.operationType),
-      start_time: dateToTimestamp(searchForm.timeRange[0]?.toISOString()) || 0,
-      end_time: dateToTimestamp(searchForm.timeRange[1]?.toISOString()) || 0,
+      start_time: dateToTimestamp(searchForm.timeRange[0]) || 0,
+      end_time: dateToTimestamp(searchForm.timeRange[1]) || 0,
       page: page.value,
       page_size: pageSize.value
     })
@@ -139,6 +134,7 @@ const handleSearch = async () => {
       created_at: item.created_at
     }))
     total.value = res.data.total
+    loading.value = false
   } catch (error) {
     ElMessage.error("获取日志列表失败")
     console.error("获取日志列表失败:", error)
