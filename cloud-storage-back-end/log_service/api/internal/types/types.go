@@ -43,9 +43,11 @@ type GetLogfileRes struct {
 }
 
 type GetOperationLogReq struct {
-	Page     int `json:"page"`
-	PageSize int `json:"page_size"`
-	Flag     int `json:"flag"` //操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件
+	Page      int   `json:"page"`
+	PageSize  int   `json:"page_size"`
+	Flag      int   `json:"flag"`       //操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件, -1: 全部
+	StartTime int64 `json:"start_time"` // 时间戳(秒)
+	EndTime   int64 `json:"end_time"`   // 时间戳(秒)
 }
 
 type GetOperationLogRes struct {
@@ -68,4 +70,6 @@ type OperationLog struct {
 	FileSize  int    `json:"file_size"`
 	CreatedAt string `json:"created_at"`
 	Flag      int    `json:"flag"`
+	FileName  string `json:"file_name"`
+	FileId    string `json:"file_id"`
 }

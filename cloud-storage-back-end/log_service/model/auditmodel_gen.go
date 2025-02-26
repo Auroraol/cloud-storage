@@ -40,12 +40,13 @@ type (
 	}
 
 	Audit struct {
-		Id         uint64 `db:"id"`          // 操作记录ID
-		UserId     uint64 `db:"user_id"`     // 用户id
-		Content    string `db:"content"`     // 操作内容
-		Flag       int64  `db:"flag"`        // 操作类型，0：上传，1：下载，2：删除，3：重命名，4：移动，5：复制，6：创建文件夹，7：修改文件
-		FileSize   int64  `db:"file_size"`   // 文件大小
-		CreateTime int64  `db:"create_time"` // 创建时间戳
+		Id           uint64 `db:"id"`            // 操作记录ID
+		UserId       uint64 `db:"user_id"`       // 用户id
+		Content      string `db:"content"`       // 操作内容
+		Flag         int64  `db:"flag"`          // 操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件
+		RepositoryId uint64 `db:"repository_id"` // 0则为文件夹, 其他为文件id
+		FileName     string `db:"file_name"`     // 文件夹名称
+		CreateTime   int64  `db:"create_time"`   // 创建时间戳
 	}
 )
 
@@ -85,8 +86,8 @@ func (m *defaultAuditModel) FindOne(ctx context.Context, id uint64) (*Audit, err
 func (m *defaultAuditModel) Insert(ctx context.Context, data *Audit) (sql.Result, error) {
 	auditIdKey := fmt.Sprintf("%s%v", cacheAuditIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, auditRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.Content, data.Flag, data.FileSize)
+		query := fmt.Sprintf("insert into %s (%s, create_time) values (?, ?, ?, ?, ?, ?)", m.table, auditRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.Content, data.Flag, data.RepositoryId, data.FileName, data.CreateTime)
 	}, auditIdKey)
 	return ret, err
 }
@@ -95,7 +96,7 @@ func (m *defaultAuditModel) Update(ctx context.Context, data *Audit) error {
 	auditIdKey := fmt.Sprintf("%s%v", cacheAuditIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, auditRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UserId, data.Content, data.Flag, data.FileSize, data.Id)
+		return conn.ExecCtx(ctx, query, data.UserId, data.Content, data.Flag, data.RepositoryId, data.FileName, data.Id)
 	}, auditIdKey)
 	return err
 }

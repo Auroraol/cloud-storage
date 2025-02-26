@@ -5,6 +5,7 @@ import (
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
 	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -48,12 +49,28 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
+	// 添加操作日志文件id
+	fileId := userFileInfo.RepositoryId
+	if userFileInfo.ParentId != 0 {
+		fileId = userFileInfo.ParentId
+	}
+
 	// 如果是文件夹,递归更新子文件和文件夹的状态
 	if userFileInfo.RepositoryId == 0 {
 		err = l.updateFolderContentsStatus(l.ctx, int64(userFileInfo.Id), userId)
 		if err != nil {
 			return nil, err
 		}
+
+		// 添加文件夹删除操作日志
+		l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+			UserId:   userId,
+			Content:  "删除文件夹",
+			Flag:     2,
+			FileId:   int64(fileId),
+			FileName: userFileInfo.Name,
+		})
+
 		return &types.UserFileDeleteResponse{}, nil
 	}
 
@@ -74,6 +91,16 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 	if err != nil {
 		return nil, response.NewErrMsg("更新容量失败！")
 	}
+
+	// 添加文件删除操作日志
+	l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+		UserId:   userId,
+		Content:  "删除文件",
+		FileSize: int32(repositoryInfo.Size),
+		Flag:     2,
+		FileId:   int64(fileId),
+		FileName: userFileInfo.Name,
+	})
 
 	return &types.UserFileDeleteResponse{}, nil
 }

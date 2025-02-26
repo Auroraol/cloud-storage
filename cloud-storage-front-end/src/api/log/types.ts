@@ -83,3 +83,4 @@ export interface ChartResponse {
   /** 数据系列 */
   series: ChartSeries[]
 }
+

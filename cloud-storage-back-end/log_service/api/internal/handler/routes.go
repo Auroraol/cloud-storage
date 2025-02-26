@@ -15,24 +15,12 @@ import (
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
-			{
-				// 日志文件
-				Method:  http.MethodPost,
-				Path:    "/logfiles",
-				Handler: logfileHandler(serverCtx),
-			},
-			{
-				// 路径文件
-				Method:  http.MethodPost,
-				Path:    "/path",
-				Handler: pathHandler(serverCtx),
-			},
-			{
-				// 日志阅读
-				Method:  http.MethodPost,
-				Path:    "/read",
-				Handler: readHandler(serverCtx),
-			},
+			//{
+			//	// 日志阅读
+			//	Method:  http.MethodPost,
+			//	Path:    "/read",
+			//	Handler: readHandler(serverCtx),
+			//},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/log_service/v1"),

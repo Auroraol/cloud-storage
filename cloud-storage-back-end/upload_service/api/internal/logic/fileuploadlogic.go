@@ -4,15 +4,6 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/store/oss"
-	"github.com/Auroraol/cloud-storage/common/token"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/utils"
-	"github.com/Auroraol/cloud-storage/upload_service/model"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
-	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -20,6 +11,17 @@ import (
 	"path"
 	"strconv"
 	"time"
+
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/store/oss"
+	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
+	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/upload_service/api/internal/utils"
+	"github.com/Auroraol/cloud-storage/upload_service/model"
+	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type FileUploadLogic struct {
@@ -126,6 +128,14 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		}, nil
 	}
 
+	// 添加操作日志
+	l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+		UserId:   userId,
+		Content:  "上传文件",
+		FileSize: int32(fileHeader.Size),
+		Flag:     0,
+	})
+
 	// 准备OSS上传选项
 	objectKey := fmt.Sprintf("files/%s/%s", strconv.FormatInt(userId, 10), utils.StringUuid())
 	uploadOptions := oss.FileUploadOptions{
@@ -143,7 +153,6 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	fileUrl, err := oss.UploadFile(uploadOptions)
 	if err != nil {
 		return nil, response.NewErrMsg(fmt.Sprintf("文件上传失败: %v", err))
-
 	}
 
 	identity := utils.IntUuid()

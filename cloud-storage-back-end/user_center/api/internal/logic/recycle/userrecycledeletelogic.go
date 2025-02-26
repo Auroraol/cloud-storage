@@ -72,9 +72,11 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 	}
 
 	l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
-		UserId:  userId,
-		Content: "删除回收站文件",
-		Flag:    2,
+		UserId:   userId,
+		Content:  "删除回收站文件",
+		Flag:     2,
+		FileId:   int64(fileInfo.Id),
+		FileName: fileInfo.Name,
 	})
 	return &types.UserRecycleDeleteResponse{}, nil
 }

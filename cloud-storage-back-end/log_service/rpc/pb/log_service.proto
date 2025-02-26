@@ -9,6 +9,8 @@ message OperationLogReq {
   string content = 2;
   int32 fileSize = 3;   //文件大小
   int32 flag = 4; // 操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件
+  string fileName = 5;
+  int64 fileId = 6;
 }
 
 message OperationLogResp {

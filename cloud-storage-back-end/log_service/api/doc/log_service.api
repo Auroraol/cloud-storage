@@ -33,14 +33,13 @@ service log_service {
 	@doc "日志阅读"
 	@handler read
 	post /read (GetLogInfoReq) returns (GetLogInfoRes)
-
-	@doc "路径文件"
-	@handler path
-	post /path (GetPathsFileReq) returns (GetPathsFileRes)
-
-	@doc "日志文件"
-	@handler logfile
-	post /logfiles (GetLogfileReq) returns (GetLogfileRes)
+// @doc "路径文件"
+// @handler path
+// post /path (GetPathsFileReq) returns (GetPathsFileRes)
+//
+// @doc "日志文件"
+// @handler logfile
+// post /logfiles (GetLogfileReq) returns (GetLogfileRes)
 // @doc "日志监控"
 // @handler monitor
 // post /monitor (GetMonitorReq) returns (GetMonitorRes)

@@ -13,7 +13,8 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	UserCenterRpcConf zrpc.RpcClientConf
-	Options           orm.Options
-	CacheRedis        cache.CacheConf // 缓存
+	UserCenterRpcConf   zrpc.RpcClientConf
+	AuditServiceRpcConf zrpc.RpcClientConf
+	Options             orm.Options
+	CacheRedis          cache.CacheConf // 缓存
 }

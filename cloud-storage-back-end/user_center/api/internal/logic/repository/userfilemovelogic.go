@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -44,11 +46,28 @@ func (l *UserFileMoveLogic) UserFileMove(req *types.UserFileMoveRequest) (resp *
 	if count > 0 {
 		return nil, response.NewErrMsg("已存在相同名称的文件！")
 	}
+
+	// 添加操作日志文件id
+	fileId := userFileInfo.RepositoryId
+	if userFileInfo.ParentId != 0 {
+		fileId = userFileInfo.ParentId
+	}
+
 	//修改
 	userFileInfo.ParentId = uint64(req.ParentId)
 	err = l.svcCtx.UserRepositoryModel.Update(l.ctx, userFileInfo)
 	if err != nil {
 		return nil, err
 	}
+
+	// 添加操作日志
+	l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+		UserId:   userId,
+		Content:  "移动文件",
+		Flag:     5,
+		FileId:   int64(fileId),
+		FileName: userFileInfo.Name,
+	})
+
 	return &types.UserFileMoveResponse{}, nil
 }

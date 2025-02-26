@@ -14,3 +14,9 @@ export const timestampToDateMs = (timestamp: number) => {
 export const timestampToDate = (timestamp: number): string => {
   return new Date(timestamp * 1000).toLocaleString()
 }
+
+// 2025-02-11T16:00:00.000Z 转成时间戳
+export const dateToTimestamp = (date: string): number => {
+  if (!date) return 0
+  return dayjs(date).unix()
+}

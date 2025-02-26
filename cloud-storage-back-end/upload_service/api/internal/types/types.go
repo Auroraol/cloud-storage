@@ -99,3 +99,13 @@ type UpdateHistoryRequest struct {
 type UpdateHistoryResponse struct {
 	Id string `json:"id"` // 文件上传历史记录ID
 }
+
+// 文件下载请求
+type FileDownloadRequest struct {
+	RepositoryId int64 `form:"repository_id"`
+}
+
+// 文件下载响应
+type FileDownloadResponse struct {
+	URL string `json:"url"`
+}

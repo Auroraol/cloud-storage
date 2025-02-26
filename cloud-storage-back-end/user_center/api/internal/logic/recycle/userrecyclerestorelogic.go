@@ -29,7 +29,6 @@ func NewUserRecycleRestoreLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 	}
 }
 
-// todo 恢复容量
 func (l *UserRecycleRestoreLogic) UserRecycleRestore(req *types.UserRecycleRestoreRequest) (resp *types.UserRecycleRestoreResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {

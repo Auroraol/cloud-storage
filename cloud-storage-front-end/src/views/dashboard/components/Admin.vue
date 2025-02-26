@@ -149,10 +149,10 @@
 
     <!-- 移动对话框 -->
     <el-dialog v-model="moveDialog.visible" title="移动文件" width="30%">
-      <el-form :model="moveDialog.form" label-width="80px">
+      <el-form :model="moveDialog.form" label-width="90px">
         <el-form-item label="目标文件夹">
           <el-select v-model="moveDialog.form.targetFolderId" placeholder="选择目标文件夹">
-            <el-option v-for="folder in folderList" :key="folder.id" :label="folder.name" :value="folder.id" />
+            <el-option v-for="folder in filesFolders" :key="folder.id" :label="folder.name" :value="folder.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -348,7 +348,12 @@ const moveDialog = reactive({
 })
 
 // 添加文件夹列表
-const folderList = ref<Array<{ id: number; name: string }>>([])
+const filesFolders = ref<Array<{ id: number; name: string }>>([
+  {
+    id: 0,
+    name: "根目录"
+  }
+])
 
 // 判断文件是否可预览
 const isPreviewAble = (file: FileListItem): boolean => {
@@ -430,6 +435,10 @@ const loadFileList = async () => {
         // 文件夹的 RepositoryId 为 0
         if (!item.repository_id) {
           // 文件夹
+          filesFolders.value.push({
+            id: item.id,
+            name: item.name
+          })
           const folderSize = await getFolderSize(item.id)
           return {
             id: item.id,

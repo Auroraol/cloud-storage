@@ -73,3 +73,25 @@ export type DetailResponseData = ApiResponseData<{
   size: number
   path: string
 }>
+
+export interface GetOperationLogReq {
+  page: number
+  page_size: number
+  flag: number //操作类型，0：上传，1：下载，2：删除，3.恢复 4：重命名，5：移动，6：复制，7：创建文件夹，8：修改文件, -1: 全部\
+  end_time: number // 时间戳(秒)
+  start_time: number // 时间戳(秒)
+}
+
+export type GetOperationLogRes = ApiResponseData<{
+  total: number
+  operation_logs: OperationLog[]
+}>
+
+interface OperationLog {
+  content: string
+  file_size: number
+  created_at: string //时间戳(秒)
+  flag: number
+  file_name: string
+  file_id: string
+}

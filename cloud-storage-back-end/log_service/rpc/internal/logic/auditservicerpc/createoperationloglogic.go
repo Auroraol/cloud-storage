@@ -27,11 +27,12 @@ func NewCreateOperationLogLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 // 创建操作记录
 func (l *CreateOperationLogLogic) CreateOperationLog(in *pb.OperationLogReq) (*pb.OperationLogResp, error) {
 	insert, err := l.svcCtx.AuditModel.Insert(l.ctx, &model.Audit{
-		UserId:     uint64(in.UserId),
-		Content:    in.Content,
-		FileSize:   int64(in.FileSize),
-		Flag:       int64(in.Flag),
-		CreateTime: time.LocalTimeNow().Unix(),
+		UserId:       uint64(in.UserId),
+		Content:      in.Content,
+		Flag:         int64(in.Flag),
+		CreateTime:   time.LocalTimeNow().Unix(),
+		FileName:     in.FileName,
+		RepositoryId: uint64(in.FileId),
 	})
 	if err != nil {
 		return nil, err
