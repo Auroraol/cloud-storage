@@ -13,44 +13,43 @@ import (
 	"proto/path.api"
 	"proto/logfiles.api"
 	"proto/audit.api"
+	"proto/log.api"
 )
 
 //============================> log_service v1 <============================
-//no need login
-//@server (
-// //路由前缀
-//)
-////影响配置文件名称和主文件名称
-//service log_service {
-//}
 //need login
 @server (
 	prefix: log_service/v1
-	//      group:  read
-	jwt: JwtAuth
+	group:  monitor
+	jwt:    JwtAuth
 )
 service log_service {
-	@doc "日志阅读"
-	@handler read
-	post /read (GetLogInfoReq) returns (GetLogInfoRes)
-// @doc "路径文件"
-// @handler path
-// post /path (GetPathsFileReq) returns (GetPathsFileRes)
-//
-// @doc "日志文件"
-// @handler logfile
-// post /logfiles (GetLogfileReq) returns (GetLogfileRes)
-// @doc "日志监控"
-// @handler monitor
-// post /monitor (GetMonitorReq) returns (GetMonitorRes)
-//
-// @doc "日志上报"
-// @handler Reported
-// post /Reported (GetReportedReq) returns (GetReportedRes)
-//
-// @doc "日志图表 "
-// @handler charts
-// post /charts (GetChartsReq) returns (GetChartsRes)
+	@doc "实时监控"
+	@handler RealTimeMonitorHandler
+	post /monitor/realtime (RealTimeMonitorReq) returns (RealTimeMonitorRes)
+
+	@doc "历史分析"
+	@handler HistoryAnalysisLogic
+	post /monitor/history (HistoryAnalysisReq) returns (HistoryAnalysisRes)
+}
+
+@server (
+	prefix: log_service/v1
+	group:  ssh
+	jwt:    JwtAuth
+)
+service log_service {
+	@doc "SSH连接"
+	@handler ConnectHandler
+	post /ssh/connect (SSHConnectReq) returns (SSHConnectRes)
+
+	@doc "获取日志文件列表"
+	@handler GetLogFilesHandler
+	post /ssh/readlog (GetLogFilesReq) returns (GetLogFilesRes)
+
+	@doc "读取日志文件"
+	@handler ReadLogFileHandler
+	post /ssh/logfiles (ReadLogFileReq) returns (ReadLogFileRes)
 }
 
 //need login

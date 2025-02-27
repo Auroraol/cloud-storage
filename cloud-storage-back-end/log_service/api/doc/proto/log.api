@@ -1,0 +1,98 @@
+syntax = "v1"
+
+type (
+	RealTimeMonitorReq {
+		Host         string   `json:"host"`         // 主机地址
+		LogFile      string   `json:"log_file"`     // 日志文件名
+		MonitorItems []string `json:"monitor_items"` // 监控项（请求数、错误数、响应时间）
+		TimeRange    int      `json:"time_range"`   // 时间范围（1小时、6小时、12小时、24小时）
+	}
+	RealTimeMonitorRes {
+		Data      []MonitorData `json:"data"`      // 监控数据
+		Total     int           `json:"total"`     // 总数
+		Success   bool          `json:"success"`   // 是否成功
+	}
+
+	MonitorData{
+		Timestamp int64  `json:"timestamp"` // 时间戳
+		Value     int    `json:"value"`     // 值
+		Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
+	}
+)
+
+type (
+	 // 历史分析请求
+	 HistoryAnalysisReq  {
+		Host        string `json:"host"`        // 主机地址
+		LogFile     string `json:"log_file"`    // 日志文件名
+		StartTime   int64  `json:"start_time"`  // 开始时间
+		EndTime     int64  `json:"end_time"`    // 结束时间
+		Keywords    string `json:"keywords"`    // 关键字
+		Page        int    `json:"page"`        // 页码
+		PageSize    int    `json:"page_size"`   // 每页大小
+		AggregateBy string `json:"aggregate_by"` // 聚合方式（按分钟、按小时、按天）
+	}
+
+	 // 历史分析响应
+	 HistoryAnalysisRes  {
+		Data      []LogEntry `json:"data"`      // 日志条目
+		Total     int        `json:"total"`     // 总数
+		Page      int        `json:"page"`      // 页码
+		PageSize  int        `json:"page_size"` // 每页大小
+		Success   bool       `json:"success"`   // 是否成功
+	}
+
+	 // 日志条目
+	 LogEntry  {
+		Timestamp int64  `json:"timestamp"` // 时间戳
+		Content   string `json:"content"`   // 内容
+		Level     string `json:"level"`     // 级别
+		Source    string `json:"source"`    // 来源
+	}
+)
+
+type (
+	// SSH连接请求
+	SSHConnectReq {
+		Host string `json:"host"`                       // 主机地址
+		User string `json:"user"`                       // 用户名
+		Password string `json:"password"`               // 密码
+		PrivateKeyPath string `json:"private_key_path"` // 私钥路径
+	}
+
+	// SSH连接响应
+	SSHConnectRes {
+		Success bool `json:"success"`   // 是否成功
+		Message string `json:"message"` // 消息
+	}
+
+	// 获取日志文件列表请求
+	GetLogFilesReq {
+		Host string `json:"host"` // 主机地址
+		Path string `json:"path"` // 日志路径
+	}
+
+	// 获取日志文件列表响应
+	GetLogFilesRes {
+		Files []string `json:"files"`   // 文件列表
+		Success bool `json:"success"`   // 是否成功
+	}
+
+	// 读取日志文件请求
+	ReadLogFileReq {
+		Host string `json:"host"`       // 主机地址
+		Path string `json:"path"`       // 日志路径
+		Match string `json:"match"`     // 匹配字符串
+		Page int `json:"page"`          // 页码
+		PageSize int `json:"page_size"` // 每页大小
+	}
+
+	// 读取日志文件响应
+	ReadLogFileRes {
+		Contents []string `json:"contents"`    // 内容
+		TotalLines int `json:"total_lines"`    // 总行数
+		Page int `json:"page"`                 // 页码
+		PageSize int `json:"page_size"`        // 每页大小
+		Success bool `json:"success"`          // 是否成功
+	}
+)
