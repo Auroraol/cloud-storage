@@ -3,6 +3,7 @@ package ssh
 import (
 	"context"
 	"fmt"
+	"github.com/Auroraol/cloud-storage/common/response"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
@@ -52,19 +53,20 @@ func (l *ReadLogFileLogic) ReadLogFile(req *types.ReadLogFileReq) (resp *types.R
 		req.Page = 1
 	}
 	if req.PageSize <= 0 {
-		req.PageSize = 20
+		req.PageSize = 10
 	}
 
 	// 读取日志文件
 	contents, totalLines, err := l.svcCtx.SSHService.ReadLogFile(req.Path, req.Match, req.Page, req.PageSize)
 	if err != nil {
+		fmt.Printf("读取日志文件失败: %v", err)
 		return &types.ReadLogFileRes{
 			Contents:   []string{},
 			TotalLines: 0,
 			Page:       req.Page,
 			PageSize:   req.PageSize,
 			Success:    false,
-		}, fmt.Errorf("读取日志文件失败: %v", err)
+		}, response.NewErrMsg("读取日志文件失败")
 	}
 
 	return &types.ReadLogFileRes{

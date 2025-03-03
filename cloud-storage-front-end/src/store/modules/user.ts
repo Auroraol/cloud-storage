@@ -12,6 +12,14 @@ import { type LoginRequestData } from "@/api/user/types/login"
 import { da } from "element-plus/es/locale"
 import { tokenService } from "@/utils/cache/localStorage-storage"
 
+// SSH连接信息接口
+export interface SSHConnectionInfo {
+  host: string
+  port: number
+  user: string
+  password: string
+}
+
 export const useUserStore = defineStore("user", () => {
   // 全局变量
   // const token = ref<string>(getToken() || "")
@@ -27,6 +35,10 @@ export const useUserStore = defineStore("user", () => {
     now_volume: 0,
     total_volume: 0
   })
+
+  // SSH连接信息
+  const sshConnections = ref<SSHConnectionInfo[]>([])
+  const currentSSHHost = ref<string>("")
 
   const tagsViewStore = useTagsViewStore()
   const settingsStore = useSettingsStore()
@@ -99,7 +111,54 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, roles, username, avatar, userInfo, capacity, login, getInfo, changeRoles, logout, resetToken }
+  /** 添加或更新SSH连接信息 */
+  const addOrUpdateSSHConnection = (connection: SSHConnectionInfo) => {
+    const index = sshConnections.value.findIndex((conn) => conn.host === connection.host)
+    if (index !== -1) {
+      // 更新现有连接
+      sshConnections.value[index] = connection
+    } else {
+      // 添加新连接
+      sshConnections.value.push(connection)
+    }
+    // 设置当前连接的主机
+    currentSSHHost.value = connection.host
+  }
+
+  /** 获取SSH连接信息 */
+  const getSSHConnection = (host: string): SSHConnectionInfo | undefined => {
+    return sshConnections.value.find((conn) => conn.host === host)
+  }
+
+  /** 设置当前SSH主机 */
+  const setCurrentSSHHost = (host: string) => {
+    currentSSHHost.value = host
+  }
+
+  /** 获取所有SSH连接主机 */
+  const getSSHHosts = (): string[] => {
+    return sshConnections.value.map((conn) => conn.host)
+  }
+
+  return {
+    token,
+    roles,
+    username,
+    avatar,
+    userInfo,
+    capacity,
+    sshConnections,
+    currentSSHHost,
+    login,
+    getInfo,
+    changeRoles,
+    logout,
+    resetToken,
+    addOrUpdateSSHConnection,
+    getSSHConnection,
+    setCurrentSSHHost,
+    getSSHHosts
+  }
 })
 
 /**

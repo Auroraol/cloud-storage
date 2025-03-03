@@ -1,81 +1,68 @@
-import { request } from "@/utils/service"
-import type {
-  LogQueryParams,
-  LogReadResponse,
-  RealtimeMonitorParams,
-  HistoryAnalysisParams,
-  ChartResponse
-} from "./types"
+import { request } from "@/utils/network/axios"
+import type * as log from "./types/log"
+import { RequestEnum } from "@/utils/network/httpEnum"
 
-const prefix = "/api/logs"
+const prefix = import.meta.env.VITE_APP_BASE_API
 
-/**
- * 读取日志内容
- * @param params 查询参数
- */
-export function readLogApi(params: LogQueryParams) {
-  return request<LogReadResponse>({
-    url: `${prefix}/read`,
-    method: "post",
-    data: params
-  })
-}
+// 日志相关接口
+export const logApi = {
+  // SSH连接
+  sshConnect(data: log.SSHConnectRequestData) {
+    return request<log.SSHConnectResponseData>(
+      `${prefix}/log_service/v1/ssh/connect`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
 
-/**
- * 下载日志文件
- * @param params 查询参数
- */
-export function downloadLogApi(params: LogQueryParams) {
-  return request({
-    url: `${prefix}/download`,
-    method: "post",
-    data: params,
-    responseType: "blob"
-  })
-}
+  // 获取日志文件列表
+  getLogFiles(data: log.GetLogFilesReq) {
+    return request<log.GetLogFilesRes>(
+      `${prefix}/log_service/v1/ssh/readlog`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
 
-/**
- * 获取实时监控数据
- * @param params 监控参数
- */
-export function getRealtimeMetricsApi(params: RealtimeMonitorParams) {
-  return request<ChartResponse>({
-    url: `${prefix}/metrics/realtime`,
-    method: "post",
-    data: params
-  })
-}
+  // 读取日志文件内容
+  readLogContent(data: log.ReadLogFileReq) {
+    return request<log.ReadLogFileRes>(
+      `${prefix}/log_service/v1/ssh/logfiles`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
 
-/**
- * 获取历史分析数据
- * @param params 分析参数
- */
-export function getHistoryMetricsApi(params: HistoryAnalysisParams) {
-  return request<ChartResponse>({
-    url: `${prefix}/metrics/history`,
-    method: "post",
-    data: params
-  })
-}
+  // 实时监控
+  realTimeMonitor(data: log.RealTimeMonitorReq) {
+    return request<log.RealTimeMonitorRes>(
+      `${prefix}/log_service/v1/monitor/realtime`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
 
-/**
- * 获取可用主机列表
- */
-export function getHostsApi() {
-  return request<string[]>({
-    url: `${prefix}/hosts`,
-    method: "get"
-  })
-}
-
-/**
- * 获取日志文件列表
- * @param host 主机名
- */
-export function getLogFilesApi(host: string) {
-  return request<string[]>({
-    url: `${prefix}/files`,
-    method: "get",
-    params: { host }
-  })
+  // 历史分析
+  historyAnalysis(data: log.HistoryAnalysisReq) {
+    return request<log.HistoryAnalysisRes>(
+      `${prefix}/log_service/v1/monitor/history`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  }
 }

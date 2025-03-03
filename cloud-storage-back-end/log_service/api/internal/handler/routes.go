@@ -17,12 +17,12 @@ import (
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
-			//{
-			//	// 日志阅读
-			//	Method:  http.MethodPost,
-			//	Path:    "/read",
-			//	Handler: readHandler(serverCtx),
-			//},
+			{
+				// 分页获得操作日志
+				Method:  http.MethodPost,
+				Path:    "/operation",
+				Handler: audit.OperationHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/log_service/v1"),
@@ -31,10 +31,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 分页获得操作日志
+				// 历史分析
 				Method:  http.MethodPost,
-				Path:    "/operation",
-				Handler: audit.OperationHandler(serverCtx),
+				Path:    "/monitor/history",
+				Handler: monitor.HistoryAnalysisLogicHandler(serverCtx),
 			},
 			{
 				// 实时监控
@@ -42,12 +42,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/monitor/realtime",
 				Handler: monitor.RealTimeMonitorHandler(serverCtx),
 			},
-			{
-				// 历史分析
-				Method:  http.MethodPost,
-				Path:    "/monitor/history",
-				Handler: monitor.HistoryAnalysisHandler(serverCtx),
-			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/log_service/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
 				// SSH连接
 				Method:  http.MethodPost,
@@ -55,16 +56,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ssh.ConnectHandler(serverCtx),
 			},
 			{
-				// 获取日志文件列表
-				Method:  http.MethodPost,
-				Path:    "/ssh/logfiles",
-				Handler: ssh.GetLogFilesHandler(serverCtx),
-			},
-			{
 				// 读取日志文件
 				Method:  http.MethodPost,
-				Path:    "/ssh/readlog",
+				Path:    "/ssh/logfiles",
 				Handler: ssh.ReadLogFileHandler(serverCtx),
+			},
+			{
+				// 获取日志文件列表
+				Method:  http.MethodPost,
+				Path:    "/ssh/readlog",
+				Handler: ssh.GetLogFilesHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

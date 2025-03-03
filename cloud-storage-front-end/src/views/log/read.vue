@@ -1,13 +1,32 @@
 <template>
   <div class="app-container">
+    <!-- SSH连接对话框 -->
+    <el-dialog v-model="sshDialogVisible" title="SSH连接" width="500px">
+      <el-form :model="sshForm" label-width="100px">
+        <el-form-item label="主机地址">
+          <el-input v-model="sshForm.host" placeholder="请输入主机地址" />
+        </el-form-item>
+        <el-form-item label="端口">
+          <el-input-number v-model="sshForm.port" :min="1" :max="65535" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="sshForm.user" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="sshForm.password" type="password" placeholder="请输入密码" show-password />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="sshDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSSHConnect" :loading="sshConnecting">连接</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <div class="filter-container">
       <!-- 搜索条件区域 -->
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="日志文件" prop="logfile">
-          <el-select v-model="queryParams.logfile" placeholder="请选择日志文件" clearable style="width: 200px">
-            <el-option v-for="file in logFiles" :key="file" :label="file" :value="file" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="主机" prop="host">
           <el-select
             v-model="queryParams.host"
@@ -17,6 +36,12 @@
             @change="handleHostChange"
           >
             <el-option v-for="host in hosts" :key="host" :label="host" :value="host" />
+          </el-select>
+          <el-button type="primary" icon="Plus" circle size="small" @click="showSSHDialog" style="margin-left: 10px" />
+        </el-form-item>
+        <el-form-item label="日志文件" prop="logfile">
+          <el-select v-model="queryParams.logfile" placeholder="请选择日志文件" clearable style="width: 200px">
+            <el-option v-for="file in logFiles" :key="file" :label="file" :value="file" />
           </el-select>
         </el-form-item>
         <el-form-item label="关键字" prop="keyword">
@@ -88,8 +113,56 @@
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import type { FormInstance } from "element-plus"
-import { readLogApi, downloadLogApi, getHostsApi, getLogFilesApi } from "@/api/log"
-import type { LogQueryParams, LogLine, LogStats } from "@/api/log/types"
+import { readLogApi, downloadLogApi, getHostsApi, getLogFilesApi, connectSSHApi } from "@/api/log/frontend"
+import type { LogQueryParams, LogLine, LogStats } from "@/api/log/types/frontend"
+import { useUserStoreHook } from "@/store/modules/user"
+
+// 用户存储
+const userStore = useUserStoreHook()
+
+// SSH连接表单
+const sshDialogVisible = ref(false)
+const sshConnecting = ref(false)
+const sshForm = reactive({
+  host: "",
+  port: 22,
+  user: "root",
+  password: ""
+})
+
+// 显示SSH连接对话框
+const showSSHDialog = () => {
+  sshDialogVisible.value = true
+}
+
+// 处理SSH连接
+const handleSSHConnect = async () => {
+  if (!sshForm.host) {
+    ElMessage.warning("请输入主机地址")
+    return
+  }
+
+  try {
+    sshConnecting.value = true
+    await connectSSHApi(sshForm.host, sshForm.port, sshForm.user, sshForm.password)
+    ElMessage.success("SSH连接成功")
+
+    // 刷新主机列表
+    await refreshHosts()
+
+    // 设置为当前选中的主机
+    queryParams.host = sshForm.host
+
+    // 获取该主机的日志文件列表
+    await handleHostChange(sshForm.host)
+
+    sshDialogVisible.value = false
+  } catch (error) {
+    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
+  } finally {
+    sshConnecting.value = false
+  }
+}
 
 // 查询参数
 const queryParams = reactive<LogQueryParams>({
@@ -123,6 +196,16 @@ let refreshTimer: number | null = null
 
 // 查询日志
 const handleQuery = async () => {
+  if (!queryParams.host) {
+    ElMessage.warning("请选择主机")
+    return
+  }
+
+  if (!queryParams.logfile) {
+    ElMessage.warning("请选择日志文件")
+    return
+  }
+
   try {
     loading.value = true
     const res = await readLogApi(queryParams)
@@ -144,14 +227,28 @@ const resetQuery = (formEl: FormInstance | undefined) => {
   handleQuery()
 }
 
+// 刷新主机列表
+const refreshHosts = async () => {
+  try {
+    hosts.value = await getHostsApi()
+  } catch (error) {
+    console.error("获取主机列表失败:", error)
+  }
+}
+
 // 主机变更
 const handleHostChange = async (host: string) => {
   if (!host) {
     logFiles.value = []
     return
   }
+
   try {
-    logFiles.value = await getLogFilesApi(host)
+    // 设置当前SSH主机
+    userStore.setCurrentSSHHost(host)
+
+    // 获取日志文件列表
+    logFiles.value = await getLogFilesApi(host, "")
   } catch (error) {
     ElMessage.error("获取日志文件列表失败")
     console.error(error)
@@ -175,6 +272,11 @@ const loadNextPage = () => {
 
 // 下载日志
 const handleDownload = async () => {
+  if (!queryParams.host || !queryParams.logfile) {
+    ElMessage.warning("请选择主机和日志文件")
+    return
+  }
+
   try {
     loading.value = true
     const blob = await downloadLogApi(queryParams)
@@ -221,12 +323,12 @@ watch(refreshRate, () => {
 
 // 初始化数据
 const initData = async () => {
-  try {
-    const hostList = await getHostsApi()
-    hosts.value = hostList
-  } catch (error) {
-    ElMessage.error("获取主机列表失败")
-    console.error(error)
+  await refreshHosts()
+
+  // 如果有当前SSH主机，则自动选择
+  if (userStore.currentSSHHost) {
+    queryParams.host = userStore.currentSSHHost
+    await handleHostChange(userStore.currentSSHHost)
   }
 }
 

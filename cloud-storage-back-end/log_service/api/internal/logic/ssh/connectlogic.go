@@ -3,6 +3,7 @@ package ssh
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
@@ -42,7 +43,7 @@ func (l *ConnectLogic) Connect(req *types.SSHConnectReq) (resp *types.SSHConnect
 	}
 
 	// 连接主机
-	err = l.svcCtx.SSHService.Connect(req.Host, req.User, req.Password, req.PrivateKeyPath)
+	err = l.svcCtx.SSHService.Connect(req.Host, strconv.Itoa(req.Port), req.User, req.Password, req.PrivateKeyPath)
 	if err != nil {
 		return &types.SSHConnectRes{
 			Success: false,

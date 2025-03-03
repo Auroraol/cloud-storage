@@ -55,9 +55,10 @@ type (
 	// SSH连接请求
 	SSHConnectReq {
 		Host string `json:"host"`                       // 主机地址
+		Port int `json:"port"`
 		User string `json:"user"`                       // 用户名
 		Password string `json:"password"`               // 密码
-		PrivateKeyPath string `json:"private_key_path"` // 私钥路径
+		PrivateKeyPath string `json:"private_key_path, optional"` // 私钥路径
 	}
 
 	// SSH连接响应

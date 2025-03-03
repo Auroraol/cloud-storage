@@ -1,7 +1,38 @@
 <!-- src/components/Chart.vue -->
 <template>
   <div class="app-container">
+    <!-- SSH连接对话框 -->
+    <el-dialog v-model="sshDialogVisible" title="SSH连接" width="500px">
+      <el-form :model="sshForm" label-width="100px">
+        <el-form-item label="主机地址">
+          <el-input v-model="sshForm.host" placeholder="请输入主机地址" />
+        </el-form-item>
+        <el-form-item label="端口">
+          <el-input-number v-model="sshForm.port" :min="1" :max="65535" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="sshForm.user" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="sshForm.password" type="password" placeholder="请输入密码" show-password />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="sshDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSSHConnect" :loading="sshConnecting">连接</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <el-card class="chart-container">
+      <div class="chart-header">
+        <el-select v-model="currentHost" placeholder="选择主机" style="width: 200px" @change="handleHostChange">
+          <el-option v-for="host in hosts" :key="host" :label="host" :value="host" />
+        </el-select>
+        <el-button type="primary" @click="showSSHDialog" style="margin-left: 10px">连接主机</el-button>
+      </div>
+
       <el-tabs v-model="activeTab">
         <el-tab-pane label="实时监控" name="realtime">
           <!-- 实时监控配置 -->
@@ -66,11 +97,74 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, onUnmounted } from "vue"
+import { ref, reactive, onMounted, onUnmounted, watch } from "vue"
 import * as echarts from "echarts"
 import { ElMessage } from "element-plus"
-import { getRealtimeMetricsApi, getHistoryMetricsApi } from "@/api/log"
-import type { RealtimeMonitorParams, HistoryAnalysisParams, ChartMetric } from "@/api/log/types"
+import { getRealtimeMetricsApi, getHistoryMetricsApi, connectSSHApi, getHostsApi } from "@/api/log/frontend"
+import type { RealtimeMonitorParams, FrontHistoryAnalysisParams, ChartMetric } from "@/api/log/types/frontend"
+import { useUserStoreHook } from "@/store/modules/user"
+
+// 用户存储
+const userStore = useUserStoreHook()
+
+// SSH连接表单
+const sshDialogVisible = ref(false)
+const sshConnecting = ref(false)
+const currentHost = ref("")
+const hosts = ref<string[]>([])
+const sshForm = reactive({
+  host: "",
+  port: 22,
+  user: "root",
+  password: ""
+})
+
+// 显示SSH连接对话框
+const showSSHDialog = () => {
+  sshDialogVisible.value = true
+}
+
+// 处理SSH连接
+const handleSSHConnect = async () => {
+  if (!sshForm.host) {
+    ElMessage.warning("请输入主机地址")
+    return
+  }
+
+  try {
+    sshConnecting.value = true
+    await connectSSHApi(sshForm.host, sshForm.port, sshForm.user, sshForm.password)
+    ElMessage.success("SSH连接成功")
+
+    // 刷新主机列表
+    await refreshHosts()
+
+    // 设置当前主机
+    currentHost.value = sshForm.host
+
+    sshDialogVisible.value = false
+  } catch (error) {
+    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
+  } finally {
+    sshConnecting.value = false
+  }
+}
+
+// 刷新主机列表
+const refreshHosts = async () => {
+  try {
+    hosts.value = await getHostsApi()
+  } catch (error) {
+    console.error("获取主机列表失败:", error)
+  }
+}
+
+// 主机变更处理
+const handleHostChange = (host: string) => {
+  if (host) {
+    userStore.setCurrentSSHHost(host)
+  }
+}
 
 // 图表实例
 const realtimeChart = ref<HTMLElement | null>(null)
@@ -95,8 +189,8 @@ const realtimeConfig = reactive<RealtimeMonitorParams>({
 })
 
 // 历史分析配置
-const historyConfig = reactive<HistoryAnalysisParams>({
-  timeRange: ["", ""],
+const historyConfig = reactive<FrontHistoryAnalysisParams>({
+  timeRange: [null, null],
   aggregation: "hour"
 })
 
@@ -114,6 +208,9 @@ onMounted(() => {
 
   // 监听窗口大小变化
   window.addEventListener("resize", handleResize)
+
+  // 初始化数据
+  initData()
 })
 
 onUnmounted(() => {
@@ -123,6 +220,16 @@ onUnmounted(() => {
   historyChartInstance?.dispose()
 })
 
+// 初始化数据
+const initData = async () => {
+  await refreshHosts()
+
+  // 如果有当前SSH主机，则自动选择
+  if (userStore.currentSSHHost) {
+    currentHost.value = userStore.currentSSHHost
+  }
+}
+
 // 窗口大小变化时重绘图表
 const handleResize = () => {
   realtimeChartInstance?.resize()
@@ -131,6 +238,12 @@ const handleResize = () => {
 
 // 开始实时监控
 const startMonitor = async () => {
+  if (!currentHost.value) {
+    ElMessage.warning("请先连接主机")
+    showSSHDialog()
+    return
+  }
+
   if (!realtimeConfig.metrics.length) {
     ElMessage.warning("请选择至少一个监控项")
     return
@@ -198,6 +311,12 @@ const renderRealtimeChart = (data: any) => {
 
 // 查询历史数据
 const queryHistory = async () => {
+  if (!currentHost.value) {
+    ElMessage.warning("请先连接主机")
+    showSSHDialog()
+    return
+  }
+
   if (!historyConfig.timeRange[0] || !historyConfig.timeRange[1]) {
     ElMessage.warning("请选择时间范围")
     return
@@ -245,11 +364,30 @@ const renderHistoryChart = (data: any) => {
 
   historyChartInstance.setOption(option)
 }
+
+// 监听当前主机变化
+watch(currentHost, (newHost) => {
+  if (newHost) {
+    userStore.setCurrentSSHHost(newHost)
+  }
+})
 </script>
 
 <style scoped>
 .chart-container {
   margin-bottom: 20px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.host-info {
+  margin-left: 15px;
+  color: #409eff;
+  font-weight: bold;
 }
 
 .chart-config {

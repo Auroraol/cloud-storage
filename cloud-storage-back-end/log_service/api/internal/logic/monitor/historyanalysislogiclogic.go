@@ -13,22 +13,22 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type HistoryAnalysisLogic struct {
+type HistoryAnalysisLogicLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
 // 历史分析
-func NewHistoryAnalysisLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HistoryAnalysisLogic {
-	return &HistoryAnalysisLogic{
+func NewHistoryAnalysisLogicLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HistoryAnalysisLogicLogic {
+	return &HistoryAnalysisLogicLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *HistoryAnalysisLogic) HistoryAnalysis(req *types.HistoryAnalysisReq) (resp *types.HistoryAnalysisRes, err error) {
+func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnalysisReq) (resp *types.HistoryAnalysisRes, err error) {
 	// 参数校验
 	if req.Page <= 0 {
 		req.Page = 1
@@ -52,7 +52,7 @@ func (l *HistoryAnalysisLogic) HistoryAnalysis(req *types.HistoryAnalysisReq) (r
 	}
 
 	// 使用SSH服务读取日志文件
-	contents, _, err := l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
+	contents, taotal, err := l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
 	if err != nil {
 		// 如果读取失败，使用模拟数据
 		l.Logger.Errorf("读取日志文件失败: %v，使用模拟数据", err)
@@ -102,7 +102,7 @@ func (l *HistoryAnalysisLogic) HistoryAnalysis(req *types.HistoryAnalysisReq) (r
 
 	return &types.HistoryAnalysisRes{
 		Data:     data,
-		Total:    100, // 假设总数为100
+		Total:    taotal, // 假设总数为100
 		Page:     req.Page,
 		PageSize: req.PageSize,
 		Success:  true,
@@ -110,7 +110,7 @@ func (l *HistoryAnalysisLogic) HistoryAnalysis(req *types.HistoryAnalysisReq) (r
 }
 
 // 生成模拟数据
-func (l *HistoryAnalysisLogic) generateMockData(req *types.HistoryAnalysisReq) (*types.HistoryAnalysisRes, error) {
+func (l *HistoryAnalysisLogicLogic) generateMockData(req *types.HistoryAnalysisReq) (*types.HistoryAnalysisRes, error) {
 	// 模拟从日志文件中读取数据
 	// 实际应该根据日志文件路径、主机、时间范围和关键字进行过滤
 	total := 100 // 模拟总数

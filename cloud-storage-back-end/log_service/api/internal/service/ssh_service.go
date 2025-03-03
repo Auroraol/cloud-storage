@@ -12,7 +12,7 @@ import (
 // SSHService SSH服务接口
 type SSHService interface {
 	// 连接主机
-	Connect(host, user, password, privateKeyPath string) error
+	Connect(host, port, user, password, privateKeyPath string) error
 	// 读取日志文件
 	ReadLogFile(path string, match string, page, pageSize int) ([]string, int, error)
 	// 获取日志文件列表
@@ -35,7 +35,7 @@ func NewSSHService() SSHService {
 }
 
 // Connect 连接主机
-func (s *sshService) Connect(host, user, password, privateKeyPath string) error {
+func (s *sshService) Connect(host, port, user, password, privateKeyPath string) error {
 	// 创建凭证
 	credential := sshx.Credential{
 		User:           user,
@@ -44,11 +44,39 @@ func (s *sshService) Connect(host, user, password, privateKeyPath string) error 
 	}
 
 	// 创建SSH客户端
-	client, err := sshx.NewClient(host, credential)
+	client, err := sshx.NewClient(host+":"+port, credential)
 	if err != nil {
 		return fmt.Errorf("连接主机失败: %v", err)
 	}
 
+	//privateKeyConf := sshx.Credential{User: "root", Password: "-+66..[]l"}
+	//
+	//// 创建 sshx 客户端
+	//client, err := sshx.NewClient("101.37.165.220:22", credential, sshx.SetEstablishTimeout(10*time.Second), sshx.SetLogger(sshx.DefaultLogger{}))
+	//if err != nil {
+	//	panic(err)
+	//}
+
+	//_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	//defer cancel()
+	if err := client.Handle(func(sub sshx.EnhanceClient) error {
+		// if _, err := sub.ReceiveFile("/tmp/xxx", "/etc/passwd", false, true); err != nil {
+		// 	panic(err)
+		// }
+
+		path := "/opt/goTest/log"
+
+		data, err := sub.ReadFile(path)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("filebeat yml: %s", string(data))
+		return nil
+	}); err != nil {
+		fmt.Printf(err.Error())
+		panic(err)
+	}
 	s.client = client
 	s.host = host
 	return nil
