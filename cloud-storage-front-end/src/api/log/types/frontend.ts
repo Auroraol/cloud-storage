@@ -7,6 +7,7 @@ export interface LogQueryParams {
   page: number
   pageSize: number
   keyword: string
+  path: string
 }
 
 // 日志行
@@ -28,12 +29,14 @@ export interface LogStats {
 export interface RealtimeMonitorParams {
   timeRange: string
   metrics: string[]
+  dataFile: string
 }
 
 // 历史分析参数
 export interface FrontHistoryAnalysisParams {
   timeRange: [Date | null, Date | null]
   aggregation: string
+  dataFile: string
 }
 
 // 图表指标选项

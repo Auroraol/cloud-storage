@@ -166,7 +166,7 @@ export const getRealtimeMetricsApi = async (params: RealtimeMonitorParams) => {
 
   const apiParams: RealTimeMonitorReq = {
     host, // 使用当前连接的主机
-    log_file: "/var/log/app.log", // 默认日志文件，可以根据需要修改
+    log_file: params.dataFile, // 默认日志文件，可以根据需要修改
     time_range: timeRangeMap[params.timeRange] || 1,
     monitor_items: params.metrics
   }
@@ -207,9 +207,9 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
 
   const apiParams: HistoryAnalysisReq = {
     host, // 使用当前连接的主机
-    log_file: "/var/log/app.log", // 默认日志文件，可以根据需要修改
+    log_file: params.dataFile, // 默认日志文件，可以根据需要修改
     page: 1,
-    page_size: 1000,
+    page_size: 50,
     start_time: startTime,
     end_time: endTime,
     aggregate_by: aggregateByMap[params.aggregation] || "按小时",
@@ -217,19 +217,19 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
   }
 
   const response = await logApi.historyAnalysis(apiParams)
+  const { data, total, page, page_size, success } = response.data
+  console.log("xxxx", data[0], total)
 
   // 处理响应数据，转换为echarts需要的格式
-  const metrics = Array.from(new Set((response.data.data || []).map((item: LogEntry) => item.level)))
+  const metrics = Array.from(new Set((data || []).map((item: LogEntry) => item.level)))
 
   const series = metrics.map((metric) => {
     return {
       name: metric,
       type: "line",
-      data: (response.data.data || [])
-        .filter((item: LogEntry) => item.level === metric)
-        .map((item: LogEntry) => [item.timestamp, 1]) // 使用计数为1来统计日志数量
+      data: (data || []).filter((item: LogEntry) => item.level === metric).map((item: LogEntry) => [item.timestamp, 1]) // 使用计数为1来统计日志数量
     }
   })
 
-  return { metrics, series }
+  return { metrics, series, total, page, page_size, success }
 }
