@@ -104,6 +104,7 @@ type MonitorData struct {
 	Timestamp int64  `json:"timestamp"` // 时间戳
 	Value     int    `json:"value"`     // 值
 	Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
+	Caller    string `json:"caller,omitempty"` // 调用者信息（可选）
 }
 
 type OperationLog struct {
@@ -134,7 +135,7 @@ type ReadLogFileRes struct {
 type RealTimeMonitorReq struct {
 	Host         string   `json:"host"`          // 主机地址
 	LogFile      string   `json:"log_file"`      // 日志文件名
-	MonitorItems []string `json:"monitor_items"` // 监控项（"requests","errors","response_time"）
+	MonitorItems []string `json:"monitor_items"` // 监控项（"requests","errors",""）
 	TimeRange    int      `json:"time_range"`    // 时间范围（1小时、6小时、12小时、24小时）
 }
 

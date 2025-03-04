@@ -16,10 +16,12 @@ require (
 	github.com/pkg/sftp v1.13.7
 	github.com/shopspring/decimal v1.4.0
 	github.com/zeromicro/go-zero v1.7.4
+	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.29.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.35.2
 	gopkg.in/amz.v1 v1.0.0-20150111123259-ad23e96a31d2
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/clickhouse v0.4.3
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/driver/postgres v1.4.6
@@ -103,9 +105,9 @@ require (
 	go.opentelemetry.io/otel/sdk v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.3.1 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/net v0.31.0 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
 	golang.org/x/sync v0.9.0 // indirect

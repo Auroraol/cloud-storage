@@ -2,13 +2,16 @@ package monitor
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"strings"
+
+	"github.com/Auroraol/cloud-storage/common/time"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strings"
-	"time"
 )
 
 type HistoryAnalysisLogicLogic struct {
@@ -46,7 +49,7 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 
 	// 如果没有指定时间范围，默认为最近24小时
 	if req.StartTime <= 0 || req.EndTime <= 0 {
-		req.EndTime = time.Now().Unix()
+		//req.EndTime = time.Now().Unix()
 		req.StartTime = req.EndTime - 86400 // 24小时前
 	}
 
@@ -63,22 +66,21 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 
 	// 解析日志内容
 	for _, content := range contents {
-		// 简单解析日志行，实际应根据日志格式进行解析
-		parts := strings.SplitN(content, " ", 3)
-		timestamp := time.Now().Unix()
-		level := "INFO"
-		message := content
+		// 尝试解析JSON格式日志
+		timestamp, level, message, fields, err := parseJSONLog(content)
+		if err != nil {
+			return nil, response.NewErrMsg("解析日志内容失败")
+		}
 
-		if len(parts) >= 3 {
-			// 尝试解析时间戳
-			if t, err := time.Parse("2006-01-02T15:04:05", parts[0]); err == nil {
-				timestamp = t.Unix()
+		// JSON解析成功，如果有额外字段，将它们添加到消息中
+		if len(fields) > 0 {
+			extraFields := ""
+			for k, v := range fields {
+				extraFields += fmt.Sprintf(" %s=%s", k, v)
 			}
-
-			// 尝试解析日志级别
-			level = parseLogLevel(parts[1])
-
-			message = parts[2]
+			if extraFields != "" {
+				message += extraFields
+			}
 		}
 
 		// 如果相同时间戳的日志条目已经存在，合并它们并累加Value
@@ -170,4 +172,61 @@ func parseLogLevel(s string) string {
 
 	// 默认为INFO
 	return "INFO"
+}
+
+// 解析JSON格式的日志
+func parseJSONLog(content string) (timestamp int64, level string, message string, fields map[string]string, err error) {
+	// 初始化返回值
+	fields = make(map[string]string)
+
+	// 解析JSON
+	var logEntry map[string]interface{}
+	err = json.Unmarshal([]byte(content), &logEntry)
+	if err != nil {
+		return 0, "INFO", content, fields, err
+	}
+
+	// 提取日志级别
+	if levelValue, exists := logEntry["level"]; exists {
+		if levelStr, ok := levelValue.(string); ok {
+			level = parseLogLevel(levelStr)
+		}
+	}
+
+	// 提取时间
+	if timeValue, exists := logEntry["time"]; exists {
+		if timeStr, ok := timeValue.(string); ok {
+			// 尝试解析时间
+			//time -> 2025-03-04 23:22:53
+			toTimestamp, err := time.StringTimeToTimestamp(timeStr)
+			if err == nil {
+				timestamp = toTimestamp
+			} else {
+				// 如果解析失败，使用当前时间
+				timestamp = time.LocalTimeNow().Unix()
+			}
+		}
+	}
+
+	// 提取消息
+	if msgValue, exists := logEntry["msg"]; exists {
+		if msgStr, ok := msgValue.(string); ok {
+			message = msgStr
+		}
+	}
+
+	// 提取其他字段
+	for key, value := range logEntry {
+		if key != "level" && key != "time" && key != "msg" {
+			switch v := value.(type) {
+			case string:
+				fields[key] = v
+			default:
+				// 对于非字符串类型，转换为字符串
+				fields[key] = fmt.Sprintf("%v", v)
+			}
+		}
+	}
+
+	return timestamp, level, message, fields, nil
 }

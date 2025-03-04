@@ -4,7 +4,7 @@ type (
 	RealTimeMonitorReq {
 		Host         string   `json:"host"`         // 主机地址
 		LogFile      string   `json:"log_file"`     // 日志文件名
-		MonitorItems []string `json:"monitor_items"` // 监控项（请求数、错误数、响应时间）
+		MonitorItems []string `json:"monitor_items"` // 监控项（requests,errors,debug_logs,info_logs,warn_logs,error_logs）
 		TimeRange    int      `json:"time_range"`   // 时间范围（1小时、6小时、12小时、24小时）
 	}
 	RealTimeMonitorRes {

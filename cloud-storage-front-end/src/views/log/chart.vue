@@ -481,7 +481,10 @@ const activeTab = ref("realtime")
 const metricOptions: ChartMetric[] = [
   { label: "请求数", value: "requests" },
   { label: "错误数", value: "errors" },
-  { label: "响应时间", value: "response_time" }
+  { label: "debug_logs", value: "debug_logs" },
+  { label: "info_logs", value: "info_logs" },
+  { label: "warn_logs", value: "warn_logs" },
+  { label: "error_logs", value: "error_logs" }
 ]
 
 // 实时监控配置

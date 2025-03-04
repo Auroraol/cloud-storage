@@ -1,0 +1,18 @@
+{"level":"DEBUG","time":"2025-03-04 23:22:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:59","msg":"测试 Debugf 用法：111"}
+{"level":"ERROR","time":"2025-03-04 23:22:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:60","msg":"测试 Errorf 用法：111"}
+{"level":"WARN","time":"2025-03-04 23:22:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:61","msg":"测试 Warnf 用法：111"}
+{"level":"INFO","time":"2025-03-04 23:22:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:62","msg":"测试 Infof 用法：111, 1111, collector returned no data, 3333.330000"}
+{"level":"INFO","time":"2025-03-04 23:22:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:65","msg":"测试 (With + Infof) 用法：测试","collector":"cpu","name":"主机"}
+{"level":"ERROR","time":"2025-03-04 23:22:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:66","msg":"测试 Errorf 用法：111"}
+{"level":"DEBUG","time":"2025-03-04 23:23:10","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:59","msg":"测试 Debugf 用法：111"}
+{"level":"ERROR","time":"2025-03-04 23:23:11","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:60","msg":"测试 Errorf 用法：111"}
+{"level":"WARN","time":"2025-03-04 23:23:12","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:61","msg":"测试 Warnf 用法：111"}
+{"level":"INFO","time":"2025-03-04 23:23:13","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:62","msg":"测试 Infof 用法：111, 1111, collector returned no data, 3333.330000"}
+{"level":"INFO","time":"2025-03-04 23:23:15","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:65","msg":"测试 (With + Infof) 用法：测试","collector":"cpu","name":"主机"}
+{"level":"ERROR","time":"2025-03-04 23:23:15","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:66","msg":"测试 Errorf 用法：111"}
+{"level":"DEBUG","time":"2025-03-04 23:23:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:59","msg":"测试 Debugf 用法：111"}
+{"level":"ERROR","time":"2025-03-04 23:23:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:60","msg":"测试 Errorf 用法：111"}
+{"level":"WARN","time":"2025-03-04 23:23:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:61","msg":"测试 Warnf 用法：111"}
+{"level":"INFO","time":"2025-03-04 23:23:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:62","msg":"测试 Infof 用法：111, 1111, collector returned no data, 3333.330000"}
+{"level":"INFO","time":"2025-03-04 23:23:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:65","msg":"测试 (With + Infof) 用法：测试","collector":"cpu","name":"主机"}
+{"level":"ERROR","time":"2025-03-04 23:23:53","caller":"C:/Users/jindao/Documents/GitHub/cloud-storage/cloud-storage-back-end/user_center/rpc/usercenter.go:66","msg":"测试 Errorf 用法：111"}

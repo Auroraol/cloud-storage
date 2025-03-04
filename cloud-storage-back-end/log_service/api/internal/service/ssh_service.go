@@ -2,14 +2,16 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-	"time"
+	stdtime "time"
 
 	sshx "github.com/Auroraol/cloud-storage/common/ssh"
+	"github.com/Auroraol/cloud-storage/common/time"
 )
 
 // SSHService SSH服务接口
@@ -55,12 +57,12 @@ func (s *sshService) Connect(host, port, user, password, privateKeyPath string) 
 	//privateKeyConf := sshx.Credential{User: "root", Password: "-+66..[]l"}
 	//
 	//// 创建 sshx 客户端
-	//client, err := sshx.NewClient("101.37.165.220:22", credential, sshx.SetEstablishTimeout(10*time.Second), sshx.SetLogger(sshx.DefaultLogger{}))
+	//client, err := sshx.NewClient("101.37.165.220:22", credential, sshx.SetEstablishTimeout(10*stdtime.Second), sshx.SetLogger(sshx.DefaultLogger{}))
 	//if err != nil {
 	//	panic(err)
 	//}
 
-	//_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	//_, cancel := context.WithTimeout(context.Background(), 5*stdtime.Second)
 	//defer cancel()
 	if err := client.Handle(func(sub sshx.EnhanceClient) error {
 		// if _, err := sub.ReceiveFile("/tmp/xxx", "/etc/passwd", false, true); err != nil {
@@ -98,7 +100,7 @@ func (s *sshService) ReadLogFile(path string, match string, page, pageSize int) 
 	}
 
 	// 执行命令
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*stdtime.Second)
 	defer cancel()
 
 	output, err := s.client.Command(ctx, cmd)
@@ -138,7 +140,7 @@ func (s *sshService) GetLogFiles(path string) ([]string, error) {
 	cmd := fmt.Sprintf("find %s -type f -name '*.log' | sort", path)
 
 	// 执行命令
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*stdtime.Second)
 	defer cancel()
 
 	output, err := s.client.Command(ctx, cmd)
@@ -162,15 +164,15 @@ func (s *sshService) MonitorLogFile(path string, monitorItems []string, timeRang
 	}
 
 	// 计算时间范围
-	now := time.Now()
-	startTime := now.Add(-time.Duration(timeRange) * time.Hour)
-	startTimeStr := startTime.Format("2006-01-02T15:04:05")
+	now := time.LocalTimeNow()
+	startTime := now.Add(-stdtime.Duration(timeRange) * stdtime.Hour)
+	startTimeStr := startTime.Format("2006-01-02 15:04:05")
 
 	// 构建命令
 	cmd := fmt.Sprintf("awk '$1 >= \"%s\" {print $0}' %s", startTimeStr, path)
 
 	// 执行命令
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*stdtime.Second)
 	defer cancel()
 
 	output, err := s.client.Command(ctx, cmd)
@@ -184,77 +186,126 @@ func (s *sshService) MonitorLogFile(path string, monitorItems []string, timeRang
 		counter[item] = make(map[int64]int)
 	}
 
+	// 创建一个map来存储调用者统计信息
+	callerStats := make(map[string]int)
+
 	// 日志处理
 	lines := strings.Split(string(output), "\n")
 	for _, line := range lines {
-		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
-
-		// 解析时间戳
-		var timestamp int64
-		parts := strings.SplitN(line, " ", 2)
-		if len(parts) > 1 {
-			if t, err := time.Parse("2006-01-02T15:04:05", parts[0]); err == nil {
-				timestamp = t.Unix()
+		// 尝试解析为JSON格式
+		var logEntry map[string]interface{}
+		if err := json.Unmarshal([]byte(line), &logEntry); err == nil {
+			// 提取时间
+			var logTime stdtime.Time
+			var toTimestamp int64
+			if timeStr, ok := logEntry["time"].(string); ok {
+				// 尝试解析时间，支持多种格式
+				toTimestamp, err = time.StringTimeToTimestamp(timeStr)
+				if err != nil {
+					// 如果解析失败，使用当前时间
+					logTime = time.LocalTimeNow()
+				} else {
+					logTime = stdtime.Unix(toTimestamp, 0)
+				}
 			} else {
-				// 无法解析时间时跳过该行
-				continue
+				// 如果没有时间字段，使用当前时间
+				logTime = time.LocalTimeNow()
 			}
-		} else {
-			continue
-		}
 
-		// 统一转为小写进行匹配检查
-		lineLower := strings.ToLower(line)
+			// 检查日志是否在指定的时间范围内
+			if logTime.Before(startTime) {
+				continue // 跳过不在时间范围内的日志
+			}
 
-		// 检查每个监控项
-		for _, item := range monitorItems {
-			switch strings.ToLower(item) {
-			case "requests":
-				if strings.Contains(strings.ToLower(lineLower), "request") {
-					counter[item][timestamp]++
-				}
-			case "errors":
-				if strings.Contains(strings.ToLower(lineLower), "error") {
-					counter[item][timestamp]++
-				}
-			case "response_time":
-				if strings.Contains(strings.ToLower(lineLower), "response_time") {
-					// 提取数值示例（假设日志格式为 response_time=0.234）
-					if val, err := extractResponseTime(line); err == nil {
-						counter[item][timestamp] += val
-					} else {
-						counter[item][timestamp]++
+			// 提取日志级别
+			var level string
+			if levelValue, ok := logEntry["level"].(string); ok {
+				level = strings.ToUpper(levelValue)
+			}
+
+			// 提取消息
+			var message string
+			if msgValue, ok := logEntry["msg"].(string); ok {
+				message = msgValue
+			}
+
+			// 提取调用者信息并统计
+			if callerValue, ok := logEntry["caller"].(string); ok {
+				// 统计调用者
+				callerStats[callerValue]++
+			}
+
+			// 按分钟取整
+			timestamp := toTimestamp
+
+			// 按照监控项进行统计
+			for _, item := range monitorItems {
+				switch item {
+				case "requests":
+					// 统计所有请求
+					counter["requests"][timestamp]++
+				case "errors":
+					// 统计错误日志
+					if level == "ERROR" {
+						counter["errors"][timestamp]++
+					}
+				case "response_time":
+					// 尝试从消息中提取响应时间
+					if responseTime, err := extractResponseTime(message); err == nil {
+						counter["response_time"][timestamp] += responseTime
+					}
+				case "debug_logs":
+					// 统计调试日志
+					if level == "DEBUG" {
+						counter["debug_logs"][timestamp]++
+					}
+				case "warn_logs":
+					// 统计警告日志
+					if level == "WARN" {
+						counter["warn_logs"][timestamp]++
+					}
+				case "info_logs":
+					// 统计信息日志
+					if level == "INFO" {
+						counter["info_logs"][timestamp]++
 					}
 				}
 			}
 		}
-
 	}
 
-	// 转换为最终结果并排序
+	// 构建结果
 	result := make(map[string][]map[string]interface{})
-	for item, timeMap := range counter {
-		var series []map[string]interface{}
-
-		// 收集所有时间戳
-		timestamps := make([]int64, 0, len(timeMap))
-		for ts := range timeMap {
-			timestamps = append(timestamps, ts)
-		}
-		sort.Slice(timestamps, func(i, j int) bool { return timestamps[i] < timestamps[j] })
-
-		// 生成有序序列
-		for _, ts := range timestamps {
-			series = append(series, map[string]interface{}{
+	for item, timestamps := range counter {
+		data := make([]map[string]interface{}, 0, len(timestamps))
+		for ts, count := range timestamps {
+			data = append(data, map[string]interface{}{
 				"timestamp": ts,
-				"value":     timeMap[ts],
+				"value":     count,
 			})
 		}
 
-		result[item] = series
+		// 按时间戳排序
+		sort.Slice(data, func(i, j int) bool {
+			return data[i]["timestamp"].(int64) < data[j]["timestamp"].(int64)
+		})
+
+		result[item] = data
+	}
+
+	// 添加调用者统计信息
+	if len(callerStats) > 0 {
+		callerData := make([]map[string]interface{}, 0, len(callerStats))
+		for caller, count := range callerStats {
+			callerData = append(callerData, map[string]interface{}{
+				"caller": caller,
+				"value":  count,
+			})
+		}
+		result["caller_stats"] = callerData
 	}
 
 	return result, nil
