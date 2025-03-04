@@ -128,9 +128,8 @@ export const downloadLogApi = async (params: LogQueryParams) => {
   return new Blob([content], { type: "text/plain" })
 }
 
-// 获取主机列表
+// 从用户存储中获取已连接的主机列表
 export const getHostsApi = async () => {
-  // 从用户存储中获取已连接的主机列表
   const userStore = useUserStoreHook()
   return userStore.getSSHHosts()
 }
@@ -172,7 +171,7 @@ export const getRealtimeMetricsApi = async (params: RealtimeMonitorParams) => {
   }
 
   const response = await logApi.realTimeMonitor(apiParams)
-
+  // console.log("response", response)
   // 处理响应数据，转换为echarts需要的格式
   const series = params.metrics.map((metric) => {
     return {
@@ -218,7 +217,6 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
 
   const response = await logApi.historyAnalysis(apiParams)
   const { data, total, page, page_size, success } = response.data
-  console.log("xxxx", data[0], total)
 
   // 处理响应数据，转换为echarts需要的格式
   const metrics = Array.from(new Set((data || []).map((item: LogEntry) => item.level)))
@@ -227,7 +225,9 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
     return {
       name: metric,
       type: "line",
-      data: (data || []).filter((item: LogEntry) => item.level === metric).map((item: LogEntry) => [item.timestamp, 1]) // 使用计数为1来统计日志数量
+      data: (data || [])
+        .filter((item: LogEntry) => item.level === metric)
+        .map((item: LogEntry) => [item.timestamp, item.value]) // 使用计数为1来统计日志数量
     }
   })
 

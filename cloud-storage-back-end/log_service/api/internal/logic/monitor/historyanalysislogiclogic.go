@@ -3,14 +3,12 @@ package monitor
 import (
 	"context"
 	"fmt"
-	"math/rand"
-	"strings"
-	"time"
-
+	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"strings"
+	"time"
 )
 
 type HistoryAnalysisLogicLogic struct {
@@ -20,6 +18,7 @@ type HistoryAnalysisLogicLogic struct {
 }
 
 // 历史分析
+
 func NewHistoryAnalysisLogicLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HistoryAnalysisLogicLogic {
 	return &HistoryAnalysisLogicLogic{
 		Logger: logx.WithContext(ctx),
@@ -52,21 +51,22 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 	}
 
 	// 使用SSH服务读取日志文件
-	contents, taotal, err := l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
+	contents, _, err := l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
 	if err != nil {
 		// 如果读取失败，使用模拟数据
-		l.Logger.Errorf("读取日志文件失败: %v，使用模拟数据", err)
-		return l.generateMockData(req)
+		l.Logger.Errorf("读取日志文件失败: %v", err)
+		return nil, response.NewErrMsg("读取日志文件失败")
 	}
 
+	// 创建一个map来存储按时间戳分组的日志条目
+	timestampToLogEntries := make(map[int64]*types.LogEntry)
+
 	// 解析日志内容
-	data := make([]types.LogEntry, 0, len(contents))
 	for _, content := range contents {
 		// 简单解析日志行，实际应根据日志格式进行解析
 		parts := strings.SplitN(content, " ", 3)
 		timestamp := time.Now().Unix()
 		level := "INFO"
-		source := "system"
 		message := content
 
 		if len(parts) >= 3 {
@@ -76,131 +76,98 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 			}
 
 			// 尝试解析日志级别
-			if strings.Contains(parts[1], "ERROR") {
-				level = "ERROR"
-			} else if strings.Contains(parts[1], "WARN") {
-				level = "WARN"
-			} else if strings.Contains(parts[1], "DEBUG") {
-				level = "DEBUG"
-			}
-
-			// 尝试解析来源
-			if strings.Contains(parts[1], "[") && strings.Contains(parts[1], "]") {
-				source = strings.Trim(parts[1], "[]")
-			}
+			level = parseLogLevel(parts[1])
 
 			message = parts[2]
 		}
 
-		data = append(data, types.LogEntry{
-			Timestamp: timestamp,
-			Content:   message,
-			Level:     level,
-			Source:    source,
-		})
+		// 如果相同时间戳的日志条目已经存在，合并它们并累加Value
+		if existingEntry, exists := timestampToLogEntries[timestamp]; exists {
+			// 合并日志内容
+			existingEntry.Content += " | " + message
+
+			// 选择最严重的日志级别
+			if compareLogLevels(level, existingEntry.Level) > 0 {
+				existingEntry.Level = level
+			}
+
+			// 累加Value
+			existingEntry.Value += 1
+		} else {
+			// 如果该时间戳日志条目还不存在，直接添加
+			timestampToLogEntries[timestamp] = &types.LogEntry{
+				Timestamp: timestamp,
+				Content:   message,
+				Level:     level,
+				Value:     1,
+			}
+		}
+	}
+
+	// 将合并后的日志条目添加到结果数据中
+	data := make([]types.LogEntry, 0, len(timestampToLogEntries))
+	for _, entry := range timestampToLogEntries {
+		data = append(data, *entry)
 	}
 
 	return &types.HistoryAnalysisRes{
 		Data:     data,
-		Total:    taotal, // 假设总数为100
+		Total:    len(data),
 		Page:     req.Page,
 		PageSize: req.PageSize,
 		Success:  true,
 	}, nil
 }
 
-// 生成模拟数据
-func (l *HistoryAnalysisLogicLogic) generateMockData(req *types.HistoryAnalysisReq) (*types.HistoryAnalysisRes, error) {
-	// 模拟从日志文件中读取数据
-	// 实际应该根据日志文件路径、主机、时间范围和关键字进行过滤
-	total := 100 // 模拟总数
-
-	// 计算分页
-	offset := (req.Page - 1) * req.PageSize
-	limit := req.PageSize
-	if offset >= total {
-		return &types.HistoryAnalysisRes{
-			Data:     make([]types.LogEntry, 0),
-			Total:    total,
-			Page:     req.Page,
-			PageSize: req.PageSize,
-			Success:  true,
-		}, nil
+// 比较日志级别的严重程度，返回1表示level1比level2更严重，-1表示level1比level2轻，0表示一样
+func compareLogLevels(level1, level2 string) int {
+	// 日志级别的严重程度顺序：CRITICAL > ERROR > WARN > INFO > DEBUG
+	levels := map[string]int{
+		"CRITICAL": 5,
+		"ERROR":    4,
+		"WARN":     3,
+		"INFO":     2,
+		"DEBUG":    1,
 	}
 
-	// 生成模拟日志数据
-	data := make([]types.LogEntry, 0, limit)
-	logLevels := []string{"INFO", "WARN", "ERROR", "DEBUG"}
-	sources := []string{"api", "service", "database", "cache"}
+	if levels[level1] > levels[level2] {
+		return 1
+	} else if levels[level1] < levels[level2] {
+		return -1
+	} else {
+		return 0
+	}
+}
 
-	// 生成随机日志内容
-	contents := []string{
-		"用户登录成功",
-		"请求处理完成",
-		"数据库查询执行",
-		"缓存更新",
-		"文件上传成功",
-		"请求参数错误",
-		"数据库连接超时",
-		"权限验证失败",
-		"系统异常",
-		"网络连接中断",
+// 创建日志级别映射表（可扩展）
+var levelMap = map[string]string{
+	"error":    "ERROR",
+	"err":      "ERROR",
+	"warning":  "WARN",
+	"warn":     "WARN",
+	"debug":    "DEBUG",
+	"dbg":      "DEBUG",
+	"info":     "INFO",
+	"notice":   "INFO",
+	"critical": "CRITICAL",
+}
+
+func parseLogLevel(s string) string {
+	// 清理字符串并转换为小写
+	cleanStr := strings.ToLower(strings.Trim(s, "[]"))
+
+	// 优先完全匹配
+	if level, exists := levelMap[cleanStr]; exists {
+		return level
 	}
 
-	// 如果有关键字，过滤内容
-	filteredContents := contents
-	if req.Keywords != "" {
-		filteredContents = make([]string, 0)
-		for _, content := range contents {
-			if strings.Contains(content, req.Keywords) {
-				filteredContents = append(filteredContents, content)
-			}
-		}
-		// 如果没有匹配的内容，使用原始内容
-		if len(filteredContents) == 0 {
-			filteredContents = contents
+	// 部分匹配（针对带格式的日志）
+	for k, v := range levelMap {
+		if strings.Contains(cleanStr, k) {
+			return v
 		}
 	}
 
-	// 根据聚合方式确定时间间隔
-	var interval int64
-	switch req.AggregateBy {
-	case "按分钟":
-		interval = 60 // 1分钟
-	case "按小时":
-		interval = 3600 // 1小时
-	case "按天":
-		interval = 86400 // 1天
-	default:
-		interval = 3600 // 默认按小时
-	}
-
-	// 生成日志条目
-	for i := 0; i < limit && offset+i < total; i++ {
-		// 随机生成时间戳，在开始和结束时间之间
-		timestamp := req.StartTime + rand.Int63n(req.EndTime-req.StartTime)
-		// 根据聚合方式调整时间戳
-		timestamp = (timestamp / interval) * interval
-
-		// 随机选择日志级别、来源和内容
-		level := logLevels[rand.Intn(len(logLevels))]
-		source := sources[rand.Intn(len(sources))]
-		content := filteredContents[rand.Intn(len(filteredContents))]
-
-		// 添加日志条目
-		data = append(data, types.LogEntry{
-			Timestamp: timestamp,
-			Content:   content,
-			Level:     level,
-			Source:    source,
-		})
-	}
-
-	return &types.HistoryAnalysisRes{
-		Data:     data,
-		Total:    total,
-		Page:     req.Page,
-		PageSize: req.PageSize,
-		Success:  true,
-	}, nil
+	// 默认为INFO
+	return "INFO"
 }

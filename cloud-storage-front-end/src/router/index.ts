@@ -143,12 +143,21 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: "chart",
         component: () => import("@/views/log/chart.vue"),
-        name: "Chart",
+        name: "LogChart",
         meta: {
           title: "日志图表",
-          keepAlive: true
+          icon: "chart"
         }
       }
+      // {
+      //   path: "echarts-test",
+      //   component: () => import("@/views/log/echarts-test.vue"),
+      //   name: "EChartsTest",
+      //   meta: {
+      //     title: "ECharts测试",
+      //     icon: "chart"
+      //   }
+      // }
     ]
   },
   {

@@ -83,7 +83,6 @@ type HistoryAnalysisReq struct {
 	Keywords    string `json:"keywords"`     // 关键字
 	Page        int    `json:"page"`         // 页码
 	PageSize    int    `json:"page_size"`    // 每页大小
-	AggregateBy string `json:"aggregate_by"` // 聚合方式（按分钟、按小时、按天）
 }
 
 type HistoryAnalysisRes struct {
@@ -98,7 +97,7 @@ type LogEntry struct {
 	Timestamp int64  `json:"timestamp"` // 时间戳
 	Content   string `json:"content"`   // 内容
 	Level     string `json:"level"`     // 级别
-	Source    string `json:"source"`    // 来源
+	Value     int    `json:"value"`     // 值
 }
 
 type MonitorData struct {
@@ -135,7 +134,7 @@ type ReadLogFileRes struct {
 type RealTimeMonitorReq struct {
 	Host         string   `json:"host"`          // 主机地址
 	LogFile      string   `json:"log_file"`      // 日志文件名
-	MonitorItems []string `json:"monitor_items"` // 监控项（请求数、错误数、响应时间）
+	MonitorItems []string `json:"monitor_items"` // 监控项（"requests","errors","response_time"）
 	TimeRange    int      `json:"time_range"`    // 时间范围（1小时、6小时、12小时、24小时）
 }
 

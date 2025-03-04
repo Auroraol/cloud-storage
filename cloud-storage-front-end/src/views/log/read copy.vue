@@ -147,10 +147,10 @@ const logfileRead = async () => {
       pageSize: 100
     }
 
-    const res = await fetch('/api/log/read', {
-      method: 'POST',
+    const res = await fetch("/api/log/read", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(params)
     })
@@ -159,7 +159,7 @@ const logfileRead = async () => {
     logContent.value = data.logs
     logContentVisible.value = true
   } catch (error) {
-    console.error('读取日志失败:', error)
+    console.error("读取日志失败:", error)
   } finally {
     loading.value = false
   }
@@ -181,10 +181,10 @@ const fetchMoreLogs = async () => {
       pageSize: 100
     }
 
-    const res = await fetch('/api/log/read', {
-      method: 'POST',
+    const res = await fetch("/api/log/read", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(params)
     })
@@ -192,7 +192,7 @@ const fetchMoreLogs = async () => {
     const data = await res.json()
     return data.logs
   } catch (error) {
-    console.error('加载更多日志失败:', error)
+    console.error("加载更多日志失败:", error)
     return []
   }
 }

@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -158,12 +161,12 @@ func (s *sshService) MonitorLogFile(path string, monitorItems []string, timeRang
 		return nil, fmt.Errorf("未连接主机")
 	}
 
-	// 计算开始时间
+	// 计算时间范围
 	now := time.Now()
 	startTime := now.Add(-time.Duration(timeRange) * time.Hour)
 	startTimeStr := startTime.Format("2006-01-02T15:04:05")
 
-	// 构建命令，使用awk提取时间戳和相关信息
+	// 构建命令
 	cmd := fmt.Sprintf("awk '$1 >= \"%s\" {print $0}' %s", startTimeStr, path)
 
 	// 执行命令
@@ -175,55 +178,103 @@ func (s *sshService) MonitorLogFile(path string, monitorItems []string, timeRang
 		return nil, fmt.Errorf("监控日志文件失败: %v", err)
 	}
 
-	// 分析日志数据
-	result := make(map[string][]map[string]interface{})
-	lines := strings.Split(string(output), "\n")
-
-	// 初始化结果
+	// 使用双层 map 进行计数 [监控项][时间戳]计数
+	counter := make(map[string]map[int64]int)
 	for _, item := range monitorItems {
-		result[item] = []map[string]interface{}{}
+		counter[item] = make(map[int64]int)
 	}
 
-	// 分析日志行，提取监控项数据
-	// 这里使用简化的逻辑，实际应根据日志格式进行解析
+	// 日志处理
+	lines := strings.Split(string(output), "\n")
 	for _, line := range lines {
+		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
 
 		// 解析时间戳
-		timestamp := time.Now().Unix() // 默认使用当前时间
+		var timestamp int64
 		parts := strings.SplitN(line, " ", 2)
 		if len(parts) > 1 {
 			if t, err := time.Parse("2006-01-02T15:04:05", parts[0]); err == nil {
 				timestamp = t.Unix()
+			} else {
+				// 无法解析时间时跳过该行
+				continue
+			}
+		} else {
+			continue
+		}
+
+		// 统一转为小写进行匹配检查
+		lineLower := strings.ToLower(line)
+
+		// 检查每个监控项
+		for _, item := range monitorItems {
+			switch strings.ToLower(item) {
+			case "requests":
+				if strings.Contains(strings.ToLower(lineLower), "request") {
+					counter[item][timestamp]++
+				}
+			case "errors":
+				if strings.Contains(strings.ToLower(lineLower), "error") {
+					counter[item][timestamp]++
+				}
+			case "response_time":
+				if strings.Contains(strings.ToLower(lineLower), "response_time") {
+					// 提取数值示例（假设日志格式为 response_time=0.234）
+					if val, err := extractResponseTime(line); err == nil {
+						counter[item][timestamp] += val
+					} else {
+						counter[item][timestamp]++
+					}
+				}
 			}
 		}
 
-		// 检查监控项
-		for _, item := range monitorItems {
-			if item == "请求数" && strings.Contains(line, "request") {
-				result[item] = append(result[item], map[string]interface{}{
-					"timestamp": timestamp,
-					"value":     1,
-				})
-			} else if item == "错误数" && (strings.Contains(line, "error") || strings.Contains(line, "ERROR")) {
-				result[item] = append(result[item], map[string]interface{}{
-					"timestamp": timestamp,
-					"value":     1,
-				})
-			} else if item == "响应时间" && strings.Contains(line, "response_time") {
-				// 尝试提取响应时间
-				// 这里使用简化逻辑，实际应根据日志格式提取
-				result[item] = append(result[item], map[string]interface{}{
-					"timestamp": timestamp,
-					"value":     200, // 默认值
-				})
-			}
+	}
+
+	// 转换为最终结果并排序
+	result := make(map[string][]map[string]interface{})
+	for item, timeMap := range counter {
+		var series []map[string]interface{}
+
+		// 收集所有时间戳
+		timestamps := make([]int64, 0, len(timeMap))
+		for ts := range timeMap {
+			timestamps = append(timestamps, ts)
 		}
+		sort.Slice(timestamps, func(i, j int) bool { return timestamps[i] < timestamps[j] })
+
+		// 生成有序序列
+		for _, ts := range timestamps {
+			series = append(series, map[string]interface{}{
+				"timestamp": ts,
+				"value":     timeMap[ts],
+			})
+		}
+
+		result[item] = series
 	}
 
 	return result, nil
+}
+
+// 辅助函数：从日志行提取响应时间（示例实现）
+func extractResponseTime(line string) (int, error) {
+	// 假设日志格式包含 response_time=123ms
+	re := regexp.MustCompile(`response_time=(\d+)`)
+	matches := re.FindStringSubmatch(line)
+	if len(matches) < 2 {
+		return 0, fmt.Errorf("未找到响应时间")
+	}
+
+	val, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return 0, err
+	}
+
+	return val, nil
 }
 
 // Close 关闭连接

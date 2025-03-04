@@ -44,7 +44,6 @@ export interface HistoryAnalysisReq {
   keywords: string // 关键字
   page: number // 页码
   page_size: number // 每页大小
-  aggregate_by: string // 聚合方式（按分钟、按小时、按天）
 }
 
 // 历史分析响应
@@ -62,6 +61,7 @@ export interface LogEntry {
   content: string // 内容
   level: string // 级别
   source: string // 来源
+  value: number // 数量
 }
 
 // 获取日志文件列表请求

@@ -35,7 +35,6 @@ export interface RealtimeMonitorParams {
 // 历史分析参数
 export interface FrontHistoryAnalysisParams {
   timeRange: [Date | null, Date | null]
-  aggregation: string
   dataFile: string
 }
 

@@ -15,7 +15,7 @@ type (
 
 	MonitorData{
 		Timestamp int64  `json:"timestamp"` // 时间戳
-		Value     int    `json:"value"`     // 值
+		Value     int    `json:"value"`     // 数量
 		Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
 	}
 )
@@ -30,7 +30,6 @@ type (
 		Keywords    string `json:"keywords"`    // 关键字
 		Page        int    `json:"page"`        // 页码
 		PageSize    int    `json:"page_size"`   // 每页大小
-		AggregateBy string `json:"aggregate_by"` // 聚合方式（按分钟、按小时、按天）
 	}
 
 	 // 历史分析响应
@@ -47,7 +46,7 @@ type (
 		Timestamp int64  `json:"timestamp"` // 时间戳
 		Content   string `json:"content"`   // 内容
 		Level     string `json:"level"`     // 级别
-		Source    string `json:"source"`    // 来源
+		Value     int    `json:"value"`     // 数量
 	}
 )
 
