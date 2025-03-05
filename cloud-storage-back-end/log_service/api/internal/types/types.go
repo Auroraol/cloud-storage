@@ -3,6 +3,16 @@
 
 package types
 
+type DeleteSSHConnectReq struct {
+	SshId int64 `json:"ssh_id"`
+}
+
+type DeleteSSHConnectRes struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	SshId   int64  `json:"ssh_id"`
+}
+
 type GetLogFilesReq struct {
 	Host string `json:"host"` // 主机地址
 	Path string `json:"path"` // 日志路径
@@ -11,45 +21,6 @@ type GetLogFilesReq struct {
 type GetLogFilesRes struct {
 	Files   []string `json:"files"`   // 文件列表
 	Success bool     `json:"success"` // 是否成功
-}
-
-type GetLogInfoReq struct {
-	Logfile  string `form:"logfile"` //log name
-	Path     string `form:"path"`    // log path
-	Host     string `form:"host"`    // host address
-	Password string `form:"password"`
-	Match    string `form:"match"`
-	Clean    string `form:"clean"`
-	Posit    string `form:"posit"`
-	Page     int    `form:"page"`
-}
-
-type GetLogInfoRes struct {
-	Contents   []string `json:"contents"`
-	Page       int      `json:"page"`
-	TotalPages int      `json:"total_pages"`
-	TotalLines int      `json:"total_lines"`
-	MatchLines int      `json:"match_lines"`
-	Lines      int      `json:"lines"`
-}
-
-type GetLogfileReq struct {
-	ID            int    `json:"id"`
-	Name          string `json:"name"`
-	Host          string `json:"host"`
-	Path          string `json:"path"`
-	CreateTime    int    `json:"create_time"`
-	Comment       string `json:"comment"`
-	MonitorChoice int    `json:"monitor_choice"`
-}
-
-type GetLogfileRes struct {
-	Name          string   `json:"name"`
-	Path          string   `json:"path"`
-	Comment       string   `json:"comment"`
-	Host          string   `json:"host"`
-	Hosts         []string `json:"hosts"`
-	MonitorChoice int      `json:"monitor_choice"`
 }
 
 type GetOperationLogReq struct {
@@ -65,24 +36,17 @@ type GetOperationLogRes struct {
 	OperationLogs []OperationLog `json:"operation_logs"`
 }
 
-type GetPathsFileReq struct {
-	LogFileName string `form:"path"` // log path
-	Path        string `form:"path"` // log path
-	Host        string `form:"host"` // host address
-}
-
-type GetPathsFileRes struct {
-	PathsFile []string `json:"contents"`
+type GetSSHConnectReq struct {
 }
 
 type HistoryAnalysisReq struct {
-	Host        string `json:"host"`         // 主机地址
-	LogFile     string `json:"log_file"`     // 日志文件名
-	StartTime   int64  `json:"start_time"`   // 开始时间
-	EndTime     int64  `json:"end_time"`     // 结束时间
-	Keywords    string `json:"keywords"`     // 关键字
-	Page        int    `json:"page"`         // 页码
-	PageSize    int    `json:"page_size"`    // 每页大小
+	Host      string `json:"host"`       // 主机地址
+	LogFile   string `json:"log_file"`   // 日志文件名
+	StartTime int64  `json:"start_time"` // 开始时间
+	EndTime   int64  `json:"end_time"`   // 结束时间
+	Keywords  string `json:"keywords"`   // 关键字
+	Page      int    `json:"page"`       // 页码
+	PageSize  int    `json:"page_size"`  // 每页大小
 }
 
 type HistoryAnalysisRes struct {
@@ -97,14 +61,13 @@ type LogEntry struct {
 	Timestamp int64  `json:"timestamp"` // 时间戳
 	Content   string `json:"content"`   // 内容
 	Level     string `json:"level"`     // 级别
-	Value     int    `json:"value"`     // 值
+	Value     int    `json:"value"`     // 数量
 }
 
 type MonitorData struct {
 	Timestamp int64  `json:"timestamp"` // 时间戳
-	Value     int    `json:"value"`     // 值
+	Value     int    `json:"value"`     // 数量
 	Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
-	Caller    string `json:"caller,omitempty"` // 调用者信息（可选）
 }
 
 type OperationLog struct {
@@ -135,7 +98,7 @@ type ReadLogFileRes struct {
 type RealTimeMonitorReq struct {
 	Host         string   `json:"host"`          // 主机地址
 	LogFile      string   `json:"log_file"`      // 日志文件名
-	MonitorItems []string `json:"monitor_items"` // 监控项（"requests","errors",""）
+	MonitorItems []string `json:"monitor_items"` // 监控项（requests,errors,debug_logs,info_logs,warn_logs,error_logs）
 	TimeRange    int      `json:"time_range"`    // 时间范围（1小时、6小时、12小时、24小时）
 }
 
@@ -156,4 +119,17 @@ type SSHConnectReq struct {
 type SSHConnectRes struct {
 	Success bool   `json:"success"` // 是否成功
 	Message string `json:"message"` // 消息
+}
+
+type SshInfoDetailResp struct {
+	UserId   int64  `json:"user_id"`  // 关联用户ID
+	SshId    int64  `json:"ssh_id"`   // SSH记录ID
+	Host     string `json:"host"`     // 主机地址
+	Port     int32  `json:"port"`     // 端口号
+	User     string `json:"user"`     // 用户名
+	Password string `json:"password"` // 密码（建议在前端脱敏处理）
+}
+
+type SshInfoListResp struct {
+	Items []*SshInfoDetailResp `json:"items"` // SSH记录列表
 }

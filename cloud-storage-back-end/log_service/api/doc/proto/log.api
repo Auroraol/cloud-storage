@@ -95,4 +95,34 @@ type (
 		PageSize int `json:"page_size"`        // 每页大小
 		Success bool `json:"success"`          // 是否成功
 	}
+
+	//  删除SSH连接信息
+	DeleteSSHConnectReq {
+		SshId int64 `json:"ssh_id"`
+	}
+
+	DeleteSSHConnectRes{
+		Success bool `json:"success"`
+		Message string `json:"message"`
+		SshId int64 `json:"ssh_id"`
+	}
+
+	//
+	GetSSHConnectReq {
+
+	}
+	// SSH连接详细信息响应结构体
+	SshInfoDetailResp {
+		UserId int64 `json:"user_id"`      // 关联用户ID
+		SshId int64 `json:"ssh_id"`        // SSH记录ID
+		Host string `json:"host"`          // 主机地址
+		Port int32 `json:"port"`           // 端口号
+		User string `json:"user"`          // 用户名
+		Password string `json:"password"`  // 密码（建议在前端脱敏处理）
+	}
+
+	// SSH连接列表响应结构体
+	SshInfoListResp {
+		Items []*SshInfoDetailResp `json:"items"`  // SSH记录列表
+	}
 )

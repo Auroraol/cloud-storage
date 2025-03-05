@@ -56,6 +56,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ssh.ConnectHandler(serverCtx),
 			},
 			{
+				// 删除SSH连接信息
+				Method:  http.MethodPost,
+				Path:    "/ssh/delete",
+				Handler: ssh.DeleteSSHConnectHandler(serverCtx),
+			},
+			{
+				// 获取SSH连接信息
+				Method:  http.MethodPost,
+				Path:    "/ssh/get",
+				Handler: ssh.GetSSHConnectHandler(serverCtx),
+			},
+			{
 				// 读取日志文件
 				Method:  http.MethodPost,
 				Path:    "/ssh/logfiles",

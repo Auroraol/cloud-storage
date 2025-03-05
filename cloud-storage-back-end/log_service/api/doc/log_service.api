@@ -9,9 +9,6 @@ info (
 )
 
 import (
-	"proto/read.api"
-	"proto/path.api"
-	"proto/logfiles.api"
 	"proto/audit.api"
 	"proto/log.api"
 )
@@ -50,6 +47,14 @@ service log_service {
 	@doc "读取日志文件"
 	@handler ReadLogFileHandler
 	post /ssh/logfiles (ReadLogFileReq) returns (ReadLogFileRes)
+
+	@doc "删除SSH连接信息 "
+	@handler DeleteSSHConnectHandler
+	post /ssh/delete (DeleteSSHConnectReq) returns (DeleteSSHConnectRes)
+
+	@doc "获取SSH连接信息"
+	@handler GetSSHConnectHandler
+	post /ssh/get (GetSSHConnectReq) returns (SshInfoListResp)
 }
 
 //need login
@@ -64,3 +69,4 @@ service log_service {
 	post /operation (GetOperationLogReq) returns (GetOperationLogRes)
 }
 
+// goctl api go --api *.api --dir ./..

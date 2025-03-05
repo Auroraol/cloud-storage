@@ -3,6 +3,9 @@ package ssh
 import (
 	"context"
 	"fmt"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/sshservicerpc"
 	"go.uber.org/zap"
 	"strconv"
 
@@ -51,6 +54,25 @@ func (l *ConnectLogic) Connect(req *types.SSHConnectReq) (resp *types.SSHConnect
 			Success: false,
 			Message: fmt.Sprintf("连接失败: %v", err),
 		}, nil
+	}
+
+	// 保存ssh信息
+	userId := token.GetUidFromCtx(l.ctx)
+	if userId == 0 {
+		zap.S().Error("凭证无效")
+		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
+	}
+
+	res, err := l.svcCtx.SshServiceRpc.SaveSshInfo(l.ctx, &sshservicerpc.SshInfoReq{
+		UserId:   userId,
+		Host:     req.Host,
+		Port:     int32(int64(req.Port)),
+		User:     req.User,
+		Password: req.Password,
+	})
+	if err != nil || res.Success == false {
+		zap.S().Error("保存ssh信息失败 SshServiceRpc err:%v", err)
+		return nil, err
 	}
 
 	return &types.SSHConnectRes{

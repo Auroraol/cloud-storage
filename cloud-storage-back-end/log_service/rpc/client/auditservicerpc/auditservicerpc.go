@@ -14,8 +14,14 @@ import (
 )
 
 type (
-	OperationLogReq  = pb.OperationLogReq
-	OperationLogResp = pb.OperationLogResp
+	DeleteSshInfoReq  = pb.DeleteSshInfoReq
+	GetSshInfosReq    = pb.GetSshInfosReq
+	OperationLogReq   = pb.OperationLogReq
+	OperationLogResp  = pb.OperationLogResp
+	SshInfoDetailResp = pb.SshInfoDetailResp
+	SshInfoListResp   = pb.SshInfoListResp
+	SshInfoReq        = pb.SshInfoReq
+	SshInfoResp       = pb.SshInfoResp
 
 	AuditServiceRpc interface {
 		// 创建操作记录

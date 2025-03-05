@@ -5,15 +5,18 @@ import (
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/config"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/service"
 	"github.com/Auroraol/cloud-storage/log_service/model"
+	"github.com/Auroraol/cloud-storage/log_service/rpc/client/sshservicerpc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/zrpc"
 	"go.uber.org/zap"
 )
 
 type ServiceContext struct {
-	Config       config.Config
-	AuditModel   model.AuditModel
-	LogfileModel model.LogfileModel
-	SSHService   service.SSHService
+	Config        config.Config
+	AuditModel    model.AuditModel
+	LogfileModel  model.LogfileModel
+	SSHService    service.SSHService
+	SshServiceRpc sshservicerpc.SshServiceRpc
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -30,5 +33,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AuditModel:   model.NewAuditModel(conn, c.CacheRedis),
 		LogfileModel: model.NewLogfileModel(conn, c.CacheRedis),
 		SSHService:   service.NewSSHService(),
+		SshServiceRpc: sshservicerpc.NewSshServiceRpc(
+			zrpc.MustNewClient(c.SshServiceRpcConf)),
 	}
 }

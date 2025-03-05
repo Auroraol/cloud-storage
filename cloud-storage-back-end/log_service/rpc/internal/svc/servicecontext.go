@@ -9,8 +9,9 @@ import (
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	AuditModel model.AuditModel
+	Config       config.Config
+	AuditModel   model.AuditModel
+	SshInfoModel model.SshInfoModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -23,6 +24,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 	return &ServiceContext{
-		Config: c, AuditModel: model.NewAuditModel(conn, c.CacheRedis),
+		Config:       c,
+		AuditModel:   model.NewAuditModel(conn, c.CacheRedis),
+		SshInfoModel: model.NewSshInfoModel(conn, c.CacheRedis),
 	}
 }

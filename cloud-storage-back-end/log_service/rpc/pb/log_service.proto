@@ -17,9 +17,58 @@ message OperationLogResp {
   int64 id = 1;
 }
 
+// 新增消息类型
+message SshInfoReq {
+  int64 userId = 1;      // 关联用户ID
+  string Host = 2;  // 主机地址
+  int32 port = 3;        // 端口号
+  string user = 4;
+  string password   = 5; // 密码
+}
+
+
+message DeleteSshInfoReq {
+  int64 sshId = 1;      // SSH记录ID
+}
+
+message SshInfoResp {
+  int64 id = 1;         // 记录ID
+  bool success = 2;     // 操作状态
+  string message = 3;   // 附加信息
+}
+
+// 查询请求参数
+message GetSshInfosReq {
+  int64 userId = 1;      // 关联用户ID
+}
+
+// 详细信息响应
+message SshInfoDetailResp {
+  int64 userId = 1;      // 关联用户ID
+  int64 sshId = 2;      // SSH记录ID
+  string Host = 3;  // 主机地址
+  int32 port = 4;        // 端口号
+  string user = 5;
+  string password   = 6; // 密码
+}
+
+// 列表响应
+message SshInfoListResp {
+  repeated SshInfoDetailResp items = 1;
+}
+
 service AuditServiceRpc {
   // 创建操作记录
   rpc CreateOperationLog (OperationLogReq) returns (OperationLogResp);
+}
+
+service SshServiceRpc {
+  // 保存ssh信息
+  rpc SaveSshInfo(SshInfoReq) returns (SshInfoResp);
+  // 删除ssh信息
+  rpc DeleteSshInfo(DeleteSshInfoReq) returns (SshInfoResp);
+  // 查询ssh信息
+  rpc GetSshInfo(GetSshInfosReq) returns (SshInfoListResp);
 }
 
 // goctl rpc protoc log_service.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../ -m
