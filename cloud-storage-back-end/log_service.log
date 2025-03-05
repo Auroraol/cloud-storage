@@ -1,0 +1,113 @@
+{"level":"REQUESTS","time":"2025-03-05 16:39:19","caller":"api/logservice.go:29","msg":"Starting server at 0.0.0.0:1007..."}
+{"level":"REQUESTS","time":"2025-03-05 17:23:15","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:23:15","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:23:15","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:23:20","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:23:29","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:23:42","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:23:44","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:24:30","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:24:33","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:24:38","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:24:41","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:24:43","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:24:46","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:31:11","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:31:14","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:09","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:09","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:09","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:15","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/logfiles]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:32","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:38","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/history]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:50","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:53","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:32:55","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:01","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:06","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:11","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:16","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:22","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:27","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:32","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:34","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:36","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:42","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:46","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:48","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:48","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:49","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:49","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:53","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:55","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:55","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:33:58","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:00","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:00","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:03","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:05","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:05","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:08","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:10","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:10","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:13","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:15","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:15","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:18","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:20","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:20","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:23","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:25","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:25","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:28","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:30","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:30","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:33","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:35","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:35","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:38","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:40","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:40","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:43","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:45","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:45","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:48","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:50","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:50","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:53","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:55","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:55","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:34:58","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:35:00","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:35:00","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:35:03","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:35:05","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:35:05","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:37:57","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-03-05 17:37:57","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-03-05 17:37:57","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:03","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:09","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:14","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:19","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:23","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/history]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:24","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:29","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:34","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:35","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:38:38","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:41","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:43","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:38:44","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:38:44","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:38:46","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:43:52","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:43:55","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:43:55","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:19","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:51:39","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:51:49","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-03-05 17:51:53","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/monitor/history]"}
+{"level":"REQUESTS","time":"2025-03-05 17:52:02","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-05 17:52:04","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"ERROR","time":"2025-03-05 17:52:05","caller":"audit/operationlogic.go:46","msg":"获取总数失败 err: context deadline exceeded"}

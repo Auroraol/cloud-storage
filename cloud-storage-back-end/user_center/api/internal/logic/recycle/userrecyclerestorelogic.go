@@ -2,6 +2,7 @@ package recycle
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -38,10 +39,12 @@ func (l *UserRecycleRestoreLogic) UserRecycleRestore(req *types.UserRecycleResto
 	// 获取文件信息
 	fileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
+		zap.S().Error("文件不存在 err:%v", err)
 		return nil, response.NewErrMsg("文件不存在")
 	}
 
 	if fileInfo.UserId != uint64(userId) {
+		zap.S().Error("无权操作此文件")
 		return nil, response.NewErrMsg("无权操作此文件")
 	}
 
@@ -49,6 +52,7 @@ func (l *UserRecycleRestoreLogic) UserRecycleRestore(req *types.UserRecycleResto
 	fileInfo.Status = 0
 	err = l.svcCtx.UserRepositoryModel.Update(l.ctx, fileInfo)
 	if err != nil {
+		zap.S().Error("恢复文件失败 err:%v", err)
 		return nil, response.NewErrMsg("恢复文件失败")
 	}
 
@@ -63,7 +67,7 @@ func (l *UserRecycleRestoreLogic) UserRecycleRestore(req *types.UserRecycleResto
 				Size: repositoryInfo.Size,
 			})
 			if err != nil {
-				logx.Errorf("更新用户存储容量失败 err:%v", err)
+				zap.S().Error("更新用户存储容量失败 err:%v", err)
 			}
 		}
 	}
@@ -91,6 +95,7 @@ func (l *UserRecycleRestoreLogic) restoreFolderContents(ctx context.Context, par
 		child.Status = 0
 		err = l.svcCtx.UserRepositoryModel.Update(ctx, child)
 		if err != nil {
+			zap.S().Error("恢复文件夹内容失败 err:%v", err)
 			return err
 		}
 
@@ -105,12 +110,13 @@ func (l *UserRecycleRestoreLogic) restoreFolderContents(ctx context.Context, par
 					Size: repositoryInfo.Size,
 				})
 				if err != nil {
-					logx.Errorf("更新用户存储容量失败 err:%v", err)
+					zap.S().Error("更新用户存储容量失败 err:%v", err)
 				}
 			}
 		} else if child.RepositoryId == 0 {
 			err = l.restoreFolderContents(ctx, int64(child.Id), userId)
 			if err != nil {
+				zap.S().Error("恢复文件夹内容失败 err:%v", err)
 				return err
 			}
 		}

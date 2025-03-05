@@ -2,7 +2,9 @@ package history
 
 import (
 	"context"
-	"fmt"
+	"go.uber.org/zap"
+	"strconv"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
@@ -10,7 +12,6 @@ import (
 	"github.com/Auroraol/cloud-storage/upload_service/model"
 	"github.com/bwmarrin/snowflake"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strconv"
 )
 
 type UpdateHistoryLogic struct {
@@ -31,11 +32,13 @@ func NewUpdateHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 func (l *UpdateHistoryLogic) UpdateHistory(req *types.UpdateHistoryRequest) (resp *types.UpdateHistoryResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 	node, err := snowflake.NewNode(1)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create snowflake node: %w", err)
+		zap.S().Error("创建雪花节点失败 err:%v", err)
+		return nil, response.NewErrMsg("failed to create snowflake node")
 	}
 	newId := node.Generate().Int64()
 	//err = l.svcCtx.UploadHistoryModel.Update(l.ctx, &model.UploadHistory{
@@ -56,7 +59,7 @@ func (l *UpdateHistoryLogic) UpdateHistory(req *types.UpdateHistoryRequest) (res
 		RepositoryId: uint64(req.RepositoryId),
 	})
 	if err != nil {
-		logx.Errorf("failed to update history: %v", err)
+		zap.S().Error("更新失败 err:%v", err)
 		return nil, response.NewErrMsg("更新失败")
 	}
 	id, err := res.LastInsertId()

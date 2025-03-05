@@ -1,11 +1,12 @@
 package Chunk
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
+	"go.uber.org/zap"
 	"mime/multipart"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
-	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 
@@ -17,6 +18,7 @@ import (
 // 上传分片
 func UploadPartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.ChunkUploadRequest
 		// 参数验证
 		if err := httpx.Parse(r, &req); err != nil {
@@ -45,7 +47,7 @@ func UploadPartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		defer func(file multipart.File) {
 			err := file.Close()
 			if err != nil {
-				logx.Errorf("关闭文件失败: %v", err)
+				zap.S().Errorf("关闭文件失败: %v", err)
 			}
 		}(file)
 

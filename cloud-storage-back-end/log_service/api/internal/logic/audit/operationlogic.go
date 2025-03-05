@@ -3,6 +3,8 @@ package audit
 import (
 	"context"
 	"fmt"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"go.uber.org/zap"
 	"strconv"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
@@ -41,7 +43,8 @@ func (l *OperationLogic) Operation(req *types.GetOperationLogReq) (resp *types.G
 	var total int64
 	total, err = auditModel.CountByTimeRange(l.ctx, int32(req.Flag), req.StartTime, req.EndTime)
 	if err != nil {
-		return nil, fmt.Errorf("获取总数失败: %v", err)
+		zap.S().Errorf("获取总数失败 err: %v", err)
+		return nil, response.NewErrMsg("获取总数失败")
 	}
 
 	if total == 0 {
@@ -57,7 +60,8 @@ func (l *OperationLogic) Operation(req *types.GetOperationLogReq) (resp *types.G
 	// 按时间范围分页查询
 	audits, err = auditModel.FindByTimeRange(l.ctx, offset, req.PageSize, int32(req.Flag), req.StartTime, req.EndTime)
 	if err != nil {
-		return nil, fmt.Errorf("分页查询失败: %v", err)
+		zap.S().Errorf("分页查询失败 err: %v", err)
+		return nil, response.NewErrMsg("分页查询失败")
 	}
 
 	// 组装返回数据

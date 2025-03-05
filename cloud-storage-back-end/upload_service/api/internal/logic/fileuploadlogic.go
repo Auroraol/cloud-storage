@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
+	"go.uber.org/zap"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -58,23 +59,25 @@ func calculateFileMD5(filePath string) (string, error) {
 func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Request) (resp *types.FileUploadResponse, err error) {
 	file, fileHeader, err := r.FormFile("file")
 	if err != nil {
-		return nil, fmt.Errorf("获取上传文件失败: %v", err)
+		zap.S().Error("获取上传文件失败: %v", err)
+		return nil, response.NewErrMsg("获取上传文件失败")
 	}
 	defer func(file multipart.File) {
 		err := file.Close()
 		if err != nil {
-			logx.Errorf("关闭文件失败: %v", err)
+			zap.S().Error("关闭文件失败: %v", err)
 		}
 	}(file)
 
 	// 检查文件大小
 	if fileHeader.Size > 20*1024*1024 { // 20MB
-		return nil, fmt.Errorf("文件大小超过限制，请使用分片上传")
+		return nil, response.NewErrMsg("文件大小超过限制，请使用分片上传")
 	}
 
 	// 判断是否已达用户容量上限
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -100,6 +103,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	// 保存文件到临时目录
 	tempFilePath, err := utils.SaveUploadedFile(fileHeader)
 	if err != nil {
+		zap.S().Error("保存临时文件失败, err: %v", err)
 		return nil, response.NewErrMsg(fmt.Sprintf("保存临时文件失败, err: %v", err))
 	}
 	defer utils.CleanupTempFile(tempFilePath) // 确保清理临时文件
@@ -107,17 +111,20 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	// 计算文件MD5
 	md5Str, err := calculateFileMD5(tempFilePath)
 	if err != nil {
+		zap.S().Error("计算文件MD5失败, err: %v", err)
 		return nil, response.NewErrMsg(fmt.Sprintf("计算文件MD5失败: %v", err))
 	}
 
 	// 检查文件是否已存在（秒传）
 	count, err := l.svcCtx.RepositoryPoolModel.CountByHash(l.ctx, md5Str)
 	if err != nil {
+		zap.S().Error("查询文件MD5失败, err: %v", err)
 		return nil, response.NewErrMsg(fmt.Sprintf("查询文件MD5失败, err: %v", err))
 	}
 	if count > 0 {
 		repositoryInfo, err := l.svcCtx.RepositoryPoolModel.FindRepositoryPoolByHash(l.ctx, md5Str)
 		if err != nil {
+			zap.S().Error("查询文件MD5失败, err: %v", err)
 			return nil, response.NewErrMsg(fmt.Sprintf("查询文件MD5失败, err: %v", err))
 		}
 		return &types.FileUploadResponse{
@@ -152,6 +159,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 	// 上传文件
 	fileUrl, err := oss.UploadFile(uploadOptions)
 	if err != nil {
+		zap.S().Error("文件上传失败, err: %v", err)
 		return nil, response.NewErrMsg(fmt.Sprintf("文件上传失败: %v", err))
 	}
 
@@ -167,6 +175,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		Path:     fileUrl,
 	})
 	if err != nil {
+		zap.S().Error("保存文件信息失败, err: %v", err)
 		return nil, response.NewErrMsg(fmt.Sprintf("保存文件信息失败: %v", err))
 	}
 
@@ -176,6 +185,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		Size: fileHeader.Size,
 	})
 	if err != nil {
+		zap.S().Error("更新用户存储容量失败, err: %v", err)
 		return nil, response.NewErrMsg(fmt.Sprintf("更新用户存储容量失败: %v", err))
 	}
 
@@ -198,19 +208,19 @@ func (l *FileUploadLogic) FileUpload_test(req *types.FileUploadRequest, r *http.
 		Path:     "fileUrl",
 	})
 	if err != nil {
-		fmt.Printf("保存文件信息失败: %v", err)
+		zap.S().Error("保存文件信息失败: %v", err)
 	}
 
 	hash, err := l.svcCtx.RepositoryPoolModel.CountByHash(l.ctx, "md5Str")
 	if err != nil {
-		fmt.Printf("查询文件MD5失败, err: %v", err)
+		zap.S().Error("查询文件MD5失败, err: %v", err)
 	}
-	fmt.Printf("hash--->", hash)
+	zap.S().Infof("hash--->", hash)
 
 	byHash, err := l.svcCtx.RepositoryPoolModel.FindRepositoryPoolByHash(l.ctx, "md5Str")
 	if err != nil {
-		fmt.Printf("查询文件MD5失败, err: %v", err)
+		zap.S().Error("查询文件MD5失败, err: %v", err)
 	}
-	fmt.Printf("byHash--->", byHash)
+	zap.S().Infof("byHash--->", byHash)
 	return nil, err
 }

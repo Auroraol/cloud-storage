@@ -3,6 +3,7 @@ package ssh
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
@@ -28,6 +29,7 @@ func NewGetLogFilesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLo
 func (l *GetLogFilesLogic) GetLogFiles(req *types.GetLogFilesReq) (resp *types.GetLogFilesRes, err error) {
 	// 参数校验
 	if req.Host == "" {
+		zap.S().Errorf("主机地址不能为空")
 		return &types.GetLogFilesRes{
 			Files:   []string{},
 			Success: false,
@@ -35,6 +37,7 @@ func (l *GetLogFilesLogic) GetLogFiles(req *types.GetLogFilesReq) (resp *types.G
 	}
 
 	if req.Path == "" {
+		zap.S().Errorf("日志路径不能为空")
 		return &types.GetLogFilesRes{
 			Files:   []string{},
 			Success: false,
@@ -44,6 +47,7 @@ func (l *GetLogFilesLogic) GetLogFiles(req *types.GetLogFilesReq) (resp *types.G
 	// 获取日志文件列表
 	files, err := l.svcCtx.SSHService.GetLogFiles(req.Path)
 	if err != nil {
+		zap.S().Errorf("获取日志文件列表失败: %v", err)
 		return &types.GetLogFilesRes{
 			Files:   []string{},
 			Success: false,

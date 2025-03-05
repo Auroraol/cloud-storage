@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/config"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/server"
@@ -34,6 +34,6 @@ func main() {
 	})
 	defer s.Stop()
 
-	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
+	zap.S().Infof("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
 }

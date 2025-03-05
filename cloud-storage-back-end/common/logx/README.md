@@ -46,3 +46,27 @@ go get -u github.com/natefinch/lumberjack
 	zap.S().Errorf("测试 Errorf 用法：%s", "111")
 
 
+```
+// 配置日志
+conf := logx.LogConfig{
+    LogLevel:      "info",
+    LogFormat:     "json",
+    LogPath:       "./logs",
+    LogFileName:   "app.log",
+    LogFileMaxSize: 100,
+    CustomLevels: map[string]string{
+        "business": "info", // 自定义业务日志级别，对应info级别
+        "audit":    "warn", // 自定义审计日志级别，对应warn级别
+    },
+    SeparateLevel: false, //是否将不同级别的日志分开存储到不同文件
+}
+logx.InitLogger(conf)
+
+// 方法1：使用LogWithCustomLevel函数
+logx.LogWithCustomLevel("business", "这是一条业务日志")
+// 输出: {"level":"BUSINESS","time":"2025-03-05 14:54:43","caller":"logx/logger.go:232","msg":"这是一条业务日志"}
+
+// 方法2：创建自定义级别的Logger
+businessLogger, _ := logx.NewCustomLevelLogger("business")
+businessLogger.Info("这是一条业务日志")
+// 输出: {"level":"BUSINESS","time":"2025-03-05 14:54:43","caller":"logx/logger.go:232","msg":"这是一条业务日志"}

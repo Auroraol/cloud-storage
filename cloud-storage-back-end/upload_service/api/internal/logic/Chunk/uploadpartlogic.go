@@ -2,6 +2,7 @@ package Chunk
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"mime/multipart"
 	"os"
 
@@ -36,6 +37,7 @@ func (l *UploadPartLogic) UploadPart(req *types.ChunkUploadRequest, header *mult
 	// 保存分片到临时文件
 	tempFile, err := utils.SaveUploadedFile(header)
 	if err != nil {
+		zap.S().Error("保存临时文件失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "保存临时文件失败")
 	}
 	defer utils.CleanupTempFile(tempFile) // 确保清理临时文件
@@ -43,12 +45,14 @@ func (l *UploadPartLogic) UploadPart(req *types.ChunkUploadRequest, header *mult
 	// 获取OSS bucket
 	bucket := oss.Bucket()
 	if bucket == nil {
+		zap.S().Error("获取OSS Bucket失败")
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取OSS Bucket失败")
 	}
 
 	// 打开临时文件
 	partFile, err := os.Open(tempFile)
 	if err != nil {
+		zap.S().Error("打开临时文件失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "打开临时文件失败")
 	}
 	defer partFile.Close()
@@ -56,6 +60,7 @@ func (l *UploadPartLogic) UploadPart(req *types.ChunkUploadRequest, header *mult
 	// 获取文件大小
 	fileInfo, err := partFile.Stat()
 	if err != nil {
+		zap.S().Error("获取文件信息失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取文件信息失败")
 	}
 
@@ -68,6 +73,7 @@ func (l *UploadPartLogic) UploadPart(req *types.ChunkUploadRequest, header *mult
 
 	part, err := bucket.UploadPart(imur, partFile, fileInfo.Size(), req.ChunkIndex)
 	if err != nil {
+		zap.S().Error("上传分片失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "上传分片失败")
 	}
 

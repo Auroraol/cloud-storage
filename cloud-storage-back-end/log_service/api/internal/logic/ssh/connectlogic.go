@@ -3,6 +3,7 @@ package ssh
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	"strconv"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
@@ -45,6 +46,7 @@ func (l *ConnectLogic) Connect(req *types.SSHConnectReq) (resp *types.SSHConnect
 	// 连接主机
 	err = l.svcCtx.SSHService.Connect(req.Host, strconv.Itoa(req.Port), req.User, req.Password, req.PrivateKeyPath)
 	if err != nil {
+		zap.S().Errorf("连接主机失败 err: %v", err)
 		return &types.SSHConnectRes{
 			Success: false,
 			Message: fmt.Sprintf("连接失败: %v", err),

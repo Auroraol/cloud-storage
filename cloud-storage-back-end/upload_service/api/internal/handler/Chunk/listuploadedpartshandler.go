@@ -1,6 +1,7 @@
 package Chunk
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/common/response"
@@ -14,6 +15,7 @@ import (
 // 查询分片上传状态
 func ListUploadedPartsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.ListPartsRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			// 1. 参数验证

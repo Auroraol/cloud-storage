@@ -7,7 +7,7 @@ package server
 import (
 	"context"
 
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/logic"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/logic/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 )
@@ -24,11 +24,11 @@ func NewUploadServiceRpcServer(svcCtx *svc.ServiceContext) *UploadServiceRpcServ
 }
 
 func (s *UploadServiceRpcServer) GetRepositoryPoolByRepositoryId(ctx context.Context, in *pb.RepositoryReq) (*pb.RepositoryResp, error) {
-	l := logic.NewGetRepositoryPoolByRepositoryIdLogic(ctx, s.svcCtx)
+	l := uploadservicerpclogic.NewGetRepositoryPoolByRepositoryIdLogic(ctx, s.svcCtx)
 	return l.GetRepositoryPoolByRepositoryId(in)
 }
 
 func (s *UploadServiceRpcServer) DeleteById(ctx context.Context, in *pb.DeleteByIdReq) (*pb.DeleteByIdResp, error) {
-	l := logic.NewDeleteByIdLogic(ctx, s.svcCtx)
+	l := uploadservicerpclogic.NewDeleteByIdLogic(ctx, s.svcCtx)
 	return l.DeleteById(in)
 }

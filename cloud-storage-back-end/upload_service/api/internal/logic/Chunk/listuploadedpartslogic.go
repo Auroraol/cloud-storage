@@ -2,6 +2,7 @@ package Chunk
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/store/oss"
@@ -30,6 +31,7 @@ func (l *ListUploadedPartsLogic) ListUploadedParts(req *types.ListPartsRequest) 
 	// 获取OSS bucket
 	bucket := oss.Bucket()
 	if bucket == nil {
+		zap.S().Error("获取OSS Bucket失败")
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取OSS Bucket失败")
 	}
 
@@ -43,7 +45,7 @@ func (l *ListUploadedPartsLogic) ListUploadedParts(req *types.ListPartsRequest) 
 	// 列举已上传的分片
 	lsRes, err := bucket.ListUploadedParts(imur)
 	if err != nil {
-		l.Logger.Errorf("列举已上传分片失败: %v", err)
+		zap.S().Error("列举已上传分片失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "列举已上传分片失败")
 	}
 
@@ -66,7 +68,7 @@ func (l *ListUploadedPartsLogic) ListUploadedParts(req *types.ListPartsRequest) 
 		FileSize:   totalSize,
 	}
 
-	l.Logger.Infof("成功获取分片上传状态, uploadId: %s, key: %s, totalParts: %d",
+	zap.S().Infof("成功获取分片上传状态, uploadId: %s, key: %s, totalParts: %d",
 		req.UploadId, req.Key, len(parts))
 
 	return resp, nil

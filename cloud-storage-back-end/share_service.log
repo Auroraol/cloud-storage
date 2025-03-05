@@ -1,0 +1,12 @@
+{"level":"REQUESTS","time":"2025-03-05 15:31:21","caller":"ssh/connecthandler.go:22","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-03-05 16:40:38","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-05 17:04:25","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-05 17:18:09","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-05 17:22:30","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:30:48","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:04","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:09","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:10","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=2&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:12","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=3&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:12","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=4&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:51:23","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}

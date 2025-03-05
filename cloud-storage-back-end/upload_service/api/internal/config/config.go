@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/rest"
@@ -17,4 +18,5 @@ type Config struct {
 	AuditServiceRpcConf zrpc.RpcClientConf
 	Options             orm.Options
 	CacheRedis          cache.CacheConf // 缓存
+	LogConfig           logx.LogConfig  // 日志配置
 }

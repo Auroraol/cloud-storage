@@ -6,6 +6,7 @@ import (
 	"github.com/Auroraol/cloud-storage/log_service/model"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
+	"go.uber.org/zap"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,11 +36,13 @@ func (l *CreateOperationLogLogic) CreateOperationLog(in *pb.OperationLogReq) (*p
 		RepositoryId: uint64(in.FileId),
 	})
 	if err != nil {
+		zap.S().Errorf("创建操作记录失败: %v", err)
 		return nil, err
 	}
 
 	id, err := insert.LastInsertId()
 	if err != nil {
+		zap.S().Errorf("获取操作记录ID失败: %v", err)
 		return nil, err
 	}
 

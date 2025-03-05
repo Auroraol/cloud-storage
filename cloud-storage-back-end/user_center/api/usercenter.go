@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/config"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/handler"
@@ -26,6 +26,6 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
-	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
+	zap.S().Info("Starting server at %s:%d...", c.Host, c.Port)
 	server.Start()
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
+	"go.uber.org/zap"
 )
 
 type UserFileListLogic struct {
@@ -28,11 +29,13 @@ func NewUserFileListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *User
 func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest) (resp *types.UserFileListResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
 	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllFileByParentId(l.ctx, req.Id, userId)
 	if err != nil {
+		zap.S().Error("该文件夹下搜索文件失败！")
 		return nil, response.NewErrMsg("该文件夹下搜索文件失败！")
 	}
 	// 获得所有文件信息
@@ -40,7 +43,7 @@ func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest) (resp *
 	for _, userRepository := range allUserRepository {
 		repositoryInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadServicePb.RepositoryReq{RepositoryId: int64(userRepository.RepositoryId)})
 		if err != nil {
-			logx.Errorf("获取文件信息失败 err:%v", err)
+			zap.S().Error("获取文件信息失败 err:%v", err)
 			continue
 			//return nil, err
 		}

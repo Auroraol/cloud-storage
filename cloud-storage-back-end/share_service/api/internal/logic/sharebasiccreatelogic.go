@@ -2,12 +2,12 @@ package logic
 
 import (
 	"context"
-	"fmt"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/share_service/model"
 	"github.com/bwmarrin/snowflake"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"strconv"
 
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
@@ -39,22 +39,24 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 	//}
 	one, err := l.svcCtx.ShareBasicModel.FindOneByIdentity(l.ctx, uint64(req.RepositoryId))
 	if err != nil && !errors.Is(err, model.ErrNotFound) {
-		logx.Errorf("failed to find repository id by id: %w", err)
+		zap.S().Errorf("failed to find share basic by identity: %v", err)
 		return nil, err
 	}
 	if one != nil {
-		logx.Error("该文件已分享！")
+		zap.S().Error("该文件已分享！")
 		return &types.ShareBasicCreateResponse{
 			Id: "",
 		}, nil
 	}
 	node, err := snowflake.NewNode(1)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create snowflake node: %w", err)
+		zap.S().Errorf("failed to create snowflake node: %v", err)
+		return nil, err
 	}
 	newId := node.Generate().Int64()
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 	_, err = l.svcCtx.ShareBasicModel.InsertWithId(l.ctx, &model.ShareBasic{
@@ -66,7 +68,7 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 		Code:             req.Code,
 	})
 	if err != nil {
-		logx.Errorf("failed to insert share basic: %v", err)
+		zap.S().Errorf("failed to insert share basic: %v", err)
 		return nil, err
 	}
 	return &types.ShareBasicCreateResponse{Id: strconv.FormatInt(newId, 10)}, nil

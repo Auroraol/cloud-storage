@@ -7,6 +7,7 @@ import (
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
 	"github.com/golang-jwt/jwt/v4"
+	"go.uber.org/zap"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,16 +34,19 @@ func (l *RefreshAuthorizationLogic) RefreshAuthorization(req *types.RefreshAuthR
 		return []byte(l.svcCtx.Config.JwtAuth.AccessSecret), nil
 	})
 	if err != nil {
+		zap.S().Error("jwt.ParseWithClaims err:%v", err)
 		return nil, err
 	}
 	//判断是否token有效
 	if !judgeValid.Valid {
+		zap.S().Error("token无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
 	// 利用过期token的其他值，生成新token等信息
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.REFRESH_CREDENTIALS_INVALID)
 	}
 

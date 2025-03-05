@@ -2,6 +2,7 @@ package userservicerpclogic
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
@@ -26,6 +27,7 @@ func NewFindVolumeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Fi
 func (l *FindVolumeByIdLogic) FindVolumeById(in *pb.FindVolumeReq) (*pb.FindVolumeResp, error) {
 	userVolume, err := l.svcCtx.UserModel.FindVolume(l.ctx, in.Id)
 	if err != nil {
+		zap.S().Error("UserModel.FindVolume err:%v", err)
 		return nil, err
 	}
 

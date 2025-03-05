@@ -8,6 +8,7 @@ import (
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
+	"go.uber.org/zap"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -31,10 +32,12 @@ func NewShareBasicSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sh
 func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (resp *types.ShareBasicSaveResponse, err error) {
 	nameInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadservicerpc.RepositoryReq{RepositoryId: req.RepositoryId})
 	if err != nil {
+		zap.S().Error("获取资源池信息失败 err:%v", err)
 		return nil, err
 	}
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -45,6 +48,7 @@ func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (
 		Name:         nameInfo.Name,
 	})
 	if err != nil {
+		zap.S().Error("创建资源失败 err:%v", err)
 		return nil, err
 	}
 	return &types.ShareBasicSaveResponse{Id: strconv.FormatInt(idInfo.Id, 10)}, nil

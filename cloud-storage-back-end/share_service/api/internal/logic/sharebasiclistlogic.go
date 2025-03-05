@@ -2,8 +2,10 @@ package logic
 
 import (
 	"context"
+
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
@@ -29,6 +31,7 @@ func NewShareBasicListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sh
 func (l *ShareBasicListLogic) ShareBasicList(req *types.ShareBasicListRequest) (resp *types.ShareBasicListResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -53,8 +56,8 @@ func (l *ShareBasicListLogic) ShareBasicList(req *types.ShareBasicListRequest) (
 		Where("share_basic.user_id = ? AND share_basic.deleted_at IS NULL", userId).
 		Count(&total).Error
 	if err != nil {
-		logx.Errorw("查询分享列表总数失败", logx.Field("Detail", err.Error()))
-		return
+		zap.S().Error("查询分享列表总数失败")
+		return nil, err
 	}
 
 	// 分页查询
@@ -71,8 +74,8 @@ func (l *ShareBasicListLogic) ShareBasicList(req *types.ShareBasicListRequest) (
 		Find(&shareFile).Error
 
 	if err != nil {
-		logx.Errorw("查询分享列表失败", logx.Field("Detail", err.Error()))
-		return
+		zap.S().Error("查询分享列表失败 err:%v", err)
+		return nil, err
 	}
 
 	return &types.ShareBasicListResponse{

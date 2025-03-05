@@ -6,6 +6,7 @@ import (
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -31,13 +32,16 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
 	if err != nil {
+		zap.S().Error("UserModel.FindOne err:%v", err)
 		return nil, err
 	}
 	if user == nil {
+		zap.S().Error("UserModel.FindOne err:%v", err)
 		return nil, errors.Wrapf(response.NewErrCode(response.ACCOUNT_NOT_FOUND), "id:%d", userId)
 	}
 	resp = &types.UserInfoResp{}

@@ -2,7 +2,7 @@ package monitor
 
 import (
 	"context"
-	"fmt"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/time"
@@ -34,22 +34,22 @@ func (l *RealTimeMonitorLogic) RealTimeMonitor(req *types.RealTimeMonitorReq) (r
 	}
 
 	if req.Host == "" {
-		return nil, fmt.Errorf("主机地址不能为空")
+		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "主机地址不能为空")
 	}
 
 	if req.LogFile == "" {
-		return nil, fmt.Errorf("日志文件不能为空")
+		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "日志文件不能为空")
 	}
 
 	if len(req.MonitorItems) == 0 {
-		return nil, fmt.Errorf("监控项不能为空")
+		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "监控项不能为空")
 	}
 
 	// 使用SSH服务获取监控数据
 	monitorData, err := l.svcCtx.SSHService.MonitorLogFile(req.LogFile, req.MonitorItems, req.TimeRange)
 	if err != nil {
 		// 如果获取失败，记录错误
-		l.Logger.Errorf("获取监控数据失败: %v", err)
+		zap.S().Errorf("获取监控数据失败: %v", err)
 		return nil, response.NewErrMsg("获取监控数据失败")
 	}
 

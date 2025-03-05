@@ -1,6 +1,7 @@
 package Chunk
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
@@ -14,6 +15,7 @@ import (
 // 完成分片上传
 func CompleteMultipartUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.ChunkUploadCompleteRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			// 参数验证

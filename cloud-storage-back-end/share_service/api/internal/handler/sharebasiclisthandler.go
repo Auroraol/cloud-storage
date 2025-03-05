@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"net/http"
 
@@ -13,6 +14,7 @@ import (
 // 用户分享列表
 func ShareBasicListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.ShareBasicListRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			response.ParamErrorResult(r, w, err)

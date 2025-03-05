@@ -1,7 +1,9 @@
 package audit
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/response"
+	"go.uber.org/zap"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/logic/audit"
@@ -13,12 +15,13 @@ import (
 // 获得操作日志
 func OperationHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.GetOperationLogReq
 		if err := httpx.Parse(r, &req); err != nil {
 			response.ParamErrorResult(r, w, err)
+			zap.S().Errorf("parse param error: %v", err)
 			return
 		}
-
 		l := audit.NewOperationLogic(r.Context(), svcCtx)
 		resp, err := l.Operation(&req)
 		response.HttpResult(r, w, resp, err)

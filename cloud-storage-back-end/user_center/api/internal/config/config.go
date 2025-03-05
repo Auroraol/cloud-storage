@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/rest"
@@ -18,4 +19,5 @@ type Config struct {
 	UploadServiceRpcConf zrpc.RpcClientConf
 	UserCenterRpcConf    zrpc.RpcClientConf
 	AuditServiceRpcConf  zrpc.RpcClientConf
+	LogConfig            logx.LogConfig
 }

@@ -198,12 +198,6 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
   const startTime = params.timeRange[0] ? new Date(params.timeRange[0]).getTime() : 0
   const endTime = params.timeRange[1] ? new Date(params.timeRange[1]).getTime() : 0
 
-  const aggregateByMap: Record<string, string> = {
-    minute: "按分钟",
-    hour: "按小时",
-    day: "按天"
-  }
-
   const apiParams: HistoryAnalysisReq = {
     host, // 使用当前连接的主机
     log_file: params.dataFile, // 默认日志文件，可以根据需要修改
@@ -211,7 +205,6 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
     page_size: 50,
     start_time: startTime,
     end_time: endTime,
-    aggregate_by: aggregateByMap[params.aggregation] || "按小时",
     keywords: "" // 添加必需的 keywords 字段
   }
 

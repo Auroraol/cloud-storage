@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Auroraol/cloud-storage/user_center/model"
 	"github.com/bwmarrin/snowflake"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
@@ -29,6 +30,7 @@ func NewCreateByShareLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 func (l *CreateByShareLogic) CreateByShare(in *pb.CreateByShareReq) (*pb.CreateByShareReply, error) {
 	node, err := snowflake.NewNode(1)
 	if err != nil {
+		zap.S().Error("failed to create snowflake node: %w", err)
 		return nil, fmt.Errorf("failed to create snowflake node: %w", err)
 	}
 	newId := node.Generate().Int64()

@@ -1,0 +1,31 @@
+{"level":"REQUESTS","time":"2025-03-05 17:15:05","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-05 17:15:23","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:15:31","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:15:31","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:15:31","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:15:31","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:17:35","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:17:41","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:17:48","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:21:24","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-05 17:22:01","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:22:28","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:22:28","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:22:28","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:22:28","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:24:50","caller":"recycle/userrecyclelistlogic.go:53","msg":"获取回收站列表失败 err:%vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:29:26","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-05 17:29:35","caller":"recycle/userrecyclelistlogic.go:53","msg":"获取回收站列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:30:49","caller":"recycle/userrecyclelistlogic.go:53","msg":"获取回收站列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:30:51","caller":"recycle/userrecyclelistlogic.go:53","msg":"获取回收站列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:30:53","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:35:46","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:35:50","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:35:58","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:36:14","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:36:45","caller":"oauth/loginlogic.go:34","msg":"用户存在 err:%vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-05 17:37:23","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-05 17:37:32","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:37:43","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:37:43","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-05 17:44:04","caller":"recycle/userrecyclelistlogic.go:53","msg":"获取回收站列表失败 err:%vcontext deadline exceeded"}

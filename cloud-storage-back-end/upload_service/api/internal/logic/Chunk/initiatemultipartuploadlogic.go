@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Auroraol/cloud-storage/common/token"
+	"go.uber.org/zap"
 	"path/filepath"
 
 	ossSDK "github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -55,6 +56,7 @@ func (l *InitiateMultipartUploadLogic) InitiateMultipartUpload(req *types.ChunkU
 	// 获取OSS bucket
 	bucket := oss.Bucket()
 	if bucket == nil {
+		zap.S().Error("获取OSS Bucket失败")
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取OSS Bucket失败")
 	}
 
@@ -67,6 +69,7 @@ func (l *InitiateMultipartUploadLogic) InitiateMultipartUpload(req *types.ChunkU
 	// 初始化分片上传
 	imur, err := bucket.InitiateMultipartUpload(objectKey, options...)
 	if err != nil {
+		zap.S().Error("初始化分片上传失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "初始化分片上传失败")
 	}
 

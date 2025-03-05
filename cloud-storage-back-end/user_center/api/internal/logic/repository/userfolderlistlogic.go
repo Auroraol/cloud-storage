@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/time"
@@ -31,12 +32,14 @@ func NewUserFolderListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Us
 func (l *UserFolderListLogic) UserFolderList(req *types.UserFolderListRequest) (resp *types.UserFolderListResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
 	// 只查询正常状态的文件夹
 	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllNormalFolderByParentId(l.ctx, req.Id, userId)
 	if err != nil {
+		zap.S().Error("该文件夹下搜索文件夹失败！")
 		return nil, response.NewErrMsg("该文件夹下搜索文件夹失败！")
 	}
 	// 获得所有文件夹信息
@@ -50,6 +53,7 @@ func (l *UserFolderListLogic) UserFolderList(req *types.UserFolderListRequest) (
 		timePart := s[:19]
 		timestamp, err := time.StringTimeToTimestamp(timePart)
 		if err != nil {
+			zap.S().Error("转化时间戳失败 err:%v", err)
 			return nil, err
 		}
 		newList = append(newList, &types.UserFolder{

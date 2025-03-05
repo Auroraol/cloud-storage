@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
+	"go.uber.org/zap"
 	"strconv"
 
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
@@ -30,11 +31,12 @@ func NewHistoryListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Histo
 func (l *HistoryListLogic) HistoryList(req *types.HistoryListRequest) (resp *types.HistoryListResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 	page, err := l.svcCtx.UploadHistoryModel.FindAllInPage(l.ctx, userId, req.Page, req.Size)
 	if err != nil {
-		logx.Infof("获取历史记录失败 err:%v", err)
+		zap.S().Error("获取历史记录失败 err:%v", err)
 	}
 	historyList := make([]*types.History, 0)
 	for _, history := range page {

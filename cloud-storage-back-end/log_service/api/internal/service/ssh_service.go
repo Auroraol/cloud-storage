@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"regexp"
 	"sort"
 	"strconv"
@@ -51,37 +52,10 @@ func (s *sshService) Connect(host, port, user, password, privateKeyPath string) 
 	// 创建SSH客户端
 	client, err := sshx.NewClient(host+":"+port, credential)
 	if err != nil {
+		zap.S().Errorf("创建SSH客户端, 连接主机失败 err: %v", err)
 		return fmt.Errorf("连接主机失败: %v", err)
 	}
 
-	//privateKeyConf := sshx.Credential{User: "root", Password: "-+66..[]l"}
-	//
-	//// 创建 sshx 客户端
-	//client, err := sshx.NewClient("101.37.165.220:22", credential, sshx.SetEstablishTimeout(10*stdtime.Second), sshx.SetLogger(sshx.DefaultLogger{}))
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	//_, cancel := context.WithTimeout(context.Background(), 5*stdtime.Second)
-	//defer cancel()
-	if err := client.Handle(func(sub sshx.EnhanceClient) error {
-		// if _, err := sub.ReceiveFile("/tmp/xxx", "/etc/passwd", false, true); err != nil {
-		// 	panic(err)
-		// }
-
-		path := "/opt/goTest/log"
-
-		data, err := sub.ReadFile(path)
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Printf("filebeat yml: %s", string(data))
-		return nil
-	}); err != nil {
-		fmt.Printf(err.Error())
-		panic(err)
-	}
 	s.client = client
 	s.host = host
 	return nil
@@ -90,6 +64,7 @@ func (s *sshService) Connect(host, port, user, password, privateKeyPath string) 
 // ReadLogFile 读取日志文件
 func (s *sshService) ReadLogFile(path string, match string, page, pageSize int) ([]string, int, error) {
 	if s.client == nil {
+		zap.S().Errorf("创建SSH客户端, 未连接主机")
 		return nil, 0, fmt.Errorf("未连接主机")
 	}
 
@@ -246,7 +221,9 @@ func (s *sshService) MonitorLogFile(path string, monitorItems []string, timeRang
 				switch item {
 				case "requests":
 					// 统计所有请求
-					counter["requests"][timestamp]++
+					if level == "REQUESTS" {
+						counter["requests"][timestamp]++
+					}
 				case "errors":
 					// 统计错误日志
 					if level == "ERROR" {

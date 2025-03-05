@@ -2,6 +2,7 @@ package Chunk
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"strconv"
 
 	ossSDK "github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -33,6 +34,7 @@ func (l *CompleteMultipartUploadLogic) CompleteMultipartUpload(req *types.ChunkU
 	// 获取OSS bucket
 	bucket := oss.Bucket()
 	if bucket == nil {
+		zap.S().Error("获取OSS Bucket失败")
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取OSS Bucket失败")
 	}
 
@@ -54,13 +56,14 @@ func (l *CompleteMultipartUploadLogic) CompleteMultipartUpload(req *types.ChunkU
 
 	result, err := bucket.CompleteMultipartUpload(imur, parts)
 	if err != nil {
+		zap.S().Error("完成分片上传失败 err:%v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "完成分片上传失败")
 	}
 
 	// 获取文件大小
 	props, err := bucket.GetObjectDetailedMeta(req.Key)
 	if err != nil {
-		logx.Errorf("获取文件元数据失败: %v", err)
+		zap.S().Error("获取文件元数据失败 err:%v", err)
 		// 继续执行，不影响返回结果
 	}
 

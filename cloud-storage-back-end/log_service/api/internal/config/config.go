@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/rest"
@@ -14,4 +15,5 @@ type Config struct {
 	}
 	Options    orm.Options
 	CacheRedis cache.CacheConf
+	LogConfig  logx.LogConfig
 }

@@ -1,125 +1,284 @@
 package logx
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"path/filepath"
-	"time"
 )
 
 const DefaultLogPath = "./logs" // 默认输出日志文件路径
 
 type LogConfig struct {
-	LogLevel          string `json:"log_level"` // 日志打印级别 debug  info  warning  error
-	LogFormat         string // 输出日志格式 json
-	LogPath           string // 输出日志文件路径
-	LogFileName       string // 输出日志文件名称
-	LogFileMaxSize    int    // 【日志分割】单个日志文件最多存储量 单位(mb)
-	LogFileMaxBackups int    // 【日志分割】日志备份文件最多数量
-	LogMaxAge         int    // 日志保留时间，单位: 天 (day)
-	LogCompress       bool   // 是否压缩日志
-	LogStdout         bool   // 是否输出到控制台
+	LogLevel          string            // 日志打印级别 debug  info  warning  error
+	LogFormat         string            // 输出日志格式 json
+	LogPath           string            // 输出日志文件路径
+	LogFileName       string            // 输出日志文件名称
+	LogFileMaxSize    int               // 【日志分割】单个日志文件最多存储量 单位(mb)
+	LogFileMaxBackups int               // 【日志分割】日志备份文件最多数量
+	LogMaxAge         int               // 日志保留时间，单位: 天 (day)
+	LogCompress       bool              // 是否压缩日志
+	LogStdout         bool              // 是否输出到控制台
+	SeparateLevel     bool              // 是否将不同级别的日志分开存储到不同文件
+	CustomLevels      map[string]string // 自定义日志级别，key为级别名称，value为对应的zapcore.Level字符串
+}
+
+// 自定义日志级别
+type CustomLevel struct {
+	Name  string
+	Level zapcore.Level
+}
+
+// 全局变量，存储自定义日志级别
+var customLevels = make(map[string]zapcore.Level)
+
+// 全局变量，存储级别到自定义名称的映射
+var levelToCustomName = make(map[zapcore.Level]string)
+
+// RegisterCustomLevel 注册自定义日志级别
+func RegisterCustomLevel(name string, level zapcore.Level) {
+	customLevels[name] = level
+	levelToCustomName[level] = name
+}
+
+// GetCustomLevel 获取自定义日志级别
+func GetCustomLevel(name string) (zapcore.Level, bool) {
+	level, ok := customLevels[name]
+	return level, ok
+}
+
+// GetCustomLevelName 获取自定义日志级别名称
+func GetCustomLevelName(level zapcore.Level) string {
+	if name, ok := levelToCustomName[level]; ok {
+		return name
+	}
+	return level.String()
+}
+
+// 自定义Level编码器
+func customLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+	levelName := GetCustomLevelName(l)
+	enc.AppendString(strings.ToUpper(levelName))
 }
 
 // InitLogger 初始化Logger
 func InitLogger(conf LogConfig) (err error) {
-	// 获取日志写入位置
-	writeSyncer, err := getLogWriter(conf)
-	if err != nil {
+	// 解析全局日志级别
+	var globalLevel zapcore.Level
+	if err := globalLevel.UnmarshalText([]byte(conf.LogLevel)); err != nil {
 		return err
 	}
-	// 获取日志输出编码
-	encoder := getEncoder(conf)
 
-	// 获取日志最低等级，即>=该等级，才会被写入。
-	var l = new(zapcore.Level)
-	err = l.UnmarshalText([]byte(conf.LogLevel))
-	if err != nil {
-		return
+	// 注册自定义日志级别
+	if conf.CustomLevels != nil {
+		for name, levelStr := range conf.CustomLevels {
+			var level zapcore.Level
+			if err := level.UnmarshalText([]byte(levelStr)); err != nil {
+				return fmt.Errorf("invalid custom level %s: %v", name, err)
+			}
+			RegisterCustomLevel(name, level)
+		}
 	}
-	// 创建一个将日志写入 WriteSyncer 的核心。
-	core := zapcore.NewCore(encoder, writeSyncer, l)
-	// zap.AddCaller() 输出日志打印文件和行数如： logger/logger_test.go:33
-	logger := zap.New(core, zap.AddCaller())
 
-	// 1. zap.ReplaceGlobals 函数将当前初始化的 logger 替换到全局的 logger,
-	// 2. 使用 logger 的时候 直接通过 zap.S().Debugf("xxx") or zap.L().Debug("xxx")
-	// 3. 使用 zap.S() 和 zap.L() 提供全局锁，保证一个全局的安全访问logger的方式
+	// 创建所有日志核心
+	var cores []zapcore.Core
+
+	// 标准日志级别
+	levels := []zapcore.Level{
+		zapcore.DebugLevel,
+		zapcore.InfoLevel,
+		zapcore.WarnLevel,
+		zapcore.ErrorLevel,
+		zapcore.DPanicLevel,
+		zapcore.PanicLevel,
+		zapcore.FatalLevel,
+	}
+
+	// 如果不需要分离日志级别，则创建一个统一的WriteSyncer
+	if !conf.SeparateLevel {
+		// 创建统一的WriteSyncer
+		syncer, err := getLogWriter(conf, "")
+		if err != nil {
+			return err
+		}
+
+		// 创建统一的Enabler
+		enabler := zap.LevelEnablerFunc(func(l zapcore.Level) bool {
+			return l >= globalLevel
+		})
+
+		// 创建核心
+		encoder := getEncoder(conf)
+		core := zapcore.NewCore(encoder, syncer, enabler)
+		cores = append(cores, core)
+	} else {
+		// 分离日志级别，为每个级别创建单独的核心
+		for _, lvl := range levels {
+			// 如果当前级别低于全局日志级别，则跳过
+			if lvl < globalLevel {
+				continue
+			}
+
+			// 创建当前级别的WriteSyncer
+			syncer, err := getLogWriter(conf, lvl.String())
+			if err != nil {
+				return err
+			}
+
+			// 创建当前级别的Enabler（仅允许当前级别）
+			enabler := zap.LevelEnablerFunc(func(l zapcore.Level) bool {
+				return l == lvl
+			})
+
+			// 创建核心
+			encoder := getEncoder(conf)
+			core := zapcore.NewCore(encoder, syncer, enabler)
+			cores = append(cores, core)
+		}
+
+		// 为自定义级别创建核心
+		for name, level := range customLevels {
+			// 如果当前级别低于全局日志级别，则跳过
+			if level < globalLevel {
+				continue
+			}
+
+			// 创建当前级别的WriteSyncer
+			syncer, err := getLogWriter(conf, name)
+			if err != nil {
+				return err
+			}
+
+			// 创建当前级别的Enabler
+			enabler := zap.LevelEnablerFunc(func(l zapcore.Level) bool {
+				return l == level
+			})
+
+			// 创建核心
+			encoder := getEncoder(conf)
+			core := zapcore.NewCore(encoder, syncer, enabler)
+			cores = append(cores, core)
+		}
+	}
+
+	// 添加控制台核心（如果需要）
+	if conf.LogStdout {
+		consoleEncoder := getEncoder(conf)
+		consoleSyncer := zapcore.AddSync(os.Stdout)
+		consoleEnabler := zap.LevelEnablerFunc(func(l zapcore.Level) bool {
+			return l >= globalLevel
+		})
+		cores = append(cores, zapcore.NewCore(consoleEncoder, consoleSyncer, consoleEnabler))
+	}
+
+	// 合并所有核心
+	core := zapcore.NewTee(cores...)
+
+	// 创建Logger实例
+	logger := zap.New(core, zap.AddCaller())
 	zap.ReplaceGlobals(logger)
 
-	//wrapped := zapLogger.NewLogger(logger)
-
-	//zap.L().Debug("")
-	//zap.S().Debugf("")
-	return
+	return nil
 }
 
-// getEncoder 编码器(如何写入日志)
+// getEncoder 编码器配置
 func getEncoder(conf LogConfig) zapcore.Encoder {
-	// 获取一个指定的的EncoderConfig，进行自定义
 	encoderConfig := zap.NewProductionEncoderConfig()
-
-	// 设置每个日志条目使用的键。如果有任何键为空，则省略该条目的部分。
-
-	// 序列化时间。eg: 2022-09-01T19:11:35.921+0800
-	//encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-
 	encoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 		enc.AppendString(t.Format("2006-01-02 15:04:05"))
 	}
-	// "time":"2022-09-01T19:11:35.921+0800"
 	encoderConfig.TimeKey = "time"
 
-	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder // 输出level序列化为全大写字符串，如 INFO DEBUG ERROR
-	//encoderConfig.EncodeCaller = zapcore.FullCallerEncoder
-	//encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
-
-	// 以 package/file:行 的格式 序列化调用程序，从完整路径中删除除最后一个目录外的所有目录。
-	encoderConfig.EncodeCaller = zapcore.FullCallerEncoder
+	// 使用自定义Level编码器
+	encoderConfig.EncodeLevel = customLevelEncoder
+	encoderConfig.EncodeCaller = zapcore.ShortCallerEncoder
 
 	if conf.LogFormat == "json" {
-		return zapcore.NewJSONEncoder(encoderConfig) // 以json格式写入
+		return zapcore.NewJSONEncoder(encoderConfig)
 	}
-	return zapcore.NewConsoleEncoder(encoderConfig) // 以logFmt格式写入
+	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
-// 负责日志写入的位置
-func getLogWriter(conf LogConfig) (zapcore.WriteSyncer, error) {
-
-	// 判断日志路径是否存在，如果不存在就创建
-	if exist := IsExist(conf.LogPath); !exist {
-		if conf.LogPath == "" {
-			conf.LogPath = DefaultLogPath
-		}
-		if err := os.MkdirAll(conf.LogPath, os.ModePerm); err != nil {
-			conf.LogPath = DefaultLogPath
-			if err := os.MkdirAll(conf.LogPath, os.ModePerm); err != nil {
-				return nil, err
-			}
-		}
+// getLogWriter 创建日志Writer
+func getLogWriter(conf LogConfig, levelName string) (zapcore.WriteSyncer, error) {
+	// 确保日志目录存在
+	if conf.LogPath == "" {
+		conf.LogPath = DefaultLogPath
+	}
+	if err := os.MkdirAll(conf.LogPath, os.ModePerm); err != nil {
+		return nil, fmt.Errorf("create log directory failed: %v", err)
 	}
 
-	// 按文件大小分割
+	// 生成文件名
+	ext := filepath.Ext(conf.LogFileName)
+	base := strings.TrimSuffix(conf.LogFileName, ext)
+	filename := conf.LogFileName
+
+	// 如果需要分离级别，则添加级别后缀
+	if levelName != "" && conf.SeparateLevel {
+		filename = fmt.Sprintf("%s-%s%s", base, strings.ToLower(levelName), ext)
+	}
+
+	fullPath := filepath.Join(conf.LogPath, filename)
+
+	// 创建Lumberjack日志切割器
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   filepath.Join(conf.LogPath, conf.LogFileName), // 日志文件路径
-		MaxSize:    conf.LogFileMaxSize,                           // 进行切割之前,日志文件的最大大小(MB为单位)
-		MaxBackups: conf.LogFileMaxBackups,                        // 日志备份数量
-		MaxAge:     conf.LogMaxAge,                                // 日志最长保留时间
-		Compress:   conf.LogCompress,                              // 是否压缩日志
-	}
-	if conf.LogStdout {
-		// 日志同时输出到控制台和日志文件中
-		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumberJackLogger), zapcore.AddSync(os.Stdout)), nil
+		Filename:   fullPath,
+		MaxSize:    conf.LogFileMaxSize,
+		MaxBackups: conf.LogFileMaxBackups,
+		MaxAge:     conf.LogMaxAge,
+		Compress:   conf.LogCompress,
 	}
 
-	// 日志只输出到日志文件
 	return zapcore.AddSync(lumberJackLogger), nil
 }
 
-// IsExist 判断文件或者目录是否存在
+// IsExist 判断文件/目录是否存在（保持不变）
 func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil || os.IsExist(err)
+}
+
+// 以下是自定义日志级别的使用方法
+
+// LogWithCustomLevel 使用自定义级别记录日志
+func LogWithCustomLevel(name string, msg string, fields ...zap.Field) {
+	if level, ok := GetCustomLevel(name); ok {
+		zap.L().Check(level, msg).Write(fields...)
+	}
+}
+
+// 创建自定义级别的Logger
+func NewCustomLevelLogger(name string) (*zap.Logger, error) {
+	level, ok := GetCustomLevel(name)
+	if !ok {
+		return nil, fmt.Errorf("custom level %s not registered", name)
+	}
+
+	return zap.L().WithOptions(zap.WrapCore(func(core zapcore.Core) zapcore.Core {
+		return &customLevelCore{
+			Core:  core,
+			level: level,
+		}
+	})), nil
+}
+
+// 自定义级别的Core
+type customLevelCore struct {
+	zapcore.Core
+	level zapcore.Level
+}
+
+// 重写Check方法，使用自定义级别
+func (c *customLevelCore) Check(ent zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore.CheckedEntry {
+	if c.Enabled(c.level) {
+		ent.Level = c.level
+		return ce.AddCore(ent, c)
+	}
+	return ce
 }

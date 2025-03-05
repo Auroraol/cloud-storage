@@ -7,6 +7,7 @@ import (
 	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
 	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 	userCenterPb "github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -38,10 +39,12 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 	// 获取文件信息
 	fileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
+		zap.S().Error("文件不存在 err:%v", err)
 		return nil, response.NewErrMsg("文件不存在")
 	}
 
 	if fileInfo.UserId != uint64(userId) {
+		zap.S().Error("无权操作此文件")
 		return nil, response.NewErrMsg("无权操作此文件")
 	}
 
@@ -49,6 +52,7 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 	if fileInfo.RepositoryId == 0 {
 		err = l.deleteFolderContents(l.ctx, int64(fileInfo.Id), userId)
 		if err != nil {
+			zap.S().Error("删除文件夹内容失败 err:%v", err)
 			return nil, err
 		}
 	} else {
@@ -60,7 +64,7 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 				Size: repositoryInfo.Size,
 			})
 			if err != nil {
-				logx.Errorf("更新用户存储容量失败 err:%v", err)
+				zap.S().Error("更新用户存储容量失败 err:%v", err)
 			}
 		}
 	}
@@ -68,6 +72,7 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 	// 彻底删除文件记录
 	err = l.svcCtx.UserRepositoryModel.Delete(l.ctx, fileInfo.Id)
 	if err != nil {
+		zap.S().Error("删除文件失败 err:%v", err)
 		return nil, response.NewErrMsg("删除文件失败")
 	}
 
@@ -84,6 +89,7 @@ func (l *UserRecycleDeleteLogic) UserRecycleDelete(req *types.UserRecycleDeleteR
 func (l *UserRecycleDeleteLogic) deleteFolderContents(ctx context.Context, parentId int64, userId int64) error {
 	children, err := l.svcCtx.UserRepositoryModel.FindAllDeletedByParentId(ctx, parentId, userId)
 	if err != nil {
+		zap.S().Error("删除文件夹内容失败 err:%v", err)
 		return err
 	}
 
@@ -91,6 +97,7 @@ func (l *UserRecycleDeleteLogic) deleteFolderContents(ctx context.Context, paren
 		if child.RepositoryId == 0 {
 			err = l.deleteFolderContents(ctx, int64(child.Id), userId)
 			if err != nil {
+				zap.S().Error("删除文件夹内容失败 err:%v", err)
 				return err
 			}
 		} else {
@@ -102,13 +109,14 @@ func (l *UserRecycleDeleteLogic) deleteFolderContents(ctx context.Context, paren
 					Size: repositoryInfo.Size,
 				})
 				if err != nil {
-					logx.Errorf("更新用户存储容量失败 err:%v", err)
+					zap.S().Error("更新用户存储容量失败 err:%v", err)
 				}
 			}
 		}
 
 		err = l.svcCtx.UserRepositoryModel.Delete(ctx, child.Id)
 		if err != nil {
+			zap.S().Error("删除文件失败 err:%v", err)
 			return err
 		}
 		l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{

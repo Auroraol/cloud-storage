@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
@@ -27,11 +28,13 @@ func NewUserFileNameUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 func (l *UserFileNameUpdateLogic) UserFileNameUpdate(req *types.UserFileNameUpdateRequest) (resp *types.UserFileNameUpdateResponse, err error) {
 	userFileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
+		zap.S().Error("UserRepositoryModel.FindOne err:%v", err)
 		return nil, err
 	}
 	userFileInfo.Name = req.Name
 	err = l.svcCtx.UserRepositoryModel.Update(l.ctx, userFileInfo)
 	if err != nil {
+		zap.S().Error("UserRepositoryModel.Update err:%v", err)
 		return nil, err
 	}
 	return &types.UserFileNameUpdateResponse{}, nil

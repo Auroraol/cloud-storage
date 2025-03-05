@@ -2,6 +2,7 @@ package recycle
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/time"
@@ -32,6 +33,7 @@ func NewUserRecycleListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 func (l *UserRecycleListLogic) UserRecycleList(req *types.UserRecycleListRequest) (resp *types.UserRecycleListResponse, err error) {
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -48,13 +50,13 @@ func (l *UserRecycleListLogic) UserRecycleList(req *types.UserRecycleListRequest
 	// 获取已删除状态的文件/文件夹
 	deletedFiles, err := l.svcCtx.UserRepositoryModel.FindAllDeletedInPage(l.ctx, req.Id, userId, startIndex, pageSize)
 	if err != nil {
-		logx.Errorf("获取回收站列表失败 err:%v", err)
+		zap.S().Error("获取回收站列表失败 err:%v", err)
 		return nil, response.NewErrMsg("获取回收站列表失败")
 	}
 
 	total, err := l.svcCtx.UserRepositoryModel.CountTotalDeletedByUserId(l.ctx, userId)
 	if err != nil {
-		logx.Errorf("获取回收站文件总数失败 err:%v", err)
+		zap.S().Error("获取回收站文件总数失败 err:%v", err)
 		return nil, response.NewErrMsg("获取回收站文件总数失败")
 	}
 
@@ -66,7 +68,7 @@ func (l *UserRecycleListLogic) UserRecycleList(req *types.UserRecycleListRequest
 			timePart := s[:19]
 			timestamp, err := time.StringTimeToTimestamp(timePart)
 			if err != nil {
-				logx.Error("转化时间戳失败 err:%v", err)
+				zap.S().Error("转化时间戳失败 err:%v", err)
 				continue
 			}
 			fileList = append(fileList, &types.UserRecycleFile{

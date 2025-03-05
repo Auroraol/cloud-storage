@@ -3,6 +3,7 @@ package userservicerpclogic
 import (
 	"context"
 	"github.com/Auroraol/cloud-storage/common/response"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
@@ -28,13 +29,16 @@ func (l *DecreaseVolumeLogic) DecreaseVolume(in *pb.DecreaseVolumeReq) (*pb.Decr
 	// 减少用户容量
 	res, err := l.svcCtx.UserModel.UpdateVolume(l.ctx, in.Id, -in.Size)
 	if err != nil {
+		zap.S().Error("UserModel.UpdateVolume err:%v", err)
 		return nil, err
 	}
 	num, err := res.RowsAffected()
 	if err != nil {
+		zap.S().Error("UserModel.UpdateVolume err:%v", err)
 		return nil, err
 	}
 	if num == 0 {
+		zap.S().Error("删除失败！")
 		return nil, response.NewErrMsg("删除失败！")
 	}
 	return &pb.DecreaseVolumeResp{}, nil

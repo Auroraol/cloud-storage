@@ -1,0 +1,7 @@
+{"level":"REQUESTS","time":"2025-03-05 16:50:07","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-05 17:23:53","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:29:33","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:39:06","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:40:58","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:42:45","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:52:17","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -34,6 +35,7 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 	// 先获取文件信息
 	userFileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
+		zap.S().Error("文件不存在 err:%v", err)
 		return nil, err
 	}
 
@@ -41,11 +43,13 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 	userFileInfo.Status = 1 // 1表示已删除
 	err = l.svcCtx.UserRepositoryModel.Update(l.ctx, userFileInfo)
 	if err != nil {
+		zap.S().Error("更新文件状态失败 err:%v", err)
 		return nil, response.NewErrMsg("更新文件状态失败")
 	}
 
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -59,6 +63,7 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 	if userFileInfo.RepositoryId == 0 {
 		err = l.updateFolderContentsStatus(l.ctx, int64(userFileInfo.Id), userId)
 		if err != nil {
+			zap.S().Error("更新文件夹状态失败 err:%v", err)
 			return nil, err
 		}
 
@@ -80,6 +85,7 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
+		zap.S().Error("中心存储池找不到该数据 err:%v", err)
 		return nil, response.NewErrMsg("中心存储池找不到该数据")
 	}
 
@@ -89,6 +95,7 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 		Size: repositoryInfo.Size,
 	})
 	if err != nil {
+		zap.S().Error("更新容量失败 err:%v", err)
 		return nil, response.NewErrMsg("更新容量失败！")
 	}
 
@@ -109,6 +116,7 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 func (l *UserFileDeleteLogic) updateFolderContentsStatus(ctx context.Context, parentId int64, userId int64) error {
 	children, err := l.svcCtx.UserRepositoryModel.FindAllFolderAndByParentId(ctx, parentId, userId)
 	if err != nil {
+		zap.S().Error("更新文件夹状态失败 err:%v", err)
 		return err
 	}
 
@@ -117,13 +125,14 @@ func (l *UserFileDeleteLogic) updateFolderContentsStatus(ctx context.Context, pa
 		child.Status = 1
 		err = l.svcCtx.UserRepositoryModel.Update(ctx, child)
 		if err != nil {
-			logx.Errorf("更新子项状态失败: %v", err)
+			zap.S().Error("更新子项状态失败: %v", err)
 			return err
 		}
 		if child.RepositoryId == 0 {
 			// 如果是文件夹,递归更新其内容
 			err = l.updateFolderContentsStatus(ctx, int64(child.Id), userId)
 			if err != nil {
+				zap.S().Error("更新子项状态失败: %v", err)
 				return err
 			}
 		} else {
@@ -132,7 +141,7 @@ func (l *UserFileDeleteLogic) updateFolderContentsStatus(ctx context.Context, pa
 			if err != nil {
 				if errors.Is(err, gorm.ErrRecordNotFound) {
 					// 如果文件在中心存储池中找不到，可以选择跳过或记录日志
-					logx.Infof("File with RepositoryId %d not found in center storage pool", child.RepositoryId)
+					zap.S().Error("File with RepositoryId %d not found in center storage pool", child.RepositoryId)
 					continue
 				}
 				return err
@@ -144,6 +153,7 @@ func (l *UserFileDeleteLogic) updateFolderContentsStatus(ctx context.Context, pa
 				Size: repositoryInfo.Size,
 			})
 			if err != nil {
+				zap.S().Error("更新容量失败 err:%v", err)
 				return err
 			}
 		}

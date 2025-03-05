@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/time"
@@ -42,6 +43,7 @@ func (l *UserFileAndFolderListLogic) UserFileAndFolderList(req *types.UserFileAn
 
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -49,7 +51,7 @@ func (l *UserFileAndFolderListLogic) UserFileAndFolderList(req *types.UserFileAn
 	allUserRepository, err := l.svcCtx.UserRepositoryModel.FindAllNormalInPage(l.ctx, req.Id, userId, startIndex, pageSize)
 	total, err := l.svcCtx.UserRepositoryModel.CountTotalNormalByIdAndParentId(l.ctx, userId, req.Id)
 	if err != nil {
-		logx.Infof("获取用户文件列表失败 err:%v", err)
+		zap.S().Error("获取用户文件列表失败 err:%v", err)
 	}
 
 	// 合并文件夹和文件列表
@@ -61,7 +63,7 @@ func (l *UserFileAndFolderListLogic) UserFileAndFolderList(req *types.UserFileAn
 			timePart := s[:19]
 			timestamp, err := time.StringTimeToTimestamp(timePart)
 			if err != nil {
-				logx.Error("转化时间戳失败 err:%v", err)
+				zap.S().Error("转化时间戳失败 err:%v", err)
 				continue
 			}
 			totalList = append(totalList, &types.UserFile{

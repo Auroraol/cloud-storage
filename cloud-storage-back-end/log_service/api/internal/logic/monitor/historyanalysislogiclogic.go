@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
+	"sort"
 	"strings"
 
 	"github.com/Auroraol/cloud-storage/common/time"
@@ -40,11 +42,11 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 	}
 
 	if req.Host == "" {
-		return nil, fmt.Errorf("主机地址不能为空")
+		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "主机地址不能为空")
 	}
 
 	if req.LogFile == "" {
-		return nil, fmt.Errorf("日志文件不能为空")
+		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "日志文件不能为空")
 	}
 
 	// 如果没有指定时间范围，默认为最近24小时
@@ -57,7 +59,7 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 	contents, _, err := l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
 	if err != nil {
 		// 如果读取失败，使用模拟数据
-		l.Logger.Errorf("读取日志文件失败: %v", err)
+		zap.S().Errorf("读取日志文件失败: %v", err)
 		return nil, response.NewErrMsg("读取日志文件失败")
 	}
 
@@ -69,6 +71,7 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 		// 尝试解析JSON格式日志
 		timestamp, level, message, fields, err := parseJSONLog(content)
 		if err != nil {
+			zap.S().Errorf("解析日志内容失败: %v", err)
 			return nil, response.NewErrMsg("解析日志内容失败")
 		}
 
@@ -111,6 +114,11 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 	for _, entry := range timestampToLogEntries {
 		data = append(data, *entry)
 	}
+
+	// 按时间戳排序
+	sort.Slice(data, func(i, j int) bool {
+		return data[i].Timestamp < data[j].Timestamp
+	})
 
 	return &types.HistoryAnalysisRes{
 		Data:     data,

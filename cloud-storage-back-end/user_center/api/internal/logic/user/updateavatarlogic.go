@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Auroraol/cloud-storage/common/store/oss"
+	"go.uber.org/zap"
 	"mime/multipart"
 	"path/filepath"
 
@@ -36,6 +37,7 @@ func (l *UpdateAvatarLogic) UpdateAvatar(req *types.UserAvatarReq, file multipar
 	// 获取用户ID
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
@@ -48,27 +50,27 @@ func (l *UpdateAvatarLogic) UpdateAvatar(req *types.UserAvatarReq, file multipar
 	// 上传文件到存储服务
 	avatarUrl, err := oss.Upload(file, newFilename, contentType)
 	if err != nil {
-		l.Logger.Errorf("上传文件失败: %v", err)
+		zap.S().Error("上传文件失败: %v", err)
 		return nil, response.NewErrCode(response.SYSTEM_ERROR)
 	}
 
 	// 删除旧头像文件
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
 	if err != nil {
-		l.Logger.Errorf("获取用户信息失败: %v", err)
+		zap.S().Error("获取用户信息失败: %v", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取用户信息失败")
 	}
 	if _, err := oss.Delete(user.Avatar.String); err != nil {
-		l.Logger.Errorf("删除旧头像失败: %v", err)
+		zap.S().Error("删除旧头像失败: %v", err)
 	}
 
 	// 更新用户头像
 	_, err = l.svcCtx.UserModel.UpdateAvatar(l.ctx, userId, avatarUrl)
 	if err != nil {
-		l.Logger.Errorf("更新头像失败: %v", err)
+		zap.S().Error("更新头像失败: %v", err)
 		// 删除已上传的新文件
 		if _, err := oss.Delete(avatarUrl); err != nil {
-			l.Logger.Errorf("删除新上传的头像失败: %v", err)
+			zap.S().Error("删除新上传的头像失败: %v", err)
 		}
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "更新头像失败")
 	}

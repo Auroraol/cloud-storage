@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/config"
 	"github.com/Auroraol/cloud-storage/share_service/model"
@@ -9,6 +10,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -24,6 +26,13 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Options.Dsn)
 	client, _ := orm.NewClient(c.Options)
+	c.LogConfig.CustomLevels = map[string]string{
+		"requests": "info", // 自定义业务日志级别，对应info级别
+	}
+	if err := logx.InitLogger(c.LogConfig); err != nil {
+		zap.S().Errorf("日志初始化失败: %v", err)
+		panic(err)
+	}
 	return &ServiceContext{
 		Config:          c,
 		ShareBasicModel: model.NewShareBasicModel(conn, c.CacheRedis),

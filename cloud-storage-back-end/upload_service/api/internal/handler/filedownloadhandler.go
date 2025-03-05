@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/common/response"
@@ -15,6 +16,7 @@ import (
 // 文件下载
 func FileDownloadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.FileDownloadRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)

@@ -496,9 +496,8 @@ const realtimeConfig = reactive<RealtimeMonitorParams>({
 
 // 历史分析配置
 const historyConfig = reactive<FrontHistoryAnalysisParams>({
-  timeRange: [null, null],
-  aggregation: "hour",
-  dataFile: ""
+  dataFile: "",
+  timeRange: [null, null]
 })
 
 // 定时器

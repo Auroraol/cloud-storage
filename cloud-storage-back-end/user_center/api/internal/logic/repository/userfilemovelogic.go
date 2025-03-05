@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -32,18 +33,22 @@ func (l *UserFileMoveLogic) UserFileMove(req *types.UserFileMoveRequest) (resp *
 	//检测该文件是否存在
 	userFileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
+		zap.S().Error("原文件不存在！")
 		return nil, response.NewErrMsg("原文件不存在！")
 	}
 
 	userId := token.GetUidFromCtx(l.ctx)
 	if userId == 0 {
+		zap.S().Error("凭证无效")
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 	count, err := l.svcCtx.UserRepositoryModel.CountByIdAndParentId(l.ctx, req.Id, userId, req.ParentId)
 	if err != nil {
+		zap.S().Error("UserRepositoryModel.CountByIdAndParentId err:%v", err)
 		return nil, err
 	}
 	if count > 0 {
+		zap.S().Error("已存在相同名称的文件！")
 		return nil, response.NewErrMsg("已存在相同名称的文件！")
 	}
 
@@ -57,6 +62,7 @@ func (l *UserFileMoveLogic) UserFileMove(req *types.UserFileMoveRequest) (resp *
 	userFileInfo.ParentId = uint64(req.ParentId)
 	err = l.svcCtx.UserRepositoryModel.Update(l.ctx, userFileInfo)
 	if err != nil {
+		zap.S().Error("UserRepositoryModel.Update err:%v", err)
 		return nil, err
 	}
 

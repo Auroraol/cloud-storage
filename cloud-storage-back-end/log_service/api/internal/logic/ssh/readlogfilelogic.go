@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Auroraol/cloud-storage/common/response"
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
@@ -29,6 +30,7 @@ func NewReadLogFileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReadL
 func (l *ReadLogFileLogic) ReadLogFile(req *types.ReadLogFileReq) (resp *types.ReadLogFileRes, err error) {
 	// 参数校验
 	if req.Host == "" {
+		zap.S().Errorf("主机地址不能为空")
 		return &types.ReadLogFileRes{
 			Contents:   []string{},
 			TotalLines: 0,
@@ -39,6 +41,7 @@ func (l *ReadLogFileLogic) ReadLogFile(req *types.ReadLogFileReq) (resp *types.R
 	}
 
 	if req.Path == "" {
+		zap.S().Errorf("日志路径不能为空")
 		return &types.ReadLogFileRes{
 			Contents:   []string{},
 			TotalLines: 0,
@@ -59,7 +62,7 @@ func (l *ReadLogFileLogic) ReadLogFile(req *types.ReadLogFileReq) (resp *types.R
 	// 读取日志文件
 	contents, totalLines, err := l.svcCtx.SSHService.ReadLogFile(req.Path, req.Match, req.Page, req.PageSize)
 	if err != nil {
-		fmt.Printf("读取日志文件失败: %v", err)
+		zap.S().Errorf("读取日志文件失败: %v", err)
 		return &types.ReadLogFileRes{
 			Contents:   []string{},
 			TotalLines: 0,
