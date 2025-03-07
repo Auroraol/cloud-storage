@@ -1,12 +1,15 @@
 package logx
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/apache/pulsar-client-go/pulsar"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -26,6 +29,11 @@ type LogConfig struct {
 	LogStdout         bool              // 是否输出到控制台
 	SeparateLevel     bool              // 是否将不同级别的日志分开存储到不同文件
 	CustomLevels      map[string]string // 自定义日志级别，key为级别名称，value为对应的zapcore.Level字符串
+	// Pulsar配置
+	EnablePulsar      bool   // 是否启用Pulsar日志输出
+	PulsarURL         string // Pulsar服务地址
+	PulsarTopic       string // Pulsar主题
+	PulsarServiceName string // 服务名称，用于标识日志来源
 }
 
 // 自定义日志级别
@@ -64,6 +72,90 @@ func GetCustomLevelName(level zapcore.Level) string {
 func customLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	levelName := GetCustomLevelName(l)
 	enc.AppendString(strings.ToUpper(levelName))
+}
+
+// PulsarCore 实现zapcore.Core接口，将日志发送到Pulsar
+type PulsarCore struct {
+	zapcore.LevelEnabler
+	encoder     zapcore.Encoder
+	client      pulsar.Client
+	producer    pulsar.Producer
+	serviceName string
+}
+
+// NewPulsarCore 创建一个新的PulsarCore
+func NewPulsarCore(client pulsar.Client, topic string, serviceName string, level zapcore.LevelEnabler, encoder zapcore.Encoder) (*PulsarCore, error) {
+	producer, err := client.CreateProducer(pulsar.ProducerOptions{
+		Topic: topic,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &PulsarCore{
+		LevelEnabler: level,
+		encoder:      encoder,
+		client:       client,
+		producer:     producer,
+		serviceName:  serviceName,
+	}, nil
+}
+
+// With 实现zapcore.Core接口
+func (c *PulsarCore) With(fields []zapcore.Field) zapcore.Core {
+	clone := *c
+	clone.encoder = c.encoder.Clone()
+	for _, field := range fields {
+		field.AddTo(clone.encoder)
+	}
+	return &clone
+}
+
+// Check 实现zapcore.Core接口
+func (c *PulsarCore) Check(ent zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore.CheckedEntry {
+	if c.Enabled(ent.Level) {
+		return ce.AddCore(ent, c)
+	}
+	return ce
+}
+
+// Write 实现zapcore.Core接口
+func (c *PulsarCore) Write(ent zapcore.Entry, fields []zapcore.Field) error {
+	buf, err := c.encoder.EncodeEntry(ent, fields)
+	if err != nil {
+		return err
+	}
+
+	// 添加服务名称标识
+	logData := map[string]interface{}{
+		"service": c.serviceName,
+		"log":     buf.String(),
+		"level":   ent.Level.String(),
+		"time":    ent.Time.Format(time.RFC3339),
+	}
+
+	// 将日志数据序列化为JSON
+	jsonData, err := json.Marshal(logData)
+	if err != nil {
+		return err
+	}
+
+	// 异步发送到Pulsar
+	c.producer.SendAsync(context.Background(), &pulsar.ProducerMessage{
+		Payload: jsonData,
+	}, func(id pulsar.MessageID, message *pulsar.ProducerMessage, err error) {
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to send log to Pulsar: %v\n", err)
+		}
+	})
+
+	return nil
+}
+
+// Sync 实现zapcore.Core接口
+func (c *PulsarCore) Sync() error {
+	c.producer.Flush()
+	return nil
 }
 
 // InitLogger 初始化Logger
@@ -164,6 +256,37 @@ func InitLogger(conf LogConfig) (err error) {
 			core := zapcore.NewCore(encoder, syncer, enabler)
 			cores = append(cores, core)
 		}
+	}
+
+	// 如果启用了Pulsar，创建Pulsar客户端和Core
+	if conf.EnablePulsar && conf.PulsarURL != "" && conf.PulsarTopic != "" {
+		// 创建Pulsar客户端
+		client, err := pulsar.NewClient(pulsar.ClientOptions{
+			URL: conf.PulsarURL,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to create Pulsar client: %v", err)
+		}
+
+		// 获取编码器
+		encoder := getEncoder(conf)
+
+		// 创建PulsarCore
+		pulsarCore, err := NewPulsarCore(
+			client,
+			conf.PulsarTopic,
+			conf.PulsarServiceName,
+			zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+				return lvl >= globalLevel
+			}),
+			encoder,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to create Pulsar core: %v", err)
+		}
+
+		// 添加到cores列表
+		cores = append(cores, pulsarCore)
 	}
 
 	// 添加控制台核心（如果需要）

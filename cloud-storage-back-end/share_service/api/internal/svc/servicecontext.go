@@ -5,7 +5,7 @@ import (
 	"github.com/Auroraol/cloud-storage/common/orm"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/config"
 	"github.com/Auroraol/cloud-storage/share_service/model"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservicerpc"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/client/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -30,7 +30,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		"requests": "info", // 自定义业务日志级别，对应info级别
 	}
 	if err := logx.InitLogger(c.LogConfig); err != nil {
-		zap.S().Errorf("日志初始化失败: %v", err)
+		zap.S().Errorf("日志初始化失败: %s", err)
 		panic(err)
 	}
 	return &ServiceContext{

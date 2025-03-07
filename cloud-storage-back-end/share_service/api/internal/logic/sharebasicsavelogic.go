@@ -6,7 +6,7 @@ import (
 	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/uploadservicerpc"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/client/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
 	"go.uber.org/zap"
 	"strconv"
@@ -32,7 +32,7 @@ func NewShareBasicSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sh
 func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (resp *types.ShareBasicSaveResponse, err error) {
 	nameInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadservicerpc.RepositoryReq{RepositoryId: req.RepositoryId})
 	if err != nil {
-		zap.S().Error("获取资源池信息失败 err:%v", err)
+		zap.S().Error("获取资源池信息失败 err:%s", err)
 		return nil, err
 	}
 	userId := token.GetUidFromCtx(l.ctx)
@@ -48,7 +48,7 @@ func (l *ShareBasicSaveLogic) ShareBasicSave(req *types.ShareBasicSaveRequest) (
 		Name:         nameInfo.Name,
 	})
 	if err != nil {
-		zap.S().Error("创建资源失败 err:%v", err)
+		zap.S().Error("创建资源失败 err:%s", err)
 		return nil, err
 	}
 	return &types.ShareBasicSaveResponse{Id: strconv.FormatInt(idInfo.Id, 10)}, nil

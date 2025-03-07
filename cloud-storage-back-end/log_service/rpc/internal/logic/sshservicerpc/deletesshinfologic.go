@@ -28,7 +28,7 @@ func (l *DeleteSshInfoLogic) DeleteSshInfo(in *pb.DeleteSshInfoReq) (*pb.SshInfo
 	// 根据 ID 删除 SSH 信息
 	err := l.svcCtx.SshInfoModel.Delete(l.ctx, in.SshId)
 	if err != nil {
-		logx.Errorf("删除 SSH 信息失败: %v", err)
+		logx.Errorf("删除 SSH 信息失败: %s", err)
 		return nil, err
 	}
 

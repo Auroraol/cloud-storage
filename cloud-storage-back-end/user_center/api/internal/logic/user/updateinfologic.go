@@ -40,7 +40,7 @@ func (l *UpdateInfoLogic) UpdateInfo(req *types.UpdateInfoReq) (resp *types.Upda
 	// 调用 UserModel 的 UpdateInfo 方法
 	err = l.svcCtx.UserModel.UpdateInfo(l.ctx, userId, req.Nickname, req.Brief, req.Birthday, req.Gender, req.Email, req.Mobile)
 	if err != nil {
-		zap.S().Error("更新用户信息失败, err: %v", err)
+		zap.S().Error("更新用户信息失败, err: %s", err)
 		return nil, errors.New("更新用户信息失败")
 	}
 

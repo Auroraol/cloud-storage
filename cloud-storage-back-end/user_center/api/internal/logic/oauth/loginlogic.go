@@ -31,7 +31,7 @@ func (l *LoginLogic) Login(req *types.AccountLoginReq) (resp *types.AccountLogin
 	md5ByString := utils.Md5ByString(req.Password)
 	userId, err := l.svcCtx.UserModel.FindUserIdByUsernameAndPassword(l.ctx, req.Name, md5ByString)
 	if err != nil || userId == -1 {
-		zap.S().Error("从数据库中查询当前用户 err:%v", err)
+		zap.S().Error("从数据库中查询当前用户 err:%s", err)
 		return nil, response.NewErrCode(response.ACCOUNT_NOT_FOUND)
 	}
 

@@ -39,7 +39,7 @@ func (l *GetSSHConnectLogic) GetSSHConnect(req *types.GetSSHConnectReq) (resp *t
 		UserId: userId,
 	})
 	if err != nil {
-		zap.S().Error("获取ssh信息失败 SshServiceRpc err:%v", err)
+		zap.S().Errorf("获取ssh信息失败 SshServiceRpc err: %s", err)
 		return nil, err
 	}
 	var items []*types.SshInfoDetailResp

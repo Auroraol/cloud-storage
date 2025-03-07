@@ -52,7 +52,7 @@ service log_service {
 	@handler DeleteSSHConnectHandler
 	post /ssh/delete (DeleteSSHConnectReq) returns (DeleteSSHConnectRes)
 
-	@doc "获取SSH连接信息"
+	@doc "获取SSH连接信息列表"
 	@handler GetSSHConnectHandler
 	post /ssh/get (GetSSHConnectReq) returns (SshInfoListResp)
 }

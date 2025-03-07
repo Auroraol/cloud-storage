@@ -52,7 +52,7 @@ func NewUserRepositoryModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.
 
 func (m *defaultUserRepositoryModel) InsertWithId(ctx context.Context, data *UserRepository) (sql.Result, error) {
 	// 构建缓存键
-	userRepositoryIdKey := fmt.Sprintf("%s%v", cacheUserRepositoryIdPrefix, data.Id)
+	userRepositoryIdKey := fmt.Sprintf("%s%s", cacheUserRepositoryIdPrefix, data.Id)
 
 	// 执行插入操作
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {

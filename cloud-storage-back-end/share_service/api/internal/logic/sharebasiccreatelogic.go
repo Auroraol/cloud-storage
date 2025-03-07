@@ -39,7 +39,7 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 	//}
 	one, err := l.svcCtx.ShareBasicModel.FindOneByIdentity(l.ctx, uint64(req.RepositoryId))
 	if err != nil && !errors.Is(err, model.ErrNotFound) {
-		zap.S().Errorf("failed to find share basic by identity: %v", err)
+		zap.S().Errorf("failed to find share basic by identity: %s", err)
 		return nil, err
 	}
 	if one != nil {
@@ -50,7 +50,7 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 	}
 	node, err := snowflake.NewNode(1)
 	if err != nil {
-		zap.S().Errorf("failed to create snowflake node: %v", err)
+		zap.S().Errorf("failed to create snowflake node: %s", err)
 		return nil, err
 	}
 	newId := node.Generate().Int64()
@@ -68,7 +68,7 @@ func (l *ShareBasicCreateLogic) ShareBasicCreate(req *types.ShareBasicCreateRequ
 		Code:             req.Code,
 	})
 	if err != nil {
-		zap.S().Errorf("failed to insert share basic: %v", err)
+		zap.S().Errorf("failed to insert share basic: %s", err)
 		return nil, err
 	}
 	return &types.ShareBasicCreateResponse{Id: strconv.FormatInt(newId, 10)}, nil

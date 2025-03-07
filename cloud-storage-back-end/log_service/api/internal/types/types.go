@@ -68,6 +68,7 @@ type MonitorData struct {
 	Timestamp int64  `json:"timestamp"` // 时间戳
 	Value     int    `json:"value"`     // 数量
 	Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
+	Caller    string `json:"caller"`
 }
 
 type OperationLog struct {

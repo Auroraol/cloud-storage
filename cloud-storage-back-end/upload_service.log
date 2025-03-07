@@ -5,3 +5,9 @@
 {"level":"ERROR","time":"2025-03-05 17:40:58","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-05 17:42:45","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-05 17:52:17","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-06 10:41:15","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:42:15","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:50:44","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:52:40","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-06 16:17:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 16:34:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}

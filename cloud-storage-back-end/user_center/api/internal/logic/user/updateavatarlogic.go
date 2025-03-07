@@ -50,7 +50,7 @@ func (l *UpdateAvatarLogic) UpdateAvatar(req *types.UserAvatarReq, file multipar
 	// 上传文件到存储服务
 	avatarUrl, err := oss.Upload(file, newFilename, contentType)
 	if err != nil {
-		zap.S().Error("上传文件失败: %v", err)
+		zap.S().Error("上传文件失败: %s", err)
 		return nil, response.NewErrCode(response.SYSTEM_ERROR)
 	}
 

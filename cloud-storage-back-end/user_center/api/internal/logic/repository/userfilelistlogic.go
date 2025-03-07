@@ -43,7 +43,7 @@ func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest) (resp *
 	for _, userRepository := range allUserRepository {
 		repositoryInfo, err := l.svcCtx.UploadServiceRpc.GetRepositoryPoolByRepositoryId(l.ctx, &uploadServicePb.RepositoryReq{RepositoryId: int64(userRepository.RepositoryId)})
 		if err != nil {
-			zap.S().Error("获取文件信息失败 err:%v", err)
+			zap.S().Error("获取文件信息失败 err:%s", err)
 			continue
 			//return nil, err
 		}

@@ -22,7 +22,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		"audit":    "warn", // 自定义审计日志级别，对应warn级别
 	}
 	if err := logx.InitLogger(c.Log); err != nil {
-		zap.S().Errorf("日志初始化失败: %v", err)
+		zap.S().Errorf("日志初始化失败: %s", err)
 		panic(err)
 	}
 

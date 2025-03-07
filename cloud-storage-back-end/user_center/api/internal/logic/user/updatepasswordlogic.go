@@ -40,7 +40,7 @@ func (l *UpdatePasswordLogic) UpdatePassword(req *types.UserPasswordReq) (resp *
 	// 获取用户信息
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
 	if err != nil {
-		zap.S().Error("获取用户信息失败: %v", err)
+		zap.S().Error("获取用户信息失败: %s", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "获取用户信息失败")
 	}
 

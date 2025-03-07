@@ -36,12 +36,12 @@ func (l *SaveSshInfoLogic) SaveSshInfo(in *pb.SshInfoReq) (*pb.SshInfoResp, erro
 		Password: in.Password,
 	})
 	if err != nil {
-		zap.S().Errorf("保存ssh信息失败: %v", err)
+		zap.S().Errorf("保存ssh信息失败: %s", err)
 		return nil, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
-		zap.S().Errorf("获取ssh信息ID失败: %v", err)
+		zap.S().Errorf("获取ssh信息ID失败: %s", err)
 		return nil, err
 	}
 

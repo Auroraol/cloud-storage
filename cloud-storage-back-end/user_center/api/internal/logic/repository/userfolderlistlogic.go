@@ -53,7 +53,7 @@ func (l *UserFolderListLogic) UserFolderList(req *types.UserFolderListRequest) (
 		timePart := s[:19]
 		timestamp, err := time.StringTimeToTimestamp(timePart)
 		if err != nil {
-			zap.S().Error("转化时间戳失败 err:%v", err)
+			zap.S().Error("转化时间戳失败 err:%s", err)
 			return nil, err
 		}
 		newList = append(newList, &types.UserFolder{

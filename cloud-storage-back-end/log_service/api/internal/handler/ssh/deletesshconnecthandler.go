@@ -1,6 +1,9 @@
 package ssh
 
 import (
+	"github.com/Auroraol/cloud-storage/common/logx"
+	"github.com/Auroraol/cloud-storage/common/response"
+	"go.uber.org/zap"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/log_service/api/internal/logic/ssh"
@@ -12,18 +15,16 @@ import (
 // 删除SSH连接信息
 func DeleteSSHConnectHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logx.LogWithCustomLevel("requests", r.Host+" ["+r.RequestURI+"]")
 		var req types.DeleteSSHConnectReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			zap.S().Errorf("parse param error: %v", err)
+			response.ParamErrorResult(r, w, err)
 			return
 		}
 
 		l := ssh.NewDeleteSSHConnectLogic(r.Context(), svcCtx)
 		resp, err := l.DeleteSSHConnect(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		response.HttpResult(r, w, resp, err)
 	}
 }

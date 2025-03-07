@@ -34,7 +34,7 @@ func (l *RefreshAuthorizationLogic) RefreshAuthorization(req *types.RefreshAuthR
 		return []byte(l.svcCtx.Config.JwtAuth.AccessSecret), nil
 	})
 	if err != nil {
-		zap.S().Error("jwt.ParseWithClaims err:%v", err)
+		zap.S().Error("jwt.ParseWithClaims err:%s", err)
 		return nil, err
 	}
 	//判断是否token有效

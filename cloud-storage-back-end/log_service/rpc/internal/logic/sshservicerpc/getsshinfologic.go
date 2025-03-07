@@ -2,6 +2,8 @@ package sshservicerpclogic
 
 import (
 	"context"
+	"go.uber.org/zap"
+	"strconv"
 
 	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
@@ -24,11 +26,11 @@ func NewGetSshInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetSsh
 }
 
 // 查询ssh信息
-func (l *GetSshInfoLogic) GetSshInfo(in *pb.ListSshInfosReq) (*pb.SshInfoListResp, error) {
+func (l *GetSshInfoLogic) GetSshInfo(in *pb.GetSshInfosReq) (*pb.SshInfoListResp, error) {
 	// 查询 SSH 信息列表
-	sshInfos, err := l.svcCtx.SshInfoModel.FindAll(l.ctx)
+	sshInfos, err := l.svcCtx.SshInfoModel.FindAll(l.ctx, strconv.FormatInt(in.UserId, 10))
 	if err != nil {
-		logx.Errorf("查询 SSH 信息失败: %v", err)
+		zap.S().Errorf("查询 SSH 信息列表失败: %s", err)
 		return nil, err
 	}
 

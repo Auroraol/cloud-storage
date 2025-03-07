@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -13,7 +14,7 @@ type (
 	// and implement the added methods in customSshInfoModel.
 	SshInfoModel interface {
 		sshInfoModel
-		FindAll(ctx context.Context) ([]*SshInfo, error) // 新增 FindAll 方法
+		FindAll(ctx context.Context, userId string) ([]*SshInfo, error) // 新增 FindAll 方法
 	}
 
 	customSshInfoModel struct {
@@ -28,12 +29,15 @@ func NewSshInfoModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option)
 	}
 }
 
-func (m *defaultSshInfoModel) FindAll(ctx context.Context) ([]*SshInfo, error) {
-	query := "select id, user_id, host, port, username, password, created_at, updated_at from " + m.table
+// 查询所有
+func (m *defaultSshInfoModel) FindAll(ctx context.Context, userId string) ([]*SshInfo, error) {
+	query := "SELECT * FROM " + m.table + " WHERE user_id = ?" // 使用参数化占位符
 	var resp []*SshInfo
-	err := m.QueryRowNoCacheCtx(ctx, &resp, query)
+
+	// 使用 QueryRows 处理多行结果
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId) // 注意方法名改为 QueryRows...
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("FindAll failed: %w", err) // 增强错误信息
 	}
 	return resp, nil
 }

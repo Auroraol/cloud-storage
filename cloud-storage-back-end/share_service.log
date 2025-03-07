@@ -10,3 +10,40 @@
 {"level":"REQUESTS","time":"2025-03-05 17:44:12","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=3&page_size=5]"}
 {"level":"REQUESTS","time":"2025-03-05 17:44:12","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=4&page_size=5]"}
 {"level":"REQUESTS","time":"2025-03-05 17:51:23","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-06 10:13:06","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:16:50","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:19:20","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:19:35","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:21:38","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:31:09","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:41:29","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:43:32","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-06 10:47:17","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:48:06","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:49:09","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:49:20","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:49:36","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:50:19","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:50:22","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:51:07","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-06 10:52:13","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:52:53","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"ERROR","time":"2025-03-06 10:54:14","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:54:33","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 10:54:45","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:54:57","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 10:55:07","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:56:48","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:57:05","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-06 11:04:59","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 11:13:54","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 11:19:35","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 11:24:07","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-03-06 11:29:49","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-06 16:21:50","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-03-06 16:23:28","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 16:23:30","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 16:32:02","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 16:39:31","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"REQUESTS","time":"2025-03-06 16:49:04","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-03-06 16:50:33","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}

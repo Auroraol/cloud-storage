@@ -5,12 +5,57 @@ import type {
   RealTimeMonitorReq,
   HistoryAnalysisReq,
   LogEntry,
-  SSHConnectRequestData
+  SSHConnectRequestData,
+  DeleteSSHConnectReq
 } from "./types/log"
 import { useUserStoreHook } from "@/store/modules/user"
 
 // 存储SSH连接状态
 let sshConnected = false
+
+// 获取SSH连接列表
+export const getSSHConnectionsApi = async () => {
+  try {
+    const response = await logApi.getSSHConnect()
+    const userStore = useUserStoreHook()
+
+    if (response.data.items && response.data.items.length > 0) {
+      // 清空现有连接信息
+      userStore.clearSSHConnections()
+
+      // 将接口返回的连接信息转换为store中的格式
+      const connections = response.data.items.map((item) => ({
+        host: item.host,
+        port: item.port,
+        user: item.user,
+        password: item.password
+      }))
+
+      // 设置连接信息到store
+      userStore.setSSHConnections(connections)
+    }
+
+    return response.data.items || []
+  } catch (error) {
+    console.error("获取SSH连接列表失败:", error)
+    return []
+  }
+}
+
+// 删除SSH连接
+export const deleteSSHConnectionApi = async (sshId: number) => {
+  try {
+    const data: DeleteSSHConnectReq = {
+      ssh_id: sshId
+    }
+
+    const response = await logApi.deleteSSHConnect(data)
+    return response.data
+  } catch (error) {
+    console.error("删除SSH连接失败:", error)
+    throw error
+  }
+}
 
 // SSH连接
 export const connectSSHApi = async (host: string, port: number = 22, user: string = "root", password: string = "") => {

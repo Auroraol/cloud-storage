@@ -35,7 +35,13 @@
             style="width: 200px"
             @change="handleHostChange"
           >
-            <el-option v-for="host in hosts" :key="host" :label="host" :value="host" />
+            <el-option
+              v-for="host in hosts"
+              :key="host"
+              :label="host"
+              :value="host"
+              @dblclick="handleHostDblClick(host)"
+            />
           </el-select>
           <el-button type="primary" icon="Plus" circle size="small" @click="showSSHDialog" style="margin-left: 10px" />
         </el-form-item>
@@ -216,7 +222,14 @@
 import { ref, reactive, onMounted, onUnmounted, watch, computed } from "vue"
 import { ElMessage } from "element-plus"
 import type { FormInstance } from "element-plus"
-import { readLogApi, downloadLogApi, getHostsApi, getLogFilesApi, connectSSHApi } from "@/api/log/frontend"
+import {
+  readLogApi,
+  downloadLogApi,
+  getHostsApi,
+  getLogFilesApi,
+  connectSSHApi,
+  getSSHConnectionsApi
+} from "@/api/log/frontend"
 import type { LogQueryParams, LogLine, LogStats } from "@/api/log/types/frontend"
 import { useUserStoreHook } from "@/store/modules/user"
 import { Document, Search, DocumentCopy, Refresh, Download } from "@element-plus/icons-vue"
@@ -265,6 +278,32 @@ const handleSSHConnect = async () => {
     ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
     sshConnecting.value = false
+  }
+}
+
+// 处理主机双击事件
+const handleHostDblClick = async (host: string) => {
+  if (!host) return
+
+  try {
+    // 获取保存的连接信息
+    const savedConnection = userStore.getSSHConnection(host)
+
+    if (savedConnection) {
+      // 使用保存的连接信息连接
+      await connectSSHApi(savedConnection.host, savedConnection.port, savedConnection.user, savedConnection.password)
+      ElMessage.success("SSH连接成功")
+
+      // 设置为当前选中的主机
+      queryParams.host = host
+
+      // 获取该主机的日志文件列表
+      await handleHostChange(host)
+    } else {
+      ElMessage.warning("未找到该主机的连接信息")
+    }
+  } catch (error) {
+    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
 
@@ -334,7 +373,11 @@ const resetQuery = (formEl: FormInstance | undefined) => {
 // 刷新主机列表
 const refreshHosts = async () => {
   try {
-    hosts.value = await getHostsApi()
+    // 获取主机列表
+    const hostList = await getHostsApi()
+
+    // 去重处理
+    hosts.value = [...new Set(hostList)]
   } catch (error) {
     console.error("获取主机列表失败:", error)
   }
@@ -490,6 +533,12 @@ watch(refreshRate, () => {
 
 // 初始化数据
 const initData = async () => {
+  // 只有在userStore中没有SSH连接信息时才从接口获取
+  if (!userStore.sshConnections || userStore.sshConnections.length === 0) {
+    await getSSHConnectionsApi()
+  }
+
+  // 刷新主机列表
   await refreshHosts()
 
   // 如果有当前SSH主机，则自动选择

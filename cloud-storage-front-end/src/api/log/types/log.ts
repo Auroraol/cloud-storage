@@ -93,3 +93,37 @@ export type ReadLogFileRes = ApiResponseData<{
   page_size: number // 每页大小
   success: boolean // 是否成功
 }>
+
+// 删除SSH连接信息请求
+export interface DeleteSSHConnectReq {
+  ssh_id: number // SSH记录ID
+}
+
+// 删除SSH连接信息响应
+export type DeleteSSHConnectRes = ApiResponseData<{
+  success: boolean // 是否成功
+  message: string // 消息
+  ssh_id: number // SSH记录ID
+}>
+
+// SSH连接详细信息
+export interface SshInfoDetailResp {
+  user_id: number // 关联用户ID
+  ssh_id: number // SSH记录ID
+  host: string // 主机地址
+  port: number // 端口号
+  user: string // 用户名
+  password: string // 密码
+}
+
+// SSH连接列表响应
+export type SshInfoListResp = ApiResponseData<{
+  items: SshInfoDetailResp[] // SSH记录列表
+}>
+
+// 通用API响应数据类型
+interface ApiResponseData<T> {
+  code: number
+  data: T
+  msg: string
+}

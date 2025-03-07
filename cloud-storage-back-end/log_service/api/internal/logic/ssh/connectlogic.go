@@ -49,10 +49,10 @@ func (l *ConnectLogic) Connect(req *types.SSHConnectReq) (resp *types.SSHConnect
 	// 连接主机
 	err = l.svcCtx.SSHService.Connect(req.Host, strconv.Itoa(req.Port), req.User, req.Password, req.PrivateKeyPath)
 	if err != nil {
-		zap.S().Errorf("连接主机失败 err: %v", err)
+		zap.S().Errorf("连接主机失败 err: %s", err)
 		return &types.SSHConnectRes{
 			Success: false,
-			Message: fmt.Sprintf("连接失败: %v", err),
+			Message: fmt.Sprintf("连接失败: %s", err),
 		}, nil
 	}
 
@@ -71,7 +71,7 @@ func (l *ConnectLogic) Connect(req *types.SSHConnectReq) (resp *types.SSHConnect
 		Password: req.Password,
 	})
 	if err != nil || res.Success == false {
-		zap.S().Error("保存ssh信息失败 SshServiceRpc err:%v", err)
+		zap.S().Error("保存ssh信息失败 SshServiceRpc err: ", err)
 		return nil, err
 	}
 

@@ -37,11 +37,11 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, 
 	}
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
 	if err != nil {
-		zap.S().Error("UserModel.FindOne err:%v", err)
+		zap.S().Error("UserModel.FindOne err:%s", err)
 		return nil, err
 	}
 	if user == nil {
-		zap.S().Error("UserModel.FindOne err:%v", err)
+		zap.S().Error("UserModel.FindOne err:%s", err)
 		return nil, errors.Wrapf(response.NewErrCode(response.ACCOUNT_NOT_FOUND), "id:%d", userId)
 	}
 	resp = &types.UserInfoResp{}

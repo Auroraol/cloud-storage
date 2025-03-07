@@ -60,7 +60,7 @@ func (l *UserFolderCreateLogic) UserFolderCreate(req *types.UserFolderCreateRequ
 		Name:     req.Name,
 	})
 	if err != nil {
-		zap.S().Error("UserRepositoryModel.Insert err:%v", err)
+		zap.S().Error("UserRepositoryModel.Insert err:%s", err)
 		return nil, err
 	}
 	return &types.UserFolderCreateResponse{Id: newId}, nil

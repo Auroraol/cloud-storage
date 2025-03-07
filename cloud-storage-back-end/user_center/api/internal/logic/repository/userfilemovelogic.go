@@ -44,7 +44,7 @@ func (l *UserFileMoveLogic) UserFileMove(req *types.UserFileMoveRequest) (resp *
 	}
 	count, err := l.svcCtx.UserRepositoryModel.CountByIdAndParentId(l.ctx, req.Id, userId, req.ParentId)
 	if err != nil {
-		zap.S().Error("UserRepositoryModel.CountByIdAndParentId err:%v", err)
+		zap.S().Error("UserRepositoryModel.CountByIdAndParentId err:%s", err)
 		return nil, err
 	}
 	if count > 0 {

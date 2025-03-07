@@ -20,7 +20,8 @@ func Client() *oss.Client {
 	var err error
 	ossCli, err = oss.New(config.Endpoint, config.AccessKeyId, config.AccessKeySecret)
 	if err != nil {
-		log.Printf("创建OSS客户端失败: %v\n", err)
+		zap.S().Errorf("创建OSS客户端失败 err: %s", err)
+
 		return nil
 	}
 	return ossCli
@@ -32,7 +33,7 @@ func Bucket() *oss.Bucket {
 	if cli != nil {
 		bucket, err := cli.Bucket(config.BucketName)
 		if err != nil {
-			fmt.Printf("获取Bucket失败: %v\n", err)
+			zap.S().Errorf("获取Bucket失败 err: %s", err)
 			return nil
 		}
 		return bucket
@@ -50,7 +51,7 @@ func DownloadURL(objName string) string {
 	}
 	signedURL, err := bucket.SignURL(objName, oss.HTTPGet, 3600)
 	if err != nil {
-		fmt.Printf("生成下载URL失败: %v\n", err)
+		zap.S().Errorf("生成下载URL失败 err: %s", err)
 		return ""
 	}
 	return signedURL

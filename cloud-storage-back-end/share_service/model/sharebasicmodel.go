@@ -36,7 +36,7 @@ func NewShareBasicModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Opti
 }
 
 func (m *defaultShareBasicModel) InsertWithId(ctx context.Context, data *ShareBasic) (sql.Result, error) {
-	shareBasicIdKey := fmt.Sprintf("%s%v", cacheShareBasicIdPrefix, data.Id)
+	shareBasicIdKey := fmt.Sprintf("%s%s", cacheShareBasicIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (id, user_id, repository_id, user_repository_id, expired_time, click_num, code) values (?, ?, ?, ?, ?, ?, ?)", m.table)
 		return conn.ExecCtx(ctx, query, data.Id, data.UserId, data.RepositoryId, data.UserRepositoryId, data.ExpiredTime, data.ClickNum, data.Code)
@@ -46,7 +46,7 @@ func (m *defaultShareBasicModel) InsertWithId(ctx context.Context, data *ShareBa
 }
 
 func (m *defaultShareBasicModel) AddOneClick(ctx context.Context, id int64) error {
-	shareBasicIdKey := fmt.Sprintf("%s%v", cacheShareBasicIdPrefix, id)
+	shareBasicIdKey := fmt.Sprintf("%s%s", cacheShareBasicIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set click_num = click_num + 1 where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)

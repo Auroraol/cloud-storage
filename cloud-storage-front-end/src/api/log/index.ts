@@ -18,6 +18,30 @@ export const logApi = {
     )
   },
 
+  // 获取SSH连接信息列表
+  getSSHConnect() {
+    return request<log.SshInfoListResp>(
+      `${prefix}/log_service/v1/ssh/get`,
+      {
+        method: RequestEnum.POST,
+        data: {}
+      },
+      true
+    )
+  },
+
+  // 删除SSH连接信息
+  deleteSSHConnect(data: log.DeleteSSHConnectReq) {
+    return request<log.DeleteSSHConnectRes>(
+      `${prefix}/log_service/v1/ssh/delete`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
   // 获取日志文件列表
   getLogFiles(data: log.GetLogFilesReq) {
     return request<log.GetLogFilesRes>(

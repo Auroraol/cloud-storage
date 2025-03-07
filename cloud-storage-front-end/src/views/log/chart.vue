@@ -187,7 +187,8 @@ import {
   getHistoryMetricsApi,
   connectSSHApi,
   getHostsApi,
-  getLogFilesApi
+  getLogFilesApi,
+  getSSHConnectionsApi
 } from "@/api/log/frontend"
 import type { RealtimeMonitorParams, FrontHistoryAnalysisParams, ChartMetric } from "@/api/log/types/frontend"
 import { useUserStoreHook } from "@/store/modules/user"
@@ -533,6 +534,11 @@ onUnmounted(() => {
 
 // 初始化数据
 const initData = async () => {
+  // 只有在userStore中没有SSH连接信息时才从接口获取
+  if (!userStore.sshConnections || userStore.sshConnections.length === 0) {
+    await getSSHConnectionsApi()
+  }
+
   await refreshHosts()
 
   // 如果有当前SSH主机，则自动选择

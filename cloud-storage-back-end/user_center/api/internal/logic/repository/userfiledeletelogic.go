@@ -35,7 +35,7 @@ func (l *UserFileDeleteLogic) UserFileDelete(req *types.UserFileDeleteRequest) (
 	// 先获取文件信息
 	userFileInfo, err := l.svcCtx.UserRepositoryModel.FindOne(l.ctx, uint64(req.Id))
 	if err != nil {
-		zap.S().Error("文件不存在 err:%v", err)
+		zap.S().Error("文件不存在 err:%s", err)
 		return nil, err
 	}
 

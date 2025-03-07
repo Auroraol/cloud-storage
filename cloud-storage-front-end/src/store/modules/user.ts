@@ -140,6 +140,16 @@ export const useUserStore = defineStore("user", () => {
     return sshConnections.value.map((conn) => conn.host)
   }
 
+  /** 清空SSH连接列表 */
+  const clearSSHConnections = () => {
+    sshConnections.value = []
+  }
+
+  /** 设置SSH连接列表 */
+  const setSSHConnections = (connections: SSHConnectionInfo[]) => {
+    sshConnections.value = connections
+  }
+
   return {
     token,
     roles,
@@ -157,7 +167,9 @@ export const useUserStore = defineStore("user", () => {
     addOrUpdateSSHConnection,
     getSSHConnection,
     setCurrentSSHHost,
-    getSSHHosts
+    getSSHHosts,
+    clearSSHConnections,
+    setSSHConnections
   }
 })
 

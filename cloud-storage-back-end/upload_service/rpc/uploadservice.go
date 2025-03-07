@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/config"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/server"
+	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/server/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
 

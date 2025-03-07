@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"go.uber.org/zap"
-
 	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/config"
 	auditservicerpcServer "github.com/Auroraol/cloud-storage/log_service/rpc/internal/server/auditservicerpc"
+	sshservicerpcServer "github.com/Auroraol/cloud-storage/log_service/rpc/internal/server/sshservicerpc"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
+	"go.uber.org/zap"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -27,6 +27,7 @@ func main() {
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		pb.RegisterAuditServiceRpcServer(grpcServer, auditservicerpcServer.NewAuditServiceRpcServer(ctx))
+		pb.RegisterSshServiceRpcServer(grpcServer, sshservicerpcServer.NewSshServiceRpcServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
@@ -34,6 +35,6 @@ func main() {
 	})
 	defer s.Stop()
 
-	zap.S().Infof("Starting server at %s...", c.ListenOn)
+	zap.S().Infof("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
 }

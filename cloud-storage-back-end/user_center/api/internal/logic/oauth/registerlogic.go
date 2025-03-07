@@ -38,7 +38,7 @@ func (l *RegisterLogic) Register(req *types.AccountRegisterReq) (resp *types.Acc
 	}
 	user, err := l.svcCtx.UserModel.FindOneByUsername(l.ctx, userName)
 	if err != nil && !errors.Is(err, model.ErrNotFound) {
-		zap.S().Error("用户存在 err:%v", err)
+		zap.S().Error("用户存在 err:%s", err)
 		return nil, errors.Wrapf(response.NewErrCode(response.DB_ERROR), "Register user exists name:%s,err:%v", req.Name, err)
 	}
 	if user != nil {
@@ -63,7 +63,7 @@ func (l *RegisterLogic) Register(req *types.AccountRegisterReq) (resp *types.Acc
 	user.TotalVolume = 1073741824 // 用户初始大小1G
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, user)
 	if err != nil {
-		zap.S().Error("用户注册失败 err:%v", err)
+		zap.S().Error("用户注册失败 err:%s", err)
 		return nil, errors.Wrapf(response.NewErrCode(response.DB_ERROR), "Register db user Insert err:%v,user:%+v", err, user)
 	}
 	return &types.AccountRegisterResp{}, nil

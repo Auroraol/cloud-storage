@@ -56,7 +56,7 @@ func (l *CompleteMultipartUploadLogic) CompleteMultipartUpload(req *types.ChunkU
 
 	result, err := bucket.CompleteMultipartUpload(imur, parts)
 	if err != nil {
-		zap.S().Error("完成分片上传失败 err:%v", err)
+		zap.S().Error("完成分片上传失败 err:%s", err)
 		return nil, response.NewErrCodeMsg(response.SYSTEM_ERROR, "完成分片上传失败")
 	}
 
