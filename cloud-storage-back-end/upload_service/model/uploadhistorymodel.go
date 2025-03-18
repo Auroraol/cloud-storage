@@ -4,12 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
+
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"strings"
 )
 
 var _ UploadHistoryModel = (*customUploadHistoryModel)(nil)
@@ -83,13 +84,36 @@ func (m *defaultUploadHistoryModel) FindAllInPage(ctx context.Context, userId in
 //}
 
 func (m *defaultUploadHistoryModel) UpdateHistory(ctx context.Context, data *UploadHistory) (sql.Result, error) {
+	// 先检查是否存在相同的repository_id记录
+	if data.RepositoryId > 0 {
+		existing, err := m.FindOneByRepositoryId(ctx, data.RepositoryId)
+		if err == nil {
+			// 记录存在，执行更新操作
+			uploadHistoryIdKey := fmt.Sprintf("%s%v", cacheUploadHistoryIdPrefix, existing.Id)
+			uploadHistoryRepositoryIdKey := fmt.Sprintf("%s%v", cacheUploadHistoryRepositoryIdPrefix, existing.RepositoryId)
+			return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+				query := fmt.Sprintf("update %s set file_name = ?, size = ?, status = ?, user_id = ? where id = ?", m.table)
+				return conn.ExecCtx(ctx, query, data.FileName, data.Size, data.Status, data.UserId, existing.Id)
+			}, uploadHistoryIdKey, uploadHistoryRepositoryIdKey)
+		} else if err != ErrNotFound {
+			// 发生了除"记录不存在"之外的错误
+			return nil, err
+		}
+	}
+
+	// 记录不存在或repository_id为0，执行插入操作
 	uploadHistoryIdKey := fmt.Sprintf("%s%v", cacheUploadHistoryIdPrefix, data.Id)
+
+	// 如果repository_id为0，则将其设置为与id相同的值，避免唯一索引冲突
+	if data.RepositoryId == 0 {
+		data.RepositoryId = data.Id
+	}
+
 	uploadHistoryRepositoryIdKey := fmt.Sprintf("%s%v", cacheUploadHistoryRepositoryIdPrefix, data.RepositoryId)
-	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, "id, user_id, file_name, size, repository_id, status")
 		return conn.ExecCtx(ctx, query, data.Id, data.UserId, data.FileName, data.Size, data.RepositoryId, data.Status)
 	}, uploadHistoryIdKey, uploadHistoryRepositoryIdKey)
-	return ret, err
 }
 
 // 计算目录下文件数量

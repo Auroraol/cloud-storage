@@ -10,8 +10,9 @@ type ChunkUploadCompleteRequest struct {
 }
 
 type ChunkUploadCompleteResponse struct {
-	URL  string `json:"url"`  // 文件访问URL
-	Size int64  `json:"size"` // 文件大小（字节）
+	URL          string `json:"url"`           // 文件访问URL
+	Size         int64  `json:"size"`          // 文件大小（字节）
+	RepositoryId int64  `json:"repository_id"` // repository表设置的主建id
 }
 
 type ChunkUploadInitRequest struct {
@@ -98,14 +99,4 @@ type UpdateHistoryRequest struct {
 
 type UpdateHistoryResponse struct {
 	Id string `json:"id"` // 文件上传历史记录ID
-}
-
-// 文件下载请求
-type FileDownloadRequest struct {
-	RepositoryId int64 `form:"repository_id"`
-}
-
-// 文件下载响应
-type FileDownloadResponse struct {
-	URL string `json:"url"`
 }

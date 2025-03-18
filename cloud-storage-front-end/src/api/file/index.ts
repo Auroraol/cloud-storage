@@ -39,7 +39,7 @@ export const uploadFileApi = {
       `${prefix}/upload_service/v1/file/multipart/init`,
       {
         method: RequestEnum.POST,
-        data
+        params: data
       },
       true
     )

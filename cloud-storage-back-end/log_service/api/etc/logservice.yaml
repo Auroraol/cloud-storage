@@ -44,3 +44,9 @@ SshServiceRpcConf:
     Hosts:
       - 127.0.0.1:2379
     Key: log_service.rpc
+
+# Pulsar配置
+Pulsar:
+  Enabled: true              # 是否启用Pulsar
+  URL: "pulsar://101.37.165.220:6650" # Pulsar服务地址
+  ServiceName: "log-service"  # 服务名称

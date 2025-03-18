@@ -2,8 +2,8 @@ package oss
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"io"
-	"log"
 	"strings"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"

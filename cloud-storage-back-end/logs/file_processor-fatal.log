@@ -1,0 +1,4 @@
+{"level":"FATAL","time":"2025-03-15 22:24:36","caller":"file_processor/main.go:68","msg":"启动文件上传消息消费者失败: 创建消费者失败: connection error"}
+{"level":"FATAL","time":"2025-03-15 22:27:36","caller":"file_processor/main.go:69","msg":"启动文件上传消息消费者失败: 创建消费者失败: connection error"}
+{"level":"FATAL","time":"2025-03-15 22:31:33","caller":"file_processor/main.go:69","msg":"启动文件上传消息消费者失败: 创建消费者失败: connection error"}
+{"level":"FATAL","time":"2025-03-15 22:32:36","caller":"file_processor/main.go:69","msg":"启动文件上传消息消费者失败: 创建消费者失败: connection error"}

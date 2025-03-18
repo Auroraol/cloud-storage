@@ -512,6 +512,7 @@ const handleFileUpload = async (options: UploadRequestOptions) => {
 
     // 根据文件大小选择上传方式
     if (file.size > 1 * 1024 * 1024) {
+      console.log("文件大于20M")
       await handleChunkUpload(file)
     } else {
       await handleNormalUpload(file)
@@ -547,55 +548,64 @@ const handleNormalUpload = async (file: File) => {
 // 处理分片上传
 const handleChunkUpload = async (file: File) => {
   // 初始化分片上传
-  const initResponse = await uploadFileApi.initiateMultipart({
-    file_name: file.name,
-    file_size: file.size,
-    metadata: JSON.stringify({ type: file.type })
-  })
+  try {
+    const initResponse = await uploadFileApi.initiateMultipart({
+      file_name: file.name,
+      file_size: file.size,
+      metadata: JSON.stringify({ type: file.type })
+    })
 
-  const { upload_id, key } = initResponse.data
-  uploadId.value = upload_id
+    const { upload_id, key } = initResponse.data
+    uploadId.value = upload_id
 
-  // 将文件分片
-  const chunkCount = Math.ceil(file.size / CHUNK_SIZE)
-  chunks.value = []
-  uploadedETags.value = new Array(chunkCount)
+    // 将文件分片
+    const chunkCount = Math.ceil(file.size / CHUNK_SIZE)
+    chunks.value = []
+    uploadedETags.value = new Array(chunkCount)
 
-  for (let i = 0; i < chunkCount; i++) {
-    const start = i * CHUNK_SIZE
-    const end = Math.min(start + CHUNK_SIZE, file.size)
-    chunks.value.push(file.slice(start, end))
-  }
+    for (let i = 0; i < chunkCount; i++) {
+      const start = i * CHUNK_SIZE
+      const end = Math.min(start + CHUNK_SIZE, file.size)
+      chunks.value.push(file.slice(start, end))
+    }
 
-  // 上传所有分片
-  for (let i = 0; i < chunks.value.length; i++) {
-    currentChunkIndex.value = i
-    const chunkUploadRequestData: ChunkUploadRequestData = {
+    // 上传所有分片
+    for (let i = 0; i < chunks.value.length; i++) {
+      currentChunkIndex.value = i
+      const chunkUploadRequestData: ChunkUploadRequestData = {
+        upload_id: uploadId.value,
+        chunk_index: i + 1,
+        key: key,
+        file: chunks.value[i]
+      }
+
+      const chunkResponse = await uploadFileApi.uploadPart(chunkUploadRequestData)
+      if (isNotEmpty(chunkResponse.data)) {
+        uploadedETags.value[i] = chunkResponse.data.etag
+      }
+
+      // 更新进度
+      const progress = ((i + 1) / chunks.value.length) * 100
+      uploadProgress.value = Math.round(progress)
+      statusText.value = `正在上传第 ${i + 1}/${chunks.value.length} 个分片`
+    }
+
+    console.log("uploadedETags")
+
+    // 完成分片上传
+    const completeResponse = await uploadFileApi.completeMultipart({
       upload_id: uploadId.value,
-      chunk_index: i + 1,
       key: key,
-      file: chunks.value[i]
-    }
+      etags: uploadedETags.value
+    })
 
-    const chunkResponse = await uploadFileApi.uploadPart(chunkUploadRequestData)
-    if (isNotEmpty(chunkResponse.data)) {
-      uploadedETags.value[i] = chunkResponse.data.etag
-    }
+    console.log("completeResponse")
 
-    // 更新进度
-    const progress = ((i + 1) / chunks.value.length) * 100
-    uploadProgress.value = Math.round(progress)
-    statusText.value = `正在上传第 ${i + 1}/${chunks.value.length} 个分片`
+    handleUploadSuccess(completeResponse.data, file)
+  } catch (error) {
+    console.error(error)
+    handleUploadError(error, file)
   }
-
-  // 完成分片上传
-  const completeResponse = await uploadFileApi.completeMultipart({
-    upload_id: uploadId.value,
-    key: key,
-    etags: uploadedETags.value
-  })
-
-  handleUploadSuccess(completeResponse.data, file)
 }
 
 // 修改处理上传成功的函数

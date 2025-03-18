@@ -3,105 +3,142 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/common/mq"
-	"github.com/joho/godotenv"
+	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
+	"github.com/Auroraol/cloud-storage/file_processor/processor"
+	pulsarClient "github.com/apache/pulsar-client-go/pulsar"
+	"github.com/zeromicro/go-zero/core/conf"
 	"go.uber.org/zap"
 )
 
-var (
-	configFile = flag.String("f", ".env", "配置文件路径")
-)
+// Config 配置结构
+type Config struct {
+	LogConfig logx.LogConfig // 日志配置
+	SubConfig pulsar.SubConfig
+	PubConfig pulsar.PubConfig // 添加发布者配置
+}
 
 func main() {
+	var configFile = flag.String("f", "file_processor/etc/config.yaml", "the config file")
 	flag.Parse()
 
-	// 加载环境变量
-	if err := godotenv.Load(*configFile); err != nil {
-		fmt.Printf("无法加载配置文件: %v\n", err)
-		os.Exit(1)
-	}
+	// 加载配置
+	var c Config
+	conf.MustLoad(*configFile, &c)
 
 	// 初始化日志
-	logConfig := logx.LogConfig{
-		LogLevel:          "info",
-		LogFormat:         "json",
-		LogPath:           "./logs",
-		LogFileName:       "file_processor.log",
-		LogFileMaxSize:    100,
-		LogFileMaxBackups: 10,
-		LogMaxAge:         30,
-		LogCompress:       true,
-		LogStdout:         true,
-		SeparateLevel:     true,
+	c.LogConfig.CustomLevels = map[string]string{
+		"processor": "info", // 自定义业务日志级别
 	}
-	if err := logx.InitLogger(logConfig); err != nil {
-		fmt.Printf("初始化日志失败: %v\n", err)
-		os.Exit(1)
+	if err := logx.InitLogger(c.LogConfig); err != nil {
+		panic(err)
 	}
 
-	// 获取Pulsar配置
-	pulsarURL := os.Getenv("PULSAR_URL")
-	if pulsarURL == "" {
-		pulsarURL = "pulsar://localhost:6650" // 默认值
+	// 初始化 Pulsar 管理器
+	if !c.SubConfig.Enabled {
+		zap.S().Fatal("Pulsar 未启用，文件处理服务无法工作")
 	}
 
-	// 创建Pulsar管理器
-	pulsarManager, err := mq.NewPulsarManager(mq.PulsarConfig{
-		URL: pulsarURL,
+	pulsarManager, err := pulsar.NewPulsarManager(pulsar.Config{
+		URL: c.SubConfig.URL,
 	})
 	if err != nil {
-		zap.S().Fatalf("创建Pulsar管理器失败: %v", err)
+		zap.S().Fatalf("Pulsar 管理器初始化失败: %s", err)
 	}
 	defer pulsarManager.Close()
 
-	zap.S().Info("文件处理服务启动成功")
-
-	// 启动文件上传消息消费者
-	err = mq.StartFileUploadedConsumer(pulsarManager, handleFileUploaded)
+	// 创建订阅者
+	subscriber, err := pulsar.NewSubscriber(pulsarManager, c.SubConfig)
 	if err != nil {
-		zap.S().Fatalf("启动文件上传消息消费者失败: %v", err)
+		zap.S().Fatalf("Pulsar 订阅者初始化失败: %s", err)
 	}
+	defer subscriber.Close()
 
-	zap.S().Info("文件上传消息消费者启动成功")
-
-	// 等待中断信号
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-
-	zap.S().Info("正在关闭文件处理服务...")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	// 创建上下文（可取消）
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// 在这里可以添加优雅关闭的逻辑
-	<-ctx.Done()
+	// 订阅消息
+	go func() {
+		err := subscriber.Subscribe(ctx, func(msg pulsarClient.Message) error {
+			// 使用泛型函数反序列化消息
+			fileMsg, err := pulsar.UnmarshalMessage[pulsar.FileUploadedMessage](msg)
+			if err != nil {
+				zap.S().Errorf("反序列化消息失败: %v", err)
+				return err
+			}
 
-	zap.S().Info("文件处理服务已关闭")
+			// 处理文件上传消息
+			zap.S().Infof("收到文件上传消息: ID=%s, 文件名=%s, 大小=%d, 用户ID=%s, 路径=%s",
+				fileMsg.FileID, fileMsg.FileName, fileMsg.FileSize, fileMsg.UserID, fileMsg.StoragePath)
+
+			// 使用处理器处理文件
+			err = processor.ProcessFile(fileMsg)
+			if err != nil {
+				zap.S().Errorf("处理文件失败: %v", err)
+				return err
+			}
+
+			zap.S().Infof("文件处理完成: %s", fileMsg.FileID)
+			return nil
+		})
+
+		if err != nil {
+			zap.S().Errorf("订阅消息失败: %v", err)
+		}
+	}()
+
+	zap.S().Info("文件处理服务已启动，等待消息...")
+
+	// 等待中断信号
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	<-sigCh
+
+	zap.S().Info("接收到中断信号，正在关闭服务...")
+	cancel() // 取消上下文，停止订阅
+	time.Sleep(1 * time.Second)
+	zap.S().Info("服务已关闭")
 }
 
-// 处理文件上传消息
-func handleFileUploaded(msg mq.FileUploadedMessage) error {
-	zap.S().Infof("收到文件上传消息: 文件ID=%s, 文件名=%s, 大小=%d, 用户ID=%s",
-		msg.FileID, msg.FileName, msg.FileSize, msg.UserID)
+// 判断文件类型的辅助函数
+func isImageFile(fileName string) bool {
+	// 实现判断图片文件的逻辑
+	return false
+}
 
-	// 这里可以添加文件处理逻辑，例如：
-	// 1. 生成缩略图
-	// 2. 提取文件元数据
-	// 3. 文件格式转换
-	// 4. 内容分析
-	// 5. 更新搜索索引
-	// 等等
+func isVideoFile(fileName string) bool {
+	// 实现判断视频文件的逻辑
+	return false
+}
 
-	// 模拟处理时间
-	time.Sleep(500 * time.Millisecond)
+func isDocumentFile(fileName string) bool {
+	// 实现判断文档文件的逻辑
+	return false
+}
 
-	zap.S().Infof("文件处理完成: 文件ID=%s", msg.FileID)
+// 处理不同类型文件的函数
+func processImageFile(msg pulsar.FileUploadedMessage) error {
+	// 实现图片处理逻辑
+	return nil
+}
+
+func processVideoFile(msg pulsar.FileUploadedMessage) error {
+	// 实现视频处理逻辑
+	return nil
+}
+
+func processDocumentFile(msg pulsar.FileUploadedMessage) error {
+	// 实现文档处理逻辑
+	return nil
+}
+
+func processOtherFile(msg pulsar.FileUploadedMessage) error {
+	// 实现其他文件处理逻辑
 	return nil
 }

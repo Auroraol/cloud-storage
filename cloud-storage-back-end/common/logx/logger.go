@@ -29,11 +29,6 @@ type LogConfig struct {
 	LogStdout         bool              // 是否输出到控制台
 	SeparateLevel     bool              // 是否将不同级别的日志分开存储到不同文件
 	CustomLevels      map[string]string // 自定义日志级别，key为级别名称，value为对应的zapcore.Level字符串
-	// Pulsar配置
-	EnablePulsar      bool   // 是否启用Pulsar日志输出
-	PulsarURL         string // Pulsar服务地址
-	PulsarTopic       string // Pulsar主题
-	PulsarServiceName string // 服务名称，用于标识日志来源
 }
 
 // 自定义日志级别
@@ -81,24 +76,6 @@ type PulsarCore struct {
 	client      pulsar.Client
 	producer    pulsar.Producer
 	serviceName string
-}
-
-// NewPulsarCore 创建一个新的PulsarCore
-func NewPulsarCore(client pulsar.Client, topic string, serviceName string, level zapcore.LevelEnabler, encoder zapcore.Encoder) (*PulsarCore, error) {
-	producer, err := client.CreateProducer(pulsar.ProducerOptions{
-		Topic: topic,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &PulsarCore{
-		LevelEnabler: level,
-		encoder:      encoder,
-		client:       client,
-		producer:     producer,
-		serviceName:  serviceName,
-	}, nil
 }
 
 // With 实现zapcore.Core接口
@@ -256,37 +233,6 @@ func InitLogger(conf LogConfig) (err error) {
 			core := zapcore.NewCore(encoder, syncer, enabler)
 			cores = append(cores, core)
 		}
-	}
-
-	// 如果启用了Pulsar，创建Pulsar客户端和Core
-	if conf.EnablePulsar && conf.PulsarURL != "" && conf.PulsarTopic != "" {
-		// 创建Pulsar客户端
-		client, err := pulsar.NewClient(pulsar.ClientOptions{
-			URL: conf.PulsarURL,
-		})
-		if err != nil {
-			return fmt.Errorf("failed to create Pulsar client: %v", err)
-		}
-
-		// 获取编码器
-		encoder := getEncoder(conf)
-
-		// 创建PulsarCore
-		pulsarCore, err := NewPulsarCore(
-			client,
-			conf.PulsarTopic,
-			conf.PulsarServiceName,
-			zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-				return lvl >= globalLevel
-			}),
-			encoder,
-		)
-		if err != nil {
-			return fmt.Errorf("failed to create Pulsar core: %v", err)
-		}
-
-		// 添加到cores列表
-		cores = append(cores, pulsarCore)
 	}
 
 	// 添加控制台核心（如果需要）

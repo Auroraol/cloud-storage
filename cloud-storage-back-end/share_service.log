@@ -47,3 +47,7 @@
 {"level":"ERROR","time":"2025-03-06 16:39:31","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
 {"level":"REQUESTS","time":"2025-03-06 16:49:04","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
 {"level":"ERROR","time":"2025-03-06 16:50:33","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"REQUESTS","time":"2025-03-16 23:00:44","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:01:06","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:01:18","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:48:26","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}

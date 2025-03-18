@@ -431,3 +431,4 @@
 {"level":"REQUESTS","time":"2025-03-06 16:50:37","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
 {"level":"REQUESTS","time":"2025-03-06 16:50:38","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
 {"level":"REQUESTS","time":"2025-03-06 16:50:42","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/logfiles]"}
+{"level":"REQUESTS","time":"2025-03-16 23:01:18","caller":"api/logservice.go:29","msg":"Starting server at 0.0.0.0:1007..."}

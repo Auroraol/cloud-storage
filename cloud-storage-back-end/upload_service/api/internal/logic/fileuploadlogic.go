@@ -14,7 +14,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/common/mq"
+	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/store/oss"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -191,26 +191,32 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		return nil, response.NewErrMsg(fmt.Sprintf("更新用户存储容量失败: %v", err))
 	}
 
-	// 发送文件上传消息到Pulsar
-	if l.svcCtx.PulsarManager != nil && l.svcCtx.Config.Pulsar.Enabled {
+	// 发送文件上传完成消息到 Pulsar
+	if l.svcCtx.FilePublisher != nil {
 		// 创建文件上传消息
-		fileUploadedMsg := mq.FileUploadedMessage{
-			FileID:      strconv.FormatInt(int64(identity), 10),
-			FileName:    fileHeader.Filename,
-			FileSize:    fileHeader.Size,
-			ContentType: fileHeader.Header.Get("Content-Type"),
-			UserID:      strconv.FormatInt(userId, 10),
-			UploadTime:  time.Now(),
-			StoragePath: fileUrl,
-		}
+		fileUploadedMsg := pulsar.NewFileUploadedMessage(
+			strconv.FormatInt(int64(identity), 10),
+			fileHeader.Filename,
+			fileHeader.Size,
+			fileHeader.Header.Get("Content-Type"),
+			strconv.FormatInt(userId, 10),
+			fileUrl,
+		)
+		// 设置文件哈希
+		fileUploadedMsg.FileHash = md5Str
 
 		// 发送消息
-		err := mq.SendFileUploadedMessage(l.svcCtx.PulsarManager, fileUploadedMsg)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		_, err = l.svcCtx.FilePublisher.SendObject(ctx, fileUploadedMsg, map[string]string{
+			"service": "upload-service",
+		})
 		if err != nil {
 			// 只记录日志，不影响上传流程
-			zap.S().Warnf("发送文件上传消息失败: %v", err)
+			zap.S().Warnf("发送文件上传消息失败: %s", err)
 		} else {
-			zap.S().Infof("文件上传消息发送成功，文件ID: %s", fileUploadedMsg.FileID)
+			zap.S().Infof("文件上传消息已发送: %s", fileUploadedMsg.FileID)
 		}
 	}
 

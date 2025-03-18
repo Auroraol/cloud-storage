@@ -2,8 +2,9 @@ package history
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"strconv"
+
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -41,14 +42,12 @@ func (l *UpdateHistoryLogic) UpdateHistory(req *types.UpdateHistoryRequest) (res
 		return nil, response.NewErrMsg("failed to create snowflake node")
 	}
 	newId := node.Generate().Int64()
-	//err = l.svcCtx.UploadHistoryModel.Update(l.ctx, &model.UploadHistory{
-	//	Id:           uint64(newId),
-	//	UserId:       uint64(userId),
-	//	Status:       req.Status,
-	//	Size:         req.Size,
-	//	FileName:     req.FileName,
-	//	RepositoryId: uint64(req.RepositoryId),
-	//})
+
+	// 创建上传历史记录
+	repositoryId := uint64(0)
+	if req.RepositoryId > 0 {
+		repositoryId = uint64(req.RepositoryId)
+	}
 
 	res, err := l.svcCtx.UploadHistoryModel.UpdateHistory(l.ctx, &model.UploadHistory{
 		Id:           uint64(newId),
@@ -56,7 +55,7 @@ func (l *UpdateHistoryLogic) UpdateHistory(req *types.UpdateHistoryRequest) (res
 		Status:       req.Status,
 		Size:         req.Size,
 		FileName:     req.FileName,
-		RepositoryId: uint64(req.RepositoryId),
+		RepositoryId: repositoryId,
 	})
 	if err != nil {
 		zap.S().Error("更新失败 err:%v", err)

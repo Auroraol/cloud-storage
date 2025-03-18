@@ -1,0 +1,15 @@
+{"level":"PROCESSOR","time":"2025-03-16 23:23:59","caller":"file_processor/main.go:106","msg":"文件处理服务已启动，等待消息..."}
+{"level":"PROCESSOR","time":"2025-03-16 23:37:23","caller":"file_processor/main.go:113","msg":"接收到中断信号，正在关闭服务..."}
+{"level":"ERROR","time":"2025-03-16 23:37:23","caller":"file_processor/main.go:102","msg":"订阅消息失败: context canceled"}
+{"level":"PROCESSOR","time":"2025-03-16 23:37:24","caller":"file_processor/main.go:116","msg":"服务已关闭"}
+{"level":"PROCESSOR","time":"2025-03-16 23:46:44","caller":"file_processor/main.go:95","msg":"文件处理服务已启动，等待消息..."}
+{"level":"PROCESSOR","time":"2025-03-17 00:07:23","caller":"file_processor/main.go:102","msg":"接收到中断信号，正在关闭服务..."}
+{"level":"ERROR","time":"2025-03-17 00:07:23","caller":"file_processor/main.go:91","msg":"订阅消息失败: context canceled"}
+{"level":"PROCESSOR","time":"2025-03-17 00:07:24","caller":"file_processor/main.go:105","msg":"服务已关闭"}
+{"level":"FATAL","time":"2025-03-17 00:07:31","caller":"file_processor/main.go:58","msg":"Pulsar 订阅者初始化失败: topic or topics is required"}
+{"level":"FATAL","time":"2025-03-17 00:08:12","caller":"file_processor/main.go:58","msg":"Pulsar 订阅者初始化失败: topic or topics is required"}
+{"level":"FATAL","time":"2025-03-17 00:08:24","caller":"file_processor/main.go:58","msg":"Pulsar 订阅者初始化失败: topic or topics is required"}
+{"level":"PROCESSOR","time":"2025-03-17 00:08:27","caller":"file_processor/main.go:96","msg":"文件处理服务已启动，等待消息..."}
+{"level":"PROCESSOR","time":"2025-03-17 10:06:26","caller":"file_processor/main.go:103","msg":"接收到中断信号，正在关闭服务..."}
+{"level":"ERROR","time":"2025-03-17 10:06:26","caller":"file_processor/main.go:92","msg":"订阅消息失败: context canceled"}
+{"level":"PROCESSOR","time":"2025-03-17 10:06:27","caller":"file_processor/main.go:106","msg":"服务已关闭"}

@@ -1,6 +1,8 @@
 Name: upload_service-api
 Host: 0.0.0.0
 Port: 1005
+MaxBytes: 5242880  # 5MB，增加请求体大小限制
+Timeout: 10000     # 10秒，增加请求超时时间
 
 # jwtAuth
 JwtAuth:
@@ -46,8 +48,15 @@ LogConfig:
   LogStdout: true            # 是否同时输出到控制台
   SeparateLevel: false       # 是否将不同级别的日志分开存储到不同文件
 
-# Pulsar配置
-Pulsar:
-  Enabled: true              # 是否启用Pulsar
-  URL: "pulsar://localhost:6650" # Pulsar服务地址
-  ServiceName: "upload-service"  # 服务名称
+# 生产者Pulsar配置
+PubConfig:
+  Enabled: true
+  URL: "pulsar://101.37.165.220:6650"
+  Topic: "file-processed"
+  BatchingEnabled: true
+  BatchingMaxMessages: 100
+  BatchingMaxPublishDelay: 10
+  CompressionType: "LZ4"
+  SendTimeout: 30
+  BlockIfQueueFull: true
+  MaxPendingMessages: 1000

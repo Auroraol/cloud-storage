@@ -11,3 +11,154 @@
 {"level":"REQUESTS","time":"2025-03-06 10:52:40","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
 {"level":"ERROR","time":"2025-03-06 16:17:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-06 16:34:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-16 23:02:00","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:05:49","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:20:16","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:20:16","caller":"api/uploadservice.go:34","msg":"Pulsar 连接已关闭"}
+{"level":"REQUESTS","time":"2025-03-16 23:20:32","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 00:05:22","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 00:08:54","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:08:58","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:08:58","caller":"logic/fileuploadlogic.go:180","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-17 00:09:15","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:09:18","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 2310510870"}
+{"level":"REQUESTS","time":"2025-03-17 00:09:56","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:09:58","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '2310510870' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:10:21","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:10:22","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '2310510870' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:11:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:11:14","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 290825853"}
+{"level":"ERROR","time":"2025-03-17 00:11:14","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:21:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:21:54","caller":"logic/fileuploadlogic.go:190","msg":"更新用户存储容量失败, err: %srpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-17 00:21:54","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:22:07","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:22:11","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"WARN","time":"2025-03-17 00:22:16","caller":"logic/fileuploadlogic.go:217","msg":"发送文件上传消息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-17 00:22:37","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:22:41","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"WARN","time":"2025-03-17 00:22:44","caller":"logic/fileuploadlogic.go:217","msg":"发送文件上传消息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-17 00:23:15","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:24:08","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:24:08","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:24:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:24:34","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:25:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:25:12","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:28:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:28:59","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:29:26","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:29:27","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:29:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:29:47","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:29:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:29:58","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:30:59","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:31:00","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:31:48","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:33:26","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:33:26","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:33:28","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:33:29","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:33:34","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:34:13","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:37:12","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:37:53","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:39:36","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 00:39:42","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:39:51","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:39:57","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:40:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:40:02","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:40:07","caller":"logic/fileuploadlogic.go:180","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-17 00:40:08","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:40:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:40:15","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 4105114471"}
+{"level":"REQUESTS","time":"2025-03-17 00:41:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:41:35","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:41:41","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:41:41","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:42:50","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:42:51","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:43:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:43:52","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:44:08","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:44:08","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:44:22","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:08","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:09","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:46:10","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:18","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:47:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:47:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:47:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:48:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:48:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:48:18","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:48:24","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:48:30","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:50:05","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:50:05","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:50:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:51:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:51:14","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:52:27","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:52:37","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:56:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:56:31","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:58:20","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:58:36","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:59:21","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-17 00:59:56","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:00:46","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:02:15","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:02:17","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 01:03:14","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:03:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"ERROR","time":"2025-03-17 01:03:35","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:14","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:17","caller":"Chunk/completemultipartuploadlogic.go:127","msg":"分片上传完成消息已发送: 2044011164"}
+{"level":"ERROR","time":"2025-03-17 01:04:17","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"ERROR","time":"2025-03-17 01:05:01","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:34","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:36","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-17 01:06:37","caller":"Chunk/completemultipartuploadlogic.go:99","msg":"保存文件信息失败, err: %sError 1062 (23000): Duplicate entry 'users/1/files/1-20050F92054.zip' for key 'repository_pool.idx_hash_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:37","caller":"Chunk/completemultipartuploadlogic.go:127","msg":"分片上传完成消息已发送: 4006380249"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:53","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-17 01:06:53","caller":"Chunk/completemultipartuploadlogic.go:99","msg":"保存文件信息失败, err: %sError 1062 (23000): Duplicate entry 'users/1/files/1-20050F92054.zip' for key 'repository_pool.idx_hash_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:53","caller":"Chunk/completemultipartuploadlogic.go:127","msg":"分片上传完成消息已发送: 3863912652"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:20","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:23","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:23","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:24","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:26","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 268562288"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:36","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:36","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 3480278398"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:36","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:37","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 533114021"}
+{"level":"REQUESTS","time":"2025-03-17 01:18:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:18:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:19:01","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:19:02","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 3708895499"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:23","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:25","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 663771060"}
+{"level":"REQUESTS","time":"2025-03-17 01:22:57","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:01","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:03","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:05","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 2083863311"}

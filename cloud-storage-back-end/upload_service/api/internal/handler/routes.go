@@ -22,12 +22,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/file/upload",
 				Handler: FileUploadHandler(serverCtx),
 			},
-			{
-				// 文件下载
-				Method:  http.MethodGet,
-				Path:    "/file/download",
-				Handler: FileDownloadHandler(serverCtx),
-			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/upload_service/v1"),
