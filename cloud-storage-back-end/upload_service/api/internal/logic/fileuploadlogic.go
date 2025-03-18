@@ -139,6 +139,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 
 	// 添加操作日志
 	l.svcCtx.AuditLogServiceRpc.CreateOperationLog(l.ctx, &auditservicerpc.OperationLogReq{
+		FileName: fileHeader.Filename,
 		UserId:   userId,
 		Content:  "上传文件",
 		FileSize: int32(fileHeader.Size),

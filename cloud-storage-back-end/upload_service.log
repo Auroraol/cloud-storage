@@ -256,3 +256,12 @@
 {"level":"REQUESTS","time":"2025-03-19 00:05:36","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 2783028271"}
 {"level":"REQUESTS","time":"2025-03-19 00:07:18","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
 {"level":"REQUESTS","time":"2025-03-19 00:07:31","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:10:39","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-19 00:10:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:32","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-19 00:12:48","caller":"logic/fileuploadlogic.go:181","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:57","caller":"logic/fileuploadlogic.go:220","msg":"文件上传消息已发送: 1956124122"}
+{"level":"REQUESTS","time":"2025-03-19 00:13:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:13:59","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"WARN","time":"2025-03-19 00:14:09","caller":"logic/fileuploadlogic.go:218","msg":"发送文件上传消息失败: context deadline exceeded"}
