@@ -45,3 +45,79 @@
 {"level":"ERROR","time":"2025-03-17 00:32:47","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-17 00:32:58","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-17 01:23:51","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%scontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-18 21:41:54","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-18 21:44:19","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 21:44:36","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:15:02","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:15:08","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:17:00","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:20:20","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:21:32","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-18 22:24:05","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-18 22:24:18","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:36","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:24:54","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:25:23","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:35:09","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:23","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:25","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:25","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:25","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:44","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:38:22","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-18 22:38:37","caller":"repository/userrepositorysavelogic.go:40","msg":"调用上传服务RPC失败, err: %srpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:41:49","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-18 22:41:56","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:42:00","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:42:13","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:42:47","caller":"userservicerpc/findvolumebyidlogic.go:30","msg":"UserModel.FindVolume err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:44:03","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:44:03","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:48:19","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:48:25","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:48:40","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:48:42","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:48:48","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:49:38","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:51:58","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:54:49","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:54:49","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:55:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 22:57:48","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-18 23:06:31","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:06:37","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:06:42","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:08:26","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:08:34","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:08:40","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:09:16","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:09:58","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:09:58","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:25:37","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:30:46","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:41:10","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:41:14","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:41:21","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:43:38","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:43:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:43:53","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:44:17","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-18 23:58:44","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 00:05:02","caller":"recycle/userrecycledeletelogic.go:42","msg":"文件不存在 err:%vsql: no rows in result set"}

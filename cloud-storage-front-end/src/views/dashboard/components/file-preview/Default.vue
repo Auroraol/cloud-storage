@@ -9,7 +9,13 @@
 </template>
 
 <script setup>
-const props = defineProps({
+const _props = defineProps({
   resource: Object
 })
+</script>
+
+<script>
+export default {
+  name: "Default"
+}
 </script>

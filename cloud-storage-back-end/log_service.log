@@ -432,3 +432,18 @@
 {"level":"REQUESTS","time":"2025-03-06 16:50:38","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
 {"level":"REQUESTS","time":"2025-03-06 16:50:42","caller":"logx/logger.go:252","msg":"localhost:1007 [/log_service/v1/ssh/logfiles]"}
 {"level":"REQUESTS","time":"2025-03-16 23:01:18","caller":"api/logservice.go:29","msg":"Starting server at 0.0.0.0:1007..."}
+{"level":"REQUESTS","time":"2025-03-18 21:41:47","caller":"api/logservice.go:29","msg":"Starting server at 0.0.0.0:1007..."}
+{"level":"REQUESTS","time":"2025-03-18 22:23:33","caller":"api/logservice.go:29","msg":"Starting server at 0.0.0.0:1007..."}
+{"level":"REQUESTS","time":"2025-03-18 23:59:36","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/get]"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:48","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:48","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"ERROR","time":"2025-03-18 23:59:48","caller":"ssh/connectlogic.go:74","msg":"保存ssh信息失败 SshServiceRpc err: rpc error: code = Unknown desc = Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:51","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:51","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"ERROR","time":"2025-03-18 23:59:52","caller":"ssh/connectlogic.go:74","msg":"保存ssh信息失败 SshServiceRpc err: rpc error: code = Unknown desc = Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:55","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:55","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"ERROR","time":"2025-03-18 23:59:55","caller":"ssh/connectlogic.go:74","msg":"保存ssh信息失败 SshServiceRpc err: rpc error: code = Unknown desc = Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:01","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:05","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:09","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/operation]"}

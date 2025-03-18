@@ -1,7 +1,7 @@
 <template>
   <el-image
     style="width: 100px; height: 100px"
-    :src="url"
+    :src="imageUrl"
     :alt="props.resource.name"
     :preview-src-list="srcList"
     :zoom-rate="1.2"
@@ -14,6 +14,8 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from "vue"
+
 const props = defineProps({
   resource: {
     type: Object,
@@ -25,9 +27,19 @@ const props = defineProps({
   }
 })
 
+onMounted(() => {
+  console.log("Image组件挂载，URL:", props.url)
+})
+
 // 计算属性
-const url = computed(() => props.url || "")
-const srcList = computed(() => [url.value])
+const imageUrl = computed(() => props.url || "")
+const srcList = computed(() => [imageUrl.value])
+</script>
+
+<script>
+export default {
+  name: "YImage"
+}
 </script>
 
 <style scoped lang="scss">

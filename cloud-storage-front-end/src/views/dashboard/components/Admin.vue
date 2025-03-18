@@ -8,7 +8,6 @@
         :with-credentials="true"
         :multiple="true"
         :http-request="handleFileUpload"
-        :accept="fileAccept"
         class="upload-resource"
       >
         <el-button type="primary" color="#FBBC4D">
@@ -69,12 +68,16 @@
           <template #default="{ row }">
             <div class="file-item" @contextmenu.prevent="handleContextMenu(row, $event)">
               <!-- 文件图标/预览图 -->
-              <template v-if="isPreviewAble(row)">
-                <Icon :cover="row.fileCover" :width="32" />
-              </template>
-              <template v-else>
-                <Icon :file-type="row.fileType" :width="32" />
-              </template>
+              <div class="icon-container">
+                <template v-if="row.fileType === 3 && row.fileCover">
+                  <!-- 仅图片类型(3)显示封面 -->
+                  <Icon :cover="row.fileCover" :width="32" />
+                </template>
+                <template v-else>
+                  <!-- 其他类型显示对应图标 -->
+                  <Icon :file-type="row.fileType" :width="32" />
+                </template>
+              </div>
               <!-- 文件名 -->
               <span class="filename" :title="row.filename">{{ row.filename }}</span>
             </div>
@@ -94,12 +97,25 @@
     </div>
 
     <!-- 上传进度 -->
-    <div v-if="currentFile" class="upload-progress">
+    <div v-if="currentFile" ref="uploadProgressRef" class="upload-progress">
       <div class="file-info">
-        <span class="filename">当前上传文件: {{ currentFile.name }}</span>
+        <span class="filename">{{ currentFile.name }}</span>
         <span class="filesize">{{ formatFileSize(currentFile.size) }}</span>
-        <div class="status-text">
-          {{ statusText }}
+
+        <div class="progress-container">
+          <el-progress
+            :percentage="uploadProgress"
+            :stroke-width="8"
+            :show-text="false"
+            :color="uploadProgress === 100 ? '#67C23A' : '#FBBC4D'"
+          />
+          <div class="percentage-text">{{ uploadProgress }}%</div>
+        </div>
+
+        <div class="status-text" :class="{ success: uploadProgress === 100 }">
+          <el-icon v-if="uploadProgress === 100" class="status-icon"><CircleCheckFilled /></el-icon>
+          <el-icon v-else class="status-icon spinning"><Loading /></el-icon>
+          {{ uploadProgress === 100 ? "上传完成" : statusText }}
         </div>
       </div>
     </div>
@@ -244,7 +260,7 @@ import { formatFileSize } from "@/utils/format/formatFileSize"
 import { timestampToDate } from "@/utils/format/formatTime"
 import { useUserStore } from "@/store/modules/user"
 import { shareApi } from "@/api/share/share"
-import { Share } from "@element-plus/icons-vue"
+import { Share, CircleCheckFilled, Loading } from "@element-plus/icons-vue"
 import { historyFileApi } from "@/api/file/history"
 import type * as History from "@/api/file/types/history"
 
@@ -253,6 +269,9 @@ const capacity = computed(() => userStore.capacity)
 
 // 添加 ref 用于获取输入框元素
 const renameInput = ref<HTMLInputElement>()
+
+// 添加上传进度区域的引用
+const uploadProgressRef = ref<HTMLElement>()
 
 interface FileListItem {
   id: number
@@ -291,9 +310,6 @@ const formatDate = (date: string): string => {
     return "-"
   }
 }
-
-// 文件接受类型
-const fileAccept = ".jpg,.jpeg,.png,.gif,.zip,.doc,.docx,.pdf"
 
 // 状态变量
 const loading = ref(false)
@@ -358,7 +374,7 @@ const filesFolders = ref<Array<{ id: number; name: string }>>([
 // 判断文件是否可预览
 const isPreviewAble = (file: FileListItem): boolean => {
   if (file.isFolder) return false
-  return file.fileType === 3 || file.fileType === 1
+  return file.fileType === 3 || file.fileType === 4 // 图片(3)和视频(4)可预览
 }
 
 // 根据文件扩展名判断文件类型
@@ -511,12 +527,19 @@ const handleFileUpload = async (options: UploadRequestOptions) => {
     statusText.value = "准备上传..."
 
     // 根据文件大小选择上传方式
-    if (file.size > 1 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       console.log("文件大于20M")
       await handleChunkUpload(file)
     } else {
       await handleNormalUpload(file)
     }
+
+    // 上传开始后，等待DOM更新后滚动到进度区域
+    nextTick(() => {
+      if (uploadProgressRef.value) {
+        uploadProgressRef.value.scrollIntoView({ behavior: "smooth", block: "center" })
+      }
+    })
   } catch (err) {
     handleUploadError(err, file)
   }
@@ -532,15 +555,30 @@ const handleNormalUpload = async (file: File) => {
     })
   }
 
+  // 设置初始状态
+  uploadProgress.value = 0
+  statusText.value = "正在上传..."
+
   const response = await uploadFileApi.upload(fileUploadRequestData, {
     onUploadProgress: (progressEvent) => {
       if (progressEvent.total) {
-        const progress = (progressEvent.loaded / progressEvent.total) * 100
+        // 限制上传阶段最多到95%，为服务器处理预留空间
+        const progress = (progressEvent.loaded / progressEvent.total) * 95
         uploadProgress.value = Math.round(progress)
-        statusText.value = "正在上传..."
+
+        // 更新状态文本
+        if (progress > 90) {
+          statusText.value = "处理中..."
+        } else {
+          statusText.value = "正在上传..."
+        }
       }
     }
   })
+
+  // 上传完成后服务器处理中
+  uploadProgress.value = 98
+  statusText.value = "即将完成..."
 
   handleUploadSuccess(response.data, file)
 }
@@ -549,6 +587,10 @@ const handleNormalUpload = async (file: File) => {
 const handleChunkUpload = async (file: File) => {
   // 初始化分片上传
   try {
+    // 设置初始状态
+    uploadProgress.value = 0
+    statusText.value = "正在初始化..."
+
     const initResponse = await uploadFileApi.initiateMultipart({
       file_name: file.name,
       file_size: file.size,
@@ -557,6 +599,10 @@ const handleChunkUpload = async (file: File) => {
 
     const { upload_id, key } = initResponse.data
     uploadId.value = upload_id
+
+    // 更新进度到初始化完成
+    uploadProgress.value = 5
+    statusText.value = "准备分片..."
 
     // 将文件分片
     const chunkCount = Math.ceil(file.size / CHUNK_SIZE)
@@ -569,28 +615,31 @@ const handleChunkUpload = async (file: File) => {
       chunks.value.push(file.slice(start, end))
     }
 
-    // 上传所有分片
+    // 上传所有分片 - 分片上传占总进度的85%
     for (let i = 0; i < chunks.value.length; i++) {
       currentChunkIndex.value = i
       const chunkUploadRequestData: ChunkUploadRequestData = {
         upload_id: uploadId.value,
         chunk_index: i + 1,
         key: key,
-        file: chunks.value[i]
+        file: chunks.value[i] as unknown as File
       }
+
+      statusText.value = `正在上传第 ${i + 1}/${chunks.value.length} 个分片`
 
       const chunkResponse = await uploadFileApi.uploadPart(chunkUploadRequestData)
       if (isNotEmpty(chunkResponse.data)) {
         uploadedETags.value[i] = chunkResponse.data.etag
       }
 
-      // 更新进度
-      const progress = ((i + 1) / chunks.value.length) * 100
+      // 更新进度 - 分片上传占进度的5~90%
+      const progress = 5 + ((i + 1) / chunks.value.length) * 85
       uploadProgress.value = Math.round(progress)
-      statusText.value = `正在上传第 ${i + 1}/${chunks.value.length} 个分片`
     }
 
-    console.log("uploadedETags")
+    // 更新进度到合并阶段
+    uploadProgress.value = 95
+    statusText.value = "正在合并分片..."
 
     // 完成分片上传
     const completeResponse = await uploadFileApi.completeMultipart({
@@ -599,7 +648,9 @@ const handleChunkUpload = async (file: File) => {
       etags: uploadedETags.value
     })
 
-    console.log("completeResponse")
+    // 更新进度到即将完成
+    uploadProgress.value = 98
+    statusText.value = "即将完成..."
 
     handleUploadSuccess(completeResponse.data, file)
   } catch (error) {
@@ -610,15 +661,14 @@ const handleChunkUpload = async (file: File) => {
 
 // 修改处理上传成功的函数
 const handleUploadSuccess = async (data: any, file: File) => {
-  uploadStatus.value = "success"
-  uploadProgress.value = 100
-  statusText.value = "上传成功"
-
-  // 保存文件关联信息
-  const parentId = currentPath.value[currentPath.value.length - 1]
-  console.log("parentId: ", parentId)
-
   try {
+    // 保存文件关联信息前显示处理中状态
+    uploadProgress.value = 99
+    statusText.value = "保存文件信息..."
+
+    const parentId = currentPath.value[currentPath.value.length - 1]
+    console.log("parentId: ", parentId)
+
     // 保存到仓库
     await userFileApi.saveRepository({
       parent_id: Number(parentId),
@@ -633,6 +683,11 @@ const handleUploadSuccess = async (data: any, file: File) => {
       size: file.size,
       status: 1 // 上传成功
     })
+
+    // 更新进度显示为完成
+    uploadStatus.value = "success"
+    uploadProgress.value = 100
+    statusText.value = "上传成功"
 
     // 更新容量显示
     capacity.value.now_volume += file.size
@@ -760,7 +815,8 @@ const handleRefresh = () => {
 // 处理搜索
 const handleSearch = debounce(() => {
   // 调用搜索api接口
-  const keyword = searchKeyword.value.trim()
+  const _keyword = searchKeyword.value.trim()
+  // TODO: 实现搜索功能
 }, 300)
 
 const handleSelectionChange = (selection: FileListItem[]) => {
@@ -1041,6 +1097,12 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     gap: 8px;
+
+    :deep(.icon) {
+      width: 32px !important;
+      height: 32px !important;
+      flex-shrink: 0;
+    }
   }
 
   .filename {
@@ -1050,31 +1112,88 @@ onUnmounted(() => {
   }
 
   .upload-progress {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #f5f7fa;
+    margin: 16px 0;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 
     .file-info {
       display: flex;
-      align-items: center;
-      margin-bottom: 10px;
+      flex-direction: column;
+      gap: 10px;
 
       .filename {
-        margin-left: 8px;
-        font-weight: bold;
+        font-size: 15px;
+        font-weight: 500;
+        color: #303133;
+        display: flex;
+        align-items: center;
+
+        &:before {
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          margin-right: 8px;
+          background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FBBC4D"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 3v5h5"/></svg>');
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
       }
 
       .filesize {
-        margin-left: 8px;
-        color: #909399;
+        font-size: 13px;
+        color: #606266;
+        margin-left: 28px;
+      }
+
+      .progress-container {
+        margin-top: 5px;
+        margin-left: 28px;
+        margin-right: 28px;
+        position: relative;
+
+        .percentage-text {
+          position: absolute;
+          right: 0;
+          top: -18px;
+          font-size: 12px;
+          color: #909399;
+        }
+      }
+
+      .status-text {
+        font-size: 13px;
+        color: #409eff;
+        margin-left: 28px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+
+        &.success {
+          color: #67c23a;
+        }
+
+        .status-icon {
+          margin-right: 5px;
+          font-size: 16px;
+
+          &.spinning {
+            animation: spin 1.5s linear infinite;
+          }
+        }
       }
     }
+  }
 
-    .status-text {
-      margin-top: 5px;
-      font-size: 12px;
-      color: #909399;
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 

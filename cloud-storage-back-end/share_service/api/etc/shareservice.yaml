@@ -17,6 +17,9 @@ CacheRedis:
   - Host: "101.37.165.220:6379"
     Type: node
     Pass: "741106"
+    MaxActive: 100    # 最大活跃连接数
+    MaxIdle: 20       # 最大空闲连接数
+    IdleTimeout: 60   # 空闲连接超时时间（秒）
 
 #rpc service
 UserCenterRpcConf:
@@ -24,6 +27,7 @@ UserCenterRpcConf:
     Hosts:
       - 127.0.0.1:2379
     Key: user_center.rpc
+  Timeout: 30000  # 修改为30秒
 
 #rpc service
 UploadServiceRpcConf:
@@ -55,3 +59,11 @@ Pulsar:
   Enabled: true              # 是否启用Pulsar
   URL: "pulsar://101.37.165.220:6650" # Pulsar服务地址
   ServiceName: "share-service"  # 服务名称
+
+# 新增AuditServiceRpcConf
+AuditServiceRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: log_service.rpc
+  Timeout: 30000  # 修改为30秒

@@ -26,6 +26,7 @@ UserCenterRpcConf:
     Hosts:
       - 127.0.0.1:2379
     Key: user_center.rpc
+  Timeout: 60000  # 修改为30秒
 
 
 #rpc service
@@ -34,6 +35,7 @@ AuditServiceRpcConf:
     Hosts:
       - 127.0.0.1:2379
     Key: log_service.rpc
+  Timeout: 60000  # 修改为30秒
 
 # 日志配置
 LogConfig:

@@ -49,7 +49,7 @@ type (
 		Hash       string    `db:"hash"`     // 文件的唯一标识
 		Ext        string    `db:"ext"`      // 文件扩展名
 		Size       int64     `db:"size"`     // 文件大小
-		Path       string    `db:"path"`     // 文件路径
+		Path       string    `db:"path"`     // 文件url路径
 		Name       string    `db:"name"`
 		CreateTime time.Time `db:"create_time"`
 		UpdateTime time.Time `db:"update_time"`

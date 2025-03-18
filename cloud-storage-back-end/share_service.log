@@ -51,3 +51,23 @@
 {"level":"REQUESTS","time":"2025-03-16 23:01:06","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
 {"level":"REQUESTS","time":"2025-03-16 23:01:18","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
 {"level":"REQUESTS","time":"2025-03-16 23:48:26","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 21:41:34","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-18 21:42:35","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 22:10:00","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 22:21:09","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:23:26","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 22:23:31","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:23:38","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 22:24:49","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 22:50:25","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:03:49","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:04:13","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:04:43","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:08:22","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:28","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-03-18 23:59:48","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-03-18 23:59:52","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-03-18 23:59:55","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:21","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-19 00:05:09","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-19 00:07:43","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}

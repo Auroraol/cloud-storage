@@ -14,7 +14,7 @@
         <n-button v-if="edit" size="small" type="primary" @click="saveContent"> 保存 </n-button>
       </div>
     </div>
-    <div v-show="!props.maximize">
+    <div v-show="!props.maximize" class="text-content">
       {{ content }}
     </div>
   </div>
@@ -23,6 +23,7 @@
 <script setup>
 import { defineExpose, onMounted, ref, watch } from "vue"
 import TextEditor from "./TextEditor.vue"
+import axios from "axios"
 // import { saveContent as saveContentHttp } from "@/http/Explore"
 
 const props = defineProps({
@@ -34,7 +35,7 @@ const props = defineProps({
 watch(
   () => props.maximize,
   (val) => {
-    console.log()
+    console.log("最大化状态变更:", val)
     setContent(content.value)
   }
 )
@@ -45,35 +46,48 @@ const editorRef = ref(null)
 const content = ref("")
 
 onMounted(() => {
+  console.log("Text组件挂载，URL:", props.url)
   refreshContent()
 })
 
 const refreshContent = function () {
-  http
+  if (!props.url) {
+    console.error("无有效的文本URL")
+    setContent("无法获取文件内容")
+    return
+  }
+
+  console.log("尝试获取文本内容:", props.url)
+  axios
     .get(props.url)
-    .then((data) => {
-      setContent(data)
+    .then((response) => {
+      console.log("获取文本成功")
+      setContent(response.data)
     })
     .catch((err) => {
-      console.log(err)
-      setContent(err)
+      console.error("获取文本失败:", err)
+      setContent("获取文件内容失败: " + err.message)
     })
 }
 
 const setContent = function (text) {
-  if (props.maximize) {
+  if (props.maximize && editorRef.value) {
     editorRef.value.setValue(text)
   }
   content.value = text
 }
 
 const setReadOnly = function (flag = false) {
-  editorRef.value.setReadOnly(flag)
+  if (editorRef.value) {
+    editorRef.value.setReadOnly(flag)
+  }
 }
 
 const toggleEdit = function (flag) {
   edit.value = flag
-  editorRef.value.setReadOnly(!flag)
+  if (editorRef.value) {
+    editorRef.value.setReadOnly(!flag)
+  }
 }
 
 /**
@@ -82,20 +96,27 @@ const toggleEdit = function (flag) {
  */
 const saveContent = function () {
   if (!resource.value) return
-  return saveContentHttp(resource.value.id, editorRef.value.getValue())
-    .then(() => {
-      window.$message.success("保存成功")
-      toggleEdit(false)
-    })
-    .catch((err) => {
-      return Promise.reject(err)
-    })
+  console.log("保存文本内容功能暂未实现")
+  // return saveContentHttp(resource.value.id, editorRef.value.getValue())
+  //   .then(() => {
+  //     window.$message.success("保存成功")
+  //     toggleEdit(false)
+  //   })
+  //   .catch((err) => {
+  //     return Promise.reject(err)
+  //   })
 }
 
 defineExpose({
   setReadOnly,
   saveContent
 })
+</script>
+
+<script>
+export default {
+  name: "YText"
+}
 </script>
 
 <style scoped lang="scss">
@@ -112,6 +133,15 @@ defineExpose({
   button {
     margin: 0 5px;
   }
+}
+.text-content {
+  white-space: pre-wrap;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  font-family: monospace;
 }
 #editor {
   margin-top: unset;

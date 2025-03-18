@@ -23,10 +23,12 @@
             <template #default="{ row }">
               <div class="file-item">
                 <!-- 文件图标/预览图 -->
-                <template v-if="isPreviewAble(row)">
+                <template v-if="row.fileType === 3 && row.fileCover">
+                  <!-- 仅图片类型(3)显示封面 -->
                   <Icon :cover="row.fileCover" :width="32" />
                 </template>
                 <template v-else>
+                  <!-- 其他类型显示对应图标 -->
                   <Icon :file-type="row.fileType" :width="32" />
                 </template>
                 <span class="filename" :title="row.filename">{{ row.filename }}</span>
@@ -101,7 +103,7 @@ interface FileListItem {
 // 判断文件是否可预览
 const isPreviewAble = (file: FileListItem): boolean => {
   if (file.isFolder) return false
-  return file.fileType === 3 || file.fileType === 1
+  return file.fileType === 3 || file.fileType === 4 // 图片(3)和视频(4)可预览
 }
 
 // 根据文件扩展名判断文件类型
@@ -336,6 +338,12 @@ onUnmounted(() => {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+
+    :deep(.icon) {
+      width: 32px !important;
+      height: 32px !important;
+      flex-shrink: 0;
+    }
   }
 
   .filename {

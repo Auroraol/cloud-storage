@@ -1,6 +1,8 @@
 <template>
   <div class="preview-audio">
+    <div v-if="!props.url" class="error-message">无法获取音频URL</div>
     <AudioPlayer
+      v-else
       class="audio-player"
       :option="{
         src: props.url,
@@ -14,11 +16,16 @@
 <script setup>
 import AudioPlayer from "vue3-audio-player"
 import "vue3-audio-player/dist/style.css"
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 
 const props = defineProps({
   resource: Object,
   url: String
+})
+
+onMounted(() => {
+  console.log("Audio组件挂载，URL:", props.url)
+  console.log("资源名称:", props.resource?.name)
 })
 
 const getTitle = computed({
@@ -31,6 +38,12 @@ const getTitle = computed({
 })
 </script>
 
+<script>
+export default {
+  name: "YAudio"
+}
+</script>
+
 <style scoped lang="scss">
 .preview-audio {
   width: 90%;
@@ -39,6 +52,8 @@ const getTitle = computed({
   max-width: 500px;
   display: flex;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
 
   .audio-player {
     height: 170px;
@@ -47,6 +62,11 @@ const getTitle = computed({
     background-color: #fff;
     border-radius: 10px;
     box-sizing: border-box;
+  }
+
+  .error-message {
+    color: red;
+    text-align: center;
   }
 }
 
