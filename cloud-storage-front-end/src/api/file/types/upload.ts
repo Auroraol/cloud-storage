@@ -72,3 +72,13 @@ export type ChunkUploadStatusResponseData = ApiResponseData<{
   total_parts: number // 总分片数
   file_size: number // 文件总大小
 }>
+
+// 下载链接请求
+export interface DownloadUrlRequestData {
+  repository_id: number
+}
+
+// 下载链接响应
+export type DownloadUrlResponseData = ApiResponseData<{
+  url: string
+}>

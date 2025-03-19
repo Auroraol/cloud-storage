@@ -123,7 +123,9 @@ const retryCount = ref(0)
 const backupPlayerContainer = ref(null)
 const nativePlayer = ref(false)
 const showRetryButton = ref(false)
+const playerContainerSize = ref({ width: 0, height: 0 })
 let player = null
+let resizeObserver = null
 
 // 添加一个调试日志函数，便于跟踪问题
 function debugLog(message, data = null) {
@@ -134,6 +136,63 @@ function debugLog(message, data = null) {
     console.log(logPrefix, message, data)
   } else {
     console.log(logPrefix, message)
+  }
+}
+
+// 添加窗口尺寸变化监听
+function handleResize() {
+  if (player) {
+    debugLog("窗口尺寸变化, 调整播放器大小")
+    player.resize()
+    updatePlayerSize()
+  }
+}
+
+// 更新播放器容器尺寸
+function updatePlayerSize() {
+  const container =
+    document.getElementById("dplayer") ||
+    document.querySelector(".video-container") ||
+    document.querySelector(".preview-video")
+
+  if (container) {
+    playerContainerSize.value = {
+      width: container.clientWidth,
+      height: container.clientHeight
+    }
+
+    debugLog("播放器容器尺寸更新", playerContainerSize.value)
+
+    // 根据容器宽高比例调整视频显示
+    adjustVideoDisplay()
+  }
+}
+
+// 根据容器和视频尺寸调整视频显示方式
+function adjustVideoDisplay() {
+  if (!player) return
+
+  const video = player.video.container.querySelector("video")
+  if (!video) return
+
+  const videoRatio = video.videoWidth / video.videoHeight
+  const containerRatio = playerContainerSize.value.width / playerContainerSize.value.height
+
+  // 根据视频和容器的比例关系调整显示
+  if (videoRatio > containerRatio) {
+    // 视频更宽，使用宽度作为基准
+    video.style.width = "100%"
+    video.style.height = "auto"
+  } else {
+    // 视频更高，使用高度作为基准
+    video.style.width = "auto"
+    video.style.height = "100%"
+  }
+
+  // 应用当前旋转角度
+  if (currentRotation.value !== 0) {
+    rotate(0) // 重置旋转角度
+    rotate(currentRotation.value) // 重新应用当前旋转角度
   }
 }
 
@@ -157,6 +216,31 @@ onMounted(() => {
     backupContainer: !!(backupPlayerContainer.value && backupPlayerContainer.value.querySelector("#backup-dplayer")),
     videoContainerExists: !!document.querySelector(".video-container")
   })
+
+  // 添加窗口尺寸变化监听
+  window.addEventListener("resize", handleResize)
+
+  // 使用ResizeObserver监听容器尺寸变化
+  try {
+    resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (
+          entry.target.classList.contains("preview-video") ||
+          entry.target.id === "dplayer" ||
+          entry.target.classList.contains("video-container")
+        ) {
+          updatePlayerSize()
+        }
+      }
+    })
+
+    const container = document.querySelector(".preview-video")
+    if (container) {
+      resizeObserver.observe(container)
+    }
+  } catch (e) {
+    debugLog("ResizeObserver不可用，将仅使用窗口resize事件", e)
+  }
 
   if (props.url) {
     initPlayer()
@@ -372,6 +456,12 @@ async function initPlayer() {
       loading.value = false
       error.value = false
       showControls.value = true
+
+      // 视频加载完成后更新尺寸
+      updatePlayerSize()
+      nextTick(() => {
+        adjustVideoDisplay()
+      })
     })
 
     player.on("error", (e) => {
@@ -583,26 +673,38 @@ function useNativePlayer() {
 function rotate(degrees) {
   if (!player) return
 
-  currentRotation.value = (currentRotation.value + degrees) % 360
+  if (degrees === 0) {
+    // 重置旋转
+    currentRotation.value = 0
+  } else {
+    // 增加旋转角度
+    currentRotation.value = (currentRotation.value + degrees) % 360
+  }
+
   const video = player.video.container.querySelector("video")
   if (video) {
     video.style.transform = `rotate(${currentRotation.value}deg)`
+    video.style.transformOrigin = "center center"
 
     if (currentRotation.value % 180 !== 0) {
+      // 旋转了90或270度
       const aspectRatio = video.videoHeight / video.videoWidth
-      video.style.transformOrigin = "center center"
+      const containerWidth = video.parentElement.clientWidth
+      const containerHeight = video.parentElement.clientHeight
 
-      if (window.innerWidth < window.innerHeight) {
-        video.style.width = `${video.parentElement.clientHeight * aspectRatio}px`
-        video.style.height = `${video.parentElement.clientWidth / aspectRatio}px`
+      // 根据容器尺寸计算最佳的视频尺寸
+      if (containerWidth > containerHeight) {
+        // 容器更宽
+        video.style.height = `${Math.min(containerWidth, containerHeight * aspectRatio)}px`
+        video.style.width = `${Math.min(containerHeight, containerWidth / aspectRatio)}px`
       } else {
-        video.style.width = `${video.parentElement.clientHeight}px`
-        video.style.maxHeight = `${video.parentElement.clientWidth}px`
+        // 容器更高
+        video.style.width = `${Math.min(containerHeight, containerWidth * aspectRatio)}px`
+        video.style.height = `${Math.min(containerWidth, containerHeight / aspectRatio)}px`
       }
     } else {
-      video.style.width = "100%"
-      video.style.height = "auto"
-      video.style.maxHeight = "100%"
+      // 正常或者旋转了180度
+      adjustVideoDisplay()
     }
   }
 }
@@ -636,6 +738,15 @@ function _getType(type) {
 }
 
 onBeforeUnmount(() => {
+  // 解除事件监听
+  window.removeEventListener("resize", handleResize)
+
+  // 清理ResizeObserver
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+
   if (player) {
     player.destroy()
     player = null
@@ -658,6 +769,7 @@ export default {
   align-items: center;
   position: relative;
   flex-direction: column;
+  overflow: hidden; // 防止内容溢出
 
   #dplayer {
     width: 100%;
@@ -667,12 +779,23 @@ export default {
     border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative; // 增加定位上下文
   }
 
   &.maximized #dplayer {
     width: 100%;
-    height: calc(100% - 50px);
+    height: 100%; // 占据全部高度
     max-width: 100% !important;
+    max-height: 100% !important;
+  }
+
+  .video-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .native-player-container {
@@ -685,20 +808,28 @@ export default {
 
     #native-video-container {
       width: 100%;
-      max-width: 900px;
-      padding: 20px;
+      height: calc(100% - 60px); // 留出底部工具栏空间
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
     }
 
     #native-video {
-      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
       border-radius: 6px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      object-fit: contain; // 保持视频比例
     }
 
     .native-video-tools {
       display: flex;
       justify-content: center;
-      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
       gap: 10px;
 
       .download-btn {
@@ -833,10 +964,12 @@ export default {
     border-radius: 6px;
     width: 100%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap; // 允许在小屏幕上换行
 
     .tool-group {
       display: flex;
       gap: 5px;
+      flex-wrap: wrap; // 允许在小屏幕上换行
     }
 
     .tool-btn {
@@ -848,6 +981,8 @@ export default {
       color: #555;
       font-size: 13px;
       transition: all 0.2s ease;
+      min-width: 36px; // 确保触摸友好的最小宽度
+      min-height: 36px; // 确保触摸友好的最小高度
 
       &:hover {
         background-color: #eee;
@@ -882,15 +1017,57 @@ export default {
     #dplayer {
       width: 100%;
       max-width: 100%;
+      height: auto;
     }
 
     .video-tools {
-      flex-wrap: wrap;
-      gap: 5px;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
 
       .tool-group {
-        flex-wrap: wrap;
+        width: 100%;
+        justify-content: center;
       }
+    }
+
+    .native-player-container {
+      #native-video-container {
+        height: calc(100% - 80px); // 移动端调整工具栏高度
+      }
+
+      .native-video-tools {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    .error-container {
+      width: 95%;
+      padding: 20px;
+
+      .error-actions {
+        flex-direction: column;
+        width: 100%;
+
+        .error-btn {
+          width: 100%;
+          margin-bottom: 8px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .preview-video {
+    .tool-btn {
+      padding: 8px; // 为移动设备增加按钮点击区域
+      font-size: 12px;
+    }
+
+    #dplayer {
+      border-radius: 0; // 移动端去除圆角，增加可视空间
     }
   }
 }
@@ -908,12 +1085,25 @@ export default {
     width: 50px;
     height: 50px;
   }
+
+  // 提高移动端控制器可用性
+  @media screen and (max-width: 768px) {
+    .dplayer-icon {
+      width: 36px; // 增大控制按钮尺寸
+      height: 36px;
+    }
+
+    .dplayer-bar-wrap {
+      height: 10px !important; // 增大进度条高度
+    }
+  }
 }
 
 :deep(.dplayer-video-wrap) {
   video {
     transition: transform 0.3s ease;
     transform-origin: center center;
+    object-fit: contain; // 保持视频比例
   }
 }
 </style>

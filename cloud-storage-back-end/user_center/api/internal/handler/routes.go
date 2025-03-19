@@ -104,6 +104,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: repository.UserFileNameUpdateHandler(serverCtx),
 			},
 			{
+				// 搜索用户文件和文件夹
+				Method:  http.MethodPost,
+				Path:    "/user/file/search",
+				Handler: repository.UserFileSearchHandler(serverCtx),
+			},
+			{
 				// 用户文件夹创建
 				Method:  http.MethodPost,
 				Path:    "/user/folder/create",

@@ -813,10 +813,78 @@ const handleRefresh = () => {
 }
 
 // 处理搜索
-const handleSearch = debounce(() => {
-  // 调用搜索api接口
-  const _keyword = searchKeyword.value.trim()
-  // TODO: 实现搜索功能
+const handleSearch = debounce(async () => {
+  const keyword = searchKeyword.value.trim()
+  if (!keyword) {
+    // 关键词为空时，重新加载原始文件列表
+    loadFileList()
+    return
+  }
+
+  loading.value = true
+  try {
+    // 调用原始文件列表API后在前端过滤
+    // 注意：这是前端实现的临时方案，后续应改为调用后端搜索API
+    const parentId = currentPath.value[currentPath.value.length - 1]
+    const response = await userFileApi.getFileAndFolderList({
+      id: parentId,
+      page: 1, // 搜索时获取较多数据
+      size: 100 // 获取更多条目便于搜索
+    })
+
+    // 在前端过滤符合搜索条件的文件
+    const filteredList = response.data.list.filter((item) => item.name.toLowerCase().includes(keyword.toLowerCase()))
+
+    // 处理搜索结果
+    const filesAndFolders = await Promise.all(
+      filteredList.map(async (item) => {
+        // 文件夹的 RepositoryId 为 0
+        if (!item.repository_id) {
+          // 文件夹
+          const folderSize = await getFolderSize(item.id)
+          return {
+            id: item.id,
+            filename: item.name,
+            fileType: 0, // 文件夹类型
+            fileSize: folderSize, // 文件夹大小
+            updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
+            fileCover: "", // 文件夹没有封面
+            isFolder: true,
+            ext: "",
+            repository_id: 0
+          }
+        } else {
+          // 文件
+          return {
+            id: item.id,
+            filename: item.name,
+            fileType: getFileTypeNumber(item.ext),
+            fileSize: item.size,
+            updateTime: timestampToDate(item.update_time) || new Date().toISOString(),
+            fileCover: item.path,
+            isFolder: false,
+            ext: item.ext,
+            repository_id: item.repository_id
+          }
+        }
+      })
+    )
+
+    fileList.value = filesAndFolders
+    total.value = filesAndFolders.length
+
+    // 显示搜索结果提示
+    if (filesAndFolders.length === 0) {
+      ElMessage.info(`没有找到名称包含"${keyword}"的文件`)
+    } else {
+      ElMessage.success(`搜索到 ${filesAndFolders.length} 个结果`)
+    }
+  } catch (error) {
+    console.error("搜索文件失败:", error)
+    ElMessage.error("搜索文件失败")
+  } finally {
+    loading.value = false
+  }
 }, 300)
 
 const handleSelectionChange = (selection: FileListItem[]) => {
@@ -833,13 +901,55 @@ const handleCurrentChange = (val: number) => {
   loadFileList()
 }
 
-// 添加文件操作相关的方法
-const handleDownload = () => {
+// 修改下载处理函数
+const handleDownload = async () => {
   if (selectedFiles.value.length === 0) {
     ElMessage.warning("请选择要下载的文件")
     return
   }
-  // TODO: 实现文件下载逻辑
+
+  // 目前只支持单文件下载
+  if (selectedFiles.value.length > 1) {
+    ElMessage.warning("目前只支持单个文件下载，请只选择一个文件")
+    return
+  }
+
+  const file = selectedFiles.value[0]
+
+  // 文件夹不能直接下载
+  if (file.isFolder) {
+    ElMessage.warning("暂不支持文件夹下载")
+    return
+  }
+
+  try {
+    console.log("准备下载文件，repository_id:", file.repository_id)
+
+    // 调用后端获取下载链接
+    const response = await uploadFileApi.getDownloadUrl({
+      repository_id: file.repository_id
+    })
+
+    console.log("获取下载链接响应:", response.code)
+
+    if (response.data && response.data.url) {
+      // 创建一个隐藏的a标签用于下载
+      const link = document.createElement("a")
+      link.href = response.data.url
+      link.download = file.filename // 设置下载文件名
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      ElMessage.success("下载开始")
+    } else {
+      console.error("响应中没有有效的下载链接:", response)
+      ElMessage.error("获取下载链接失败")
+    }
+  } catch (error) {
+    console.error("下载文件失败:", error)
+    ElMessage.error("下载文件失败: " + (error instanceof Error ? error.message : String(error)))
+  }
 }
 
 const handleDelete = async () => {
@@ -961,25 +1071,6 @@ const openMoveDialog = () => {
   moveDialog.visible = true
   closeContextMenu()
 }
-
-// // 获取文件夹列表
-// const loadFolderList = async () => {
-//   try {
-//     // 获取文件夹列表
-//     const response = await userFileApi.getFolderList({
-//       id: 0
-//     })
-//     folderList.value = [
-//       {
-//         id: 0,
-//         name: "/"
-//       },
-//       ...response.data.list
-//     ]
-//   } catch (error) {
-//     console.error("获取文件夹列表失败:", error)
-//   }
-// }
 
 // 文件预览相关状态
 const previewDialog = ref({ visible: false })

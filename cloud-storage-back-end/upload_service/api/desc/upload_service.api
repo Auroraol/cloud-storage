@@ -26,6 +26,13 @@ service upload_service {
 	)
 	@handler FileUpload
 	post /file/upload (FileUploadRequest) returns (FileUploadResponse)
+
+	@doc (
+		summary:     "获取文件下载链接"
+		description: "获取文件的临时下载链接"
+	)
+	@handler FileDownloadUrl
+	post /file/download/url (FileDownloadUrlRequest) returns (FileDownloadUrlResponse)
 }
 
 //need login

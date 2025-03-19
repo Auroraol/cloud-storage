@@ -121,3 +121,59 @@
 {"level":"ERROR","time":"2025-03-18 23:44:17","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-18 23:58:44","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
 {"level":"ERROR","time":"2025-03-19 00:05:02","caller":"recycle/userrecycledeletelogic.go:42","msg":"文件不存在 err:%vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-19 20:46:15","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-03-19 21:13:28","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:14:48","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%sdial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-03-19 21:14:58","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:36","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:15:59","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:21:51","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:23:52","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:27:27","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:27:27","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:27:27","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-03-19 21:28:32","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:33:01","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:33:05","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:33:17","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:33:23","caller":"repository/userfileandfolderlistlogic.go:54","msg":"获取用户文件列表失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:33:36","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:33:36","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:41:15","caller":"user/detaillogic.go:40","msg":"UserModel.FindOne err:%sdial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-03-19 21:41:20","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%sdial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-03-19 21:47:23","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:23","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:23","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:23","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:47:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:48:01","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:48:01","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-19 21:48:01","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-20 00:04:45","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}

@@ -265,3 +265,50 @@
 {"level":"REQUESTS","time":"2025-03-19 00:13:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
 {"level":"REQUESTS","time":"2025-03-19 00:13:59","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
 {"level":"WARN","time":"2025-03-19 00:14:09","caller":"logic/fileuploadlogic.go:218","msg":"发送文件上传消息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-19 20:45:16","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-03-19 20:46:43","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-19 20:46:43","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-20 00:05:22","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:05:22","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-20 00:10:16","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:10:16","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-20 00:17:24","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:17:24","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:37","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:45","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:56","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:21:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:21:06","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:21:54","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-20 00:29:43","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:54","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"ERROR","time":"2025-03-20 00:31:30","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:31:30","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-20 00:31:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:53","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:57","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:03","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:03","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:04","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:17","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:18","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:34:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:34:13","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:35:21","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:35:22","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"ERROR","time":"2025-03-20 00:44:47","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:44:47","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-20 00:44:53","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:44:55","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:10","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:20","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}

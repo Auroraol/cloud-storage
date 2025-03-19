@@ -10,7 +10,9 @@ import type {
   ChunkUploadCompleteResponseData,
   ChunkUploadCompleteRequestData,
   ChunkUploadStatusRequestData,
-  ChunkUploadStatusResponseData
+  ChunkUploadStatusResponseData,
+  DownloadUrlRequestData,
+  DownloadUrlResponseData
 } from "./types/upload"
 
 const prefix = import.meta.env.VITE_APP_BASE_API
@@ -18,7 +20,7 @@ const prefix = import.meta.env.VITE_APP_BASE_API
 // 文件上传相关接口
 export const uploadFileApi = {
   // 普通上传
-  upload(formData: FileUploadRequestData, config?: any) {
+  upload(data: FileUploadRequestData, config?: any) {
     return request<FileUploadResponseData>(
       `${prefix}/upload_service/v1/file/upload`,
       {
@@ -26,8 +28,20 @@ export const uploadFileApi = {
         headers: {
           "Content-Type": ContentTypeEnum.FORM_DATA
         },
-        data: formData,
+        data,
         ...config
+      },
+      true
+    )
+  },
+
+  // 获取下载链接
+  getDownloadUrl(data: DownloadUrlRequestData) {
+    return request<DownloadUrlResponseData>(
+      `${prefix}/upload_service/v1/file/download/url`,
+      {
+        method: RequestEnum.POST,
+        data
       },
       true
     )

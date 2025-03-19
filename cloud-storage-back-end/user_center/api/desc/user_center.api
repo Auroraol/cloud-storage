@@ -126,6 +126,12 @@ service user_center {
 	)
 	@handler UserFolderSize
 	get /user/folder/size (UserFolderSizeRequest) returns (UserFolderSizeResponse)
+
+	@doc (
+		summary: "搜索用户文件和文件夹"
+	)
+	@handler UserFileSearch
+	post /user/file/search (UserFileSearchRequest) returns (UserFileSearchResponse)
 }
 
 @server (

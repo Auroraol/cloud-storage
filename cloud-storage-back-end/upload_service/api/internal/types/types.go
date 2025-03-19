@@ -36,6 +36,14 @@ type ChunkUploadResponse struct {
 	ETag string `json:"etag"` // 分片的ETag
 }
 
+type FileDownloadUrlRequest struct {
+	RepositoryId int64 `json:"repository_id"` // 文件ID
+}
+
+type FileDownloadUrlResponse struct {
+	URL string `json:"url"` // 文件下载URL
+}
+
 type FileUploadRequest struct {
 	Metadata string `form:"metadata,optional"`
 }

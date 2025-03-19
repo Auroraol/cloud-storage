@@ -81,4 +81,14 @@ type (
 		TotalParts int `json:"total_parts"`   // 总分片数
 		FileSize int64 `json:"file_size"`     // 文件总大小
 	}
+
+	// 获取文件下载链接请求
+	FileDownloadUrlRequest {
+		RepositoryId int64 `json:"repository_id"` // 文件ID
+	}
+
+	// 获取文件下载链接响应
+	FileDownloadUrlResponse {
+		URL string `json:"url"` // 文件下载URL
+	}
 )

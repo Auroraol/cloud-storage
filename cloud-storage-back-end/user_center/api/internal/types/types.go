@@ -146,6 +146,18 @@ type UserFileNameUpdateRequest struct {
 type UserFileNameUpdateResponse struct {
 }
 
+type UserFileSearchRequest struct {
+	ParentId int64  `json:"parent_id"`     // 当前目录ID
+	Keyword  string `json:"keyword"`       // 搜索关键词
+	Page     int64  `json:"page,optional"` // 查询的第几页
+	Size     int64  `json:"size,optional"` // 每页页数
+}
+
+type UserFileSearchResponse struct {
+	List  []*UserFile `json:"list"`
+	Count int64       `json:"count"`
+}
+
 type UserFolder struct {
 	Id         int64  `json:"id"`
 	Name       string `json:"name"`

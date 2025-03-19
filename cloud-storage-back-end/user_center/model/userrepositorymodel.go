@@ -36,6 +36,8 @@ type (
 		FindAllDeletedInPage(ctx context.Context, parentId int64, userId int64, startIndex int64, pageSize int64) ([]*UserRepository, error)
 		FindAllDeletedByParentId(ctx context.Context, parentId int64, userId int64) ([]*UserRepository, error)
 		CountTotalDeletedByUserId(ctx context.Context, userId int64) (int64, error)
+		SearchFilesByKeywordInPage(ctx context.Context, parentId int64, userId int64, keyword string, startIndex int64, pageSize int64) ([]*UserRepository, error)
+		CountSearchResultsByKeyword(ctx context.Context, parentId int64, userId int64, keyword string) (int64, error)
 	}
 
 	customUserRepositoryModel struct {
@@ -366,6 +368,57 @@ func (m *defaultUserRepositoryModel) CountTotalDeletedByUserId(ctx context.Conte
 	query, values, err := countBuilder.
 		Where("user_id = ?", userId).
 		Where("status = ?", 1). // 统计已删除状态
+		ToSql()
+
+	var resp int64
+	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
+	switch {
+	case err == nil:
+		return resp, nil
+	case errors.Is(err, sqlc.ErrNotFound):
+		return 0, model.ErrNotFound
+	default:
+		return 0, err
+	}
+}
+
+// 根据关键字搜索文件和文件夹(分页)
+func (m *defaultUserRepositoryModel) SearchFilesByKeywordInPage(ctx context.Context, parentId int64, userId int64, keyword string, startIndex int64, pageSize int64) ([]*UserRepository, error) {
+	var resp []*UserRepository
+	rowBuilder := m.RowBuilder()
+	// 在指定目录下搜索
+	query, values, err := rowBuilder.
+		Where("parent_id = ?", parentId).
+		Where("user_id = ?", userId).
+		Where("status = ?", 0).                // 只搜索正常状态的文件和文件夹
+		Where("name LIKE ?", "%"+keyword+"%"). // 使用LIKE进行模糊匹配
+		OrderBy("repository_id").              // 按repository_id排序，文件夹在前，文件在后
+		Offset(uint64(startIndex)).
+		Limit(uint64(pageSize)).
+		ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, model.ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+// 统计搜索结果总数
+func (m *defaultUserRepositoryModel) CountSearchResultsByKeyword(ctx context.Context, parentId int64, userId int64, keyword string) (int64, error) {
+	countBuilder := m.CountBuilder("id")
+	query, values, err := countBuilder.
+		Where("parent_id = ?", parentId).
+		Where("user_id = ?", userId).
+		Where("status = ?", 0).                // 只统计正常状态的文件和文件夹
+		Where("name LIKE ?", "%"+keyword+"%"). // 使用LIKE进行模糊匹配
 		ToSql()
 
 	var resp int64

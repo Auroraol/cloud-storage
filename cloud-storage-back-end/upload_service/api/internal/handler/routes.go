@@ -17,6 +17,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 获取文件下载链接
+				Method:  http.MethodPost,
+				Path:    "/file/download/url",
+				Handler: FileDownloadUrlHandler(serverCtx),
+			},
+			{
 				// 普通文件上传
 				Method:  http.MethodPost,
 				Path:    "/file/upload",
