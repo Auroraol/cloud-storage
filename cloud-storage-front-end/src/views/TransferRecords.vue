@@ -27,24 +27,24 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue"
 
 export default {
-  name: 'TransferRecords',
+  name: "TransferRecords",
   setup() {
     const uploadRecords = ref([
-      { id: 1, fileName: 'file1.txt', size: '1 MB', date: '2023-01-01' },
-      { id: 2, fileName: 'file2.txt', size: '2 MB', date: '2023-01-02' },
-    ]);
+      { id: 1, fileName: "file1.txt", size: "1 MB", date: "2023-01-01" },
+      { id: 2, fileName: "file2.txt", size: "2 MB", date: "2023-01-02" }
+    ])
 
     const downloadRecords = ref([
-      { id: 1, fileName: 'file3.txt', size: '3 MB', date: '2023-01-03' },
-      { id: 2, fileName: 'file4.txt', size: '4 MB', date: '2023-01-04' },
-    ]);
+      { id: 1, fileName: "file3.txt", size: "3 MB", date: "2023-01-03" },
+      { id: 2, fileName: "file4.txt", size: "4 MB", date: "2023-01-04" }
+    ])
 
-    return { uploadRecords, downloadRecords };
-  },
-};
+    return { uploadRecords, downloadRecords }
+  }
+}
 </script>
 
 <style scoped>

@@ -14,10 +14,10 @@
 3. pnpm 版本 8.x 或最新版
 
 # 克隆项目
-git clone https://github.com/un-pany/v3-electron-vite.git
+git clone https://github.com/un-pany/cloud-storage.git
 
 # 进入项目目录
-cd v3-electron-vite
+cd cloud-storage
 
 # 安装依赖
 pnpm i

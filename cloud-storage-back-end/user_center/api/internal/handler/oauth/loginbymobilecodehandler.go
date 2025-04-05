@@ -13,7 +13,7 @@ import (
 // 手机号登陆/注册
 func LoginByMobileCodeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.LoginReq
+		var req types.MobileLoginReq
 		if err := httpx.Parse(r, &req); err != nil {
 			response.ParamErrorResult(r, w, err)
 			return

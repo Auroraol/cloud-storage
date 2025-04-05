@@ -23,18 +23,18 @@ type AccountRegisterResp struct {
 }
 
 type CodeSendRequest struct {
-	Email string `json:"email"`
+	Mobile string `json:"mobile"`
 }
 
 type CodeSendResponse struct {
 }
 
-type LoginReq struct {
-	Mobile   string `json:"mobile"`
-	Password string `json:"password"`
+type MobileLoginReq struct {
+	Mobile string `json:"mobile"`
+	Code   string `json:"code"`
 }
 
-type LoginResp struct {
+type MobileLoginResp struct {
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`

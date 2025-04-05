@@ -32,6 +32,30 @@ export function accountLoginApi(data: Login.LoginRequestData) {
   )
 }
 
+/** 手机号登录 */
+export function phoneLoginApi(data: Login.PhoneLoginRequestData) {
+  return request<Login.LoginResponseData>(
+    `${prefix}/user_center/v1/oauth/login/mobile`,
+    {
+      method: "post",
+      data
+    },
+    true
+  )
+}
+
+/** 发送验证码 */
+export function sendSmsCodeApi(data: Login.SendSmsCodeRequestData) {
+  return request<Login.RegisterResponseData>(
+    `${prefix}/user_center/v1/oauth/send`,
+    {
+      method: "post",
+      data
+    },
+    true
+  )
+}
+
 /** 刷新token */
 export function refreshTokenApi() {
   return request<Login.RefreshTokenResponseData>(

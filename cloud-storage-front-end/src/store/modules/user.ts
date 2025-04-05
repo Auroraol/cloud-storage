@@ -7,7 +7,7 @@ import { getToken, removeToken, setToken } from "@/utils/cache/session-storage"
 import { resetRouter } from "@/router"
 import routeSettings from "@/config/route"
 // api
-import { accountLoginApi, getUserInfoApi } from "@/api/user"
+import { accountLoginApi, getUserInfoApi, phoneLoginApi } from "@/api/user"
 import { type LoginRequestData } from "@/api/user/types/login"
 import { da } from "element-plus/es/locale"
 import { tokenService } from "@/utils/cache/localStorage-storage"
@@ -44,15 +44,26 @@ export const useUserStore = defineStore("user", () => {
   const settingsStore = useSettingsStore()
 
   /** 登录 */
-  const login = async ({ name, password }: LoginRequestData) => {
-    const { data, message } = await accountLoginApi({ name, password })
+  const login = async (req: LoginRequestData) => {
+    let dataResult: any = {}
+    let messageResult = ""
+    // 判断是否为手机号
+    if (req.isPhone) {
+      const { data, message } = await phoneLoginApi({ mobile: req.mobile, code: req.code })
+      dataResult = data
+      messageResult = message
+    } else {
+      const { data, message } = await accountLoginApi({ name: req.name, password: req.password })
+      dataResult = data
+      messageResult = message
+    }
     // console.log(data)
     // 方式1
     // setToken(data.accessToken) //保存在sessionStorage, 也可以使用cookie
     // 方式2 tokenService
-    tokenService.setToken(data)
-    token.value = data.accessToken
-    return message // 添加返回值
+    tokenService.setToken(dataResult)
+    token.value = dataResult.accessToken
+    return messageResult // 添加返回值
   }
 
   /** 获取用户详情(动态路由) */

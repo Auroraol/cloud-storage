@@ -34,11 +34,11 @@ type (
 )
 
 type (
-	LoginReq {
+	MobileLoginReq {
 		Mobile   string `json:"mobile"`
-		Password string `json:"password"`
+		code string `json:"code"`
 	}
-	LoginResp {
+	MobileLoginResp {
 		AccessToken  string `json:"accessToken"`
 		AccessExpire int64  `json:"accessExpire"`
 		RefreshAfter int64  `json:"refreshAfter"`
@@ -47,7 +47,7 @@ type (
 
 type (
 	CodeSendRequest {
-		Email string `json:"email"`
+		Mobile string `json:"mobile"`
 	}
 
 	CodeSendResponse {

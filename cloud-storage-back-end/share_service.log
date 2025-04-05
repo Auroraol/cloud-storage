@@ -75,3 +75,16 @@
 {"level":"ERROR","time":"2025-03-19 00:14:22","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
 {"level":"REQUESTS","time":"2025-03-19 00:14:26","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
 {"level":"REQUESTS","time":"2025-03-19 20:45:56","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-04 21:05:20","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-04 21:05:27","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-04 21:07:12","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-04 21:07:16","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-04-04 21:49:52","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:50:07","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:52:27","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:52:47","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:53:25","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:59:45","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 22:03:28","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-04-04 22:07:22","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-04 22:07:50","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/detail?id=1894794766218956800&code=v1z5yg]"}

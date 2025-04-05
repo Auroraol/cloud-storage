@@ -13,10 +13,8 @@ import (
 	ossSDK "github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/zeromicro/go-zero/core/logx"
 
-	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/store/oss"
-	"github.com/Auroraol/cloud-storage/common/token"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/utils"
@@ -81,7 +79,7 @@ func (l *CompleteMultipartUploadLogic) CompleteMultipartUpload(req *types.ChunkU
 	}
 
 	// 获取用户ID
-	userId := token.GetUidFromCtx(l.ctx)
+	//userId := token.GetUidFromCtx(l.ctx)
 
 	// 保存文件信息到数据库
 	fileName := filepath.Base(req.Key)
@@ -108,36 +106,36 @@ func (l *CompleteMultipartUploadLogic) CompleteMultipartUpload(req *types.ChunkU
 		// 继续执行，不影响返回结果
 	}
 
-	// 发送文件上传完成消息到 Pulsar
-	if l.svcCtx.FilePublisher != nil {
-		// 创建文件上传消息
-		fileUploadedMsg := pulsar.NewFileUploadedMessage(
-			strconv.FormatInt(int64(identity), 10),
-			fileName,
-			size,
-			props.Get("Content-Type"),
-			strconv.FormatInt(userId, 10),
-			result.Location,
-		)
-
-		// 设置文件哈希
-		fileUploadedMsg.FileHash = fileHash
-
-		// 发送消息
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-
-		_, err = l.svcCtx.FilePublisher.SendObject(ctx, fileUploadedMsg, map[string]string{
-			"service":     "upload-service",
-			"upload_type": "multipart",
-		})
-		if err != nil {
-			// 只记录日志，不影响上传流程
-			zap.S().Warnf("发送分片上传完成消息失败: %s", err)
-		} else {
-			zap.S().Infof("分片上传完成消息已发送: %s", fileUploadedMsg.FileID)
-		}
-	}
+	// 发送文件上传完成消息到 Pulsar (异步, 暂不实现)
+	//if l.svcCtx.FilePublisher != nil {
+	//	// 创建文件上传消息
+	//	fileUploadedMsg := pulsar.NewFileUploadedMessage(
+	//		strconv.FormatInt(int64(identity), 10),
+	//		fileName,
+	//		size,
+	//		props.Get("Content-Type"),
+	//		strconv.FormatInt(userId, 10),
+	//		result.Location,
+	//	)
+	//
+	//	// 设置文件哈希
+	//	fileUploadedMsg.FileHash = fileHash
+	//
+	//	// 发送消息
+	//	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	//	defer cancel()
+	//
+	//	_, err = l.svcCtx.FilePublisher.SendObject(ctx, fileUploadedMsg, map[string]string{
+	//		"service":     "upload-service",
+	//		"upload_type": "multipart",
+	//	})
+	//	if err != nil {
+	//		// 只记录日志，不影响上传流程
+	//		zap.S().Warnf("发送分片上传完成消息失败: %s", err)
+	//	} else {
+	//		zap.S().Infof("分片上传完成消息已发送: %s", fileUploadedMsg.FileID)
+	//	}
+	//}
 
 	return &types.ChunkUploadCompleteResponse{
 		URL:          result.Location,

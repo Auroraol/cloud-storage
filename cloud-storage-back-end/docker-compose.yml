@@ -1,0 +1,231 @@
+version: "3.8"
+
+services:
+  # 基础设施服务
+  mysql:
+    image: mysql:8.0.27
+    container_name: mysql
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 741106
+      MYSQL_DATABASE: cloud_storage
+    ports:
+      - "3306:3306"
+    volumes:
+      - /opt/project/mysql/data:/var/lib/mysql
+      - /opt/project/mysql/conf:/etc/mysql/conf.d
+    command: --default-authentication-plugin=mysql_native_password
+    privileged: true
+    networks:
+      - cloud-network
+
+  redis:
+    image: redis:6.2.6
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+    command: --requirepass "741106"
+    volumes:
+      - /opt/project/redis/data:/data
+      - /opt/project/redis/conf/redis.conf:/etc/redis/redis.conf
+    privileged: true
+    networks:
+      - cloud-network
+
+  pulsar:
+    image: apachepulsar/pulsar:latest
+    container_name: pulsar
+    restart: always
+    command: bin/pulsar standalone
+    ports:
+      - "6650:6650"  # Pulsar Broker
+      - "8080:8080"  # Pulsar Web UI
+    volumes:
+      - /opt/project/pulsar_data:/pulsar/data
+    environment:
+      - PULSAR_MEM="-Xmx512m -Xms512m"
+    networks:
+      - cloud-network
+
+  # 添加Prometheus监控
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - /opt/project/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /opt/project/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - cloud-network
+    
+  # 添加Grafana仪表盘
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - /opt/project/grafana/data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - cloud-network
+
+  etcd:
+    image: bitnami/etcd:latest
+    container_name: etcd
+    restart: always
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    volumes:
+      - /opt/project/etcd_data:/bitnami/etcd
+    networks:
+      - cloud-network
+
+  # 应用服务
+  user-center:
+    build:
+      context: .
+      dockerfile: docker/user_center/Dockerfile
+    container_name: user-center
+    restart: always
+    ports:
+      - "1004:1004"
+      - "4004:4004"  # 为Prometheus监控暴露端口
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - cloud-network
+
+  upload-service:
+    build:
+      context: .
+      dockerfile: docker/upload_service/Dockerfile
+    container_name: upload-service
+    restart: always
+    ports:
+      - "1005:1005"
+      - "4005:4005"  # 为Prometheus监控暴露端口
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - pulsar
+    environment:
+      - TZ=Asia/Shanghai
+      - OSS_ACCESS_KEY_ID=${OSS_ACCESS_KEY_ID}
+      - OSS_ACCESS_KEY_SECRET=${OSS_ACCESS_KEY_SECRET}
+      - OSS_BUCKET_NAME=${OSS_BUCKET_NAME}
+      - OSS_ENDPOINT=${OSS_ENDPOINT}
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - cloud-network
+
+  share-service:
+    build:
+      context: .
+      dockerfile: docker/share_service/Dockerfile
+    container_name: share-service
+    restart: always
+    ports:
+      - "1006:1006"
+      - "4006:4006"  # 为Prometheus监控暴露端口
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - cloud-network
+
+  log-service:
+    build:
+      context: .
+      dockerfile: docker/log_service/Dockerfile
+    container_name: log-service
+    restart: always
+    ports:
+      - "1007:1007"
+      - "4007:4007"  # 为Prometheus监控暴露端口
+    depends_on:
+      - mysql
+      - etcd
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - cloud-network
+
+  file-processor:
+    build:
+      context: .
+      dockerfile: docker/file_processor/Dockerfile
+    container_name: file-processor
+    restart: always
+    depends_on:
+      - pulsar
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - cloud-network
+
+  # Nginx反向代理
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/project/nginx/html:/usr/share/nginx/html
+      - /opt/project/nginx/log:/var/log/nginx
+      - /opt/project/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/project/ssl:/etc/nginx/cert
+    depends_on:
+      - user-center
+      - upload-service
+      - share-service
+    privileged: true
+    networks:
+      - cloud-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+# 网络配置
+networks:
+  # 内部网络，用于服务间通信
+  cloud-network:
+    driver: bridge 

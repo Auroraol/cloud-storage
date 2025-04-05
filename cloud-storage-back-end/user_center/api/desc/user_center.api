@@ -29,14 +29,13 @@ service user_center {
 	@handler login
 	post /oauth/login (AccountLoginReq) returns (AccountLoginResp)
 
-	@doc "手机号登陆/注册" // todo
+	@doc "手机号登陆/注册"
 	@handler loginByMobileCode
-	post /oauth/login/mobile (LoginReq) returns (LoginResp)
+	post /oauth/login/mobile (MobileLoginReq) returns (MobileLoginResp)
 
-	@doc "验证码发送" // todo
+	@doc "验证码发送"
 	@handler codeSend
 	post /oauth/send (CodeSendRequest) returns (CodeSendResponse)
-//github 登录
 }
 
 //need login

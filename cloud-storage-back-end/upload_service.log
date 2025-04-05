@@ -312,3 +312,25 @@
 {"level":"REQUESTS","time":"2025-03-20 00:45:10","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
 {"level":"REQUESTS","time":"2025-03-20 00:45:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
 {"level":"REQUESTS","time":"2025-03-20 00:45:20","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"REQUESTS","time":"2025-04-04 21:02:49","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-04 21:05:46","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-04-04 21:05:46","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-04-04 21:08:45","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-04-04 21:10:40","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:11:05","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:19:52","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:20:02","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:22:47","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:26:56","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:27:51","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:30:12","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:30:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:32:39","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 22:04:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 22:09:00","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-05 00:07:46","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-05 00:29:07","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 01:02:38","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 01:26:18","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 01:47:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 02:02:48","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}

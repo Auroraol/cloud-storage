@@ -1,0 +1,172 @@
+version: "3.8"
+
+services:
+  # 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: cloud_storage
+    ports:
+      - "3306:3306"
+    volumes:
+      - /opt/project/mysql/data:/var/lib/mysql
+      - /opt/project/mysql/conf:/etc/mysql/conf.d
+    networks:
+      - cloud-network
+
+  # 缓存服务
+  redis:
+    image: redis:6.2
+    container_name: redis
+    restart: always
+    command: ["redis-server", "/etc/redis/redis.conf", "--requirepass", "123456"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - /opt/project/redis/data:/data
+      - /opt/project/redis/conf/redis.conf:/etc/redis/redis.conf
+    networks:
+      - cloud-network
+
+  # 监控系统 - Prometheus
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9091:9090"  # 修改宿主机端口避免与原有服务冲突
+    volumes:
+      - /opt/project/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /opt/project/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - cloud-network
+
+  # 监控系统 - Grafana
+  grafana:
+    image: grafana/grafana:9.1.0
+    container_name: grafana
+    restart: always
+    ports:
+      - "3001:3000"  # 修改宿主机端口避免与原有服务冲突
+    volumes:
+      - /opt/project/grafana/data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    networks:
+      - cloud-network
+
+  # 分布式配置服务
+  etcd:
+    image: bitnami/etcd:3.5.5
+    container_name: etcd
+    restart: always
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    ports:
+      - "2379:2379"
+    volumes:
+      - /opt/project/etcd_data:/bitnami/etcd
+    networks:
+      - cloud-network
+
+  # 用户中心服务
+  user-center:
+    image: ${DOCKER_REGISTRY:-}user-center:latest
+    container_name: user-center
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+    networks:
+      - cloud-network
+
+  # 上传服务
+  upload-service:
+    image: ${DOCKER_REGISTRY:-}upload-service:latest
+    container_name: upload-service
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - OSS_ACCESS_KEY_ID=${OSS_ACCESS_KEY_ID}
+      - OSS_ACCESS_KEY_SECRET=${OSS_ACCESS_KEY_SECRET}
+      - OSS_BUCKET_NAME=${OSS_BUCKET_NAME}
+      - OSS_ENDPOINT=${OSS_ENDPOINT}
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - user-center
+    networks:
+      - cloud-network
+
+  # 分享服务
+  share-service:
+    image: ${DOCKER_REGISTRY:-}share-service:latest
+    container_name: share-service
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - user-center
+    networks:
+      - cloud-network
+
+  # 日志服务
+  log-service:
+    image: ${DOCKER_REGISTRY:-}log-service:latest
+    container_name: log-service
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+    networks:
+      - cloud-network
+
+  # Nginx服务 - 作为统一的入口
+  nginx:
+    image: nginx:1.22
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/project/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/project/nginx/log:/var/log/nginx
+      - /opt/project/ssl:/etc/nginx/ssl
+      - /usr/share/nginx/html:/usr/share/nginx/html
+    depends_on:
+      - user-center
+      - upload-service
+      - share-service
+      - log-service
+      - prometheus
+      - grafana
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - cloud-network
+
+networks:
+  cloud-network:
+    driver: bridge

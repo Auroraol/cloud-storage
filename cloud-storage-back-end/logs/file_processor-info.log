@@ -1,6 +1,0 @@
-{"level":"INFO","time":"2025-03-15 22:23:27","caller":"file_processor/main.go:63","msg":"文件处理服务启动成功"}
-{"level":"INFO","time":"2025-03-15 22:25:54","caller":"file_processor/main.go:63","msg":"文件处理服务启动成功"}
-{"level":"INFO","time":"2025-03-15 22:26:21","caller":"file_processor/main.go:63","msg":"文件处理服务启动成功"}
-{"level":"INFO","time":"2025-03-15 22:26:38","caller":"file_processor/main.go:64","msg":"文件处理服务启动成功"}
-{"level":"INFO","time":"2025-03-15 22:30:40","caller":"file_processor/main.go:64","msg":"文件处理服务启动成功"}
-{"level":"INFO","time":"2025-03-15 22:31:41","caller":"file_processor/main.go:64","msg":"文件处理服务启动成功"}

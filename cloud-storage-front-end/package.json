@@ -1,19 +1,10 @@
 {
-  "name": "v3-electron-vite",
-  "version": "4.5.6",
-  "description": "v3-electron-client",
-  "author": {
-    "name": "nevlf",
-    "email": "2863180001@qq.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/un-pany/v3-electron-vite.git"
-  },
-  "homepage": "https://github.com/un-pany",
+  "name": "cloud-storage",
+  "version": "1.0.0",
+  "description": "Cloud Storage",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=18.0.0"
   },
   "env": {
     "host": "127.0.0.1",
@@ -36,8 +27,8 @@
     "prepare": "husky"
   },
   "build": {
-    "productName": "v3-electron-vite",
-    "appId": "com.app.v3-electron-vite",
+    "productName": "cloud-storage",
+    "appId": "com.app.cloud-storage",
     "directories": {
       "output": "release/v${version}-${platform}"
     },
@@ -57,7 +48,8 @@
         "url": ""
       }
     ],
-    "asar": true,
+    "asar": false,
+    "electronDist": "./node_modules/electron/dist",
     "nsis": {
       "oneClick": false,
       "perMachine": true,
@@ -68,9 +60,15 @@
       "allowToChangeInstallationDirectory": true
     },
     "win": {
-      "icon": "static/icons/logo_256x256.ico",
+      "icon": "static/icons/logo.png",
       "artifactName": "${productName} v${version} ${arch}.${ext}",
       "requestedExecutionLevel": "requireAdministrator",
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "dir"
+        }
+      ],
       "signtoolOptions": {
         "sign": null
       }
@@ -111,9 +109,11 @@
   "dependencies": {
     "@electron/remote": "2.1.2",
     "@element-plus/icons-vue": "2.3.1",
+    "@vue-office/docx": "^1.2.0",
     "axios": "1.7.7",
     "axios-retry": "^4.3.0",
     "dayjs": "1.11.13",
+    "dplayer": "^1.27.1",
     "echarts": "5.6.0",
     "electron-log": "5.2.3",
     "element-plus": "2.8.8",
@@ -130,12 +130,10 @@
     "vue-clipboard3": "2.0.0",
     "vue-good-table-next": "^0.2.1",
     "vue-router": "4.4.5",
+    "vue3-audio-player": "^1.0.6",
     "vxe-table": "4.6.23",
     "vxe-table-plugin-element": "4.0.4",
-    "xe-utils": "3.5.31",
-    "@vue-office/docx": "^1.2.0",
-    "vue3-audio-player": "^1.0.6",
-    "dplayer": "^1.27.1"
+    "xe-utils": "3.5.31"
   },
   "devDependencies": {
     "@types/lodash-es": "4.17.12",
@@ -149,7 +147,7 @@
     "@vue-hooks-plus/resolvers": "^1.2.4",
     "@vue/eslint-config-prettier": "9.0.0",
     "@vue/eslint-config-typescript": "13.0.0",
-    "electron": "33.2.1",
+    "electron": "28.0.0",
     "electron-builder": "25.1.8",
     "eslint": "8.57.1",
     "eslint-plugin-prettier": "5.2.1",
@@ -188,5 +186,7 @@
     "pinia",
     "rollup"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "electron_mirror": "https://npmmirror.com/mirrors/electron/",
+  "electron_builder_binaries_mirror": "https://npmmirror.com/mirrors/electron-builder-binaries/"
 }

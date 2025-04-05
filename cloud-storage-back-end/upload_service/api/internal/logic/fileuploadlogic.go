@@ -14,7 +14,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
 	"github.com/Auroraol/cloud-storage/common/response"
 	"github.com/Auroraol/cloud-storage/common/store/oss"
 	"github.com/Auroraol/cloud-storage/common/token"
@@ -192,34 +191,34 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		return nil, response.NewErrMsg(fmt.Sprintf("更新用户存储容量失败: %v", err))
 	}
 
-	// 发送文件上传完成消息到 Pulsar
-	if l.svcCtx.FilePublisher != nil {
-		// 创建文件上传消息
-		fileUploadedMsg := pulsar.NewFileUploadedMessage(
-			strconv.FormatInt(int64(identity), 10),
-			fileHeader.Filename,
-			fileHeader.Size,
-			fileHeader.Header.Get("Content-Type"),
-			strconv.FormatInt(userId, 10),
-			fileUrl,
-		)
-		// 设置文件哈希
-		fileUploadedMsg.FileHash = md5Str
-
-		// 发送消息
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-
-		_, err = l.svcCtx.FilePublisher.SendObject(ctx, fileUploadedMsg, map[string]string{
-			"service": "upload-service",
-		})
-		if err != nil {
-			// 只记录日志，不影响上传流程
-			zap.S().Warnf("发送文件上传消息失败: %s", err)
-		} else {
-			zap.S().Infof("文件上传消息已发送: %s", fileUploadedMsg.FileID)
-		}
-	}
+	// 发送文件上传完成消息到 Pulsar (异步, 暂不实现)
+	//if l.svcCtx.FilePublisher != nil {
+	//	// 创建文件上传消息
+	//	fileUploadedMsg := pulsar.NewFileUploadedMessage(
+	//		strconv.FormatInt(int64(identity), 10),
+	//		fileHeader.Filename,
+	//		fileHeader.Size,
+	//		fileHeader.Header.Get("Content-Type"),
+	//		strconv.FormatInt(userId, 10),
+	//		fileUrl,
+	//	)
+	//	// 设置文件哈希
+	//	fileUploadedMsg.FileHash = md5Str
+	//
+	//	// 发送消息
+	//	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	//	defer cancel()
+	//
+	//	_, err = l.svcCtx.FilePublisher.SendObject(ctx, fileUploadedMsg, map[string]string{
+	//		"service": "upload-service",
+	//	})
+	//	if err != nil {
+	//		// 只记录日志，不影响上传流程
+	//		zap.S().Warnf("发送文件上传消息失败: %s", err)
+	//	} else {
+	//		zap.S().Infof("文件上传消息已发送: %s", fileUploadedMsg.FileID)
+	//	}
+	//}
 
 	return &types.FileUploadResponse{
 		URL:          fileUrl,
@@ -227,32 +226,4 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest, r *http.Reque
 		Size:         fileHeader.Size,
 		RepositoryId: int64(identity),
 	}, nil
-}
-
-func (l *FileUploadLogic) FileUpload_test(req *types.FileUploadRequest, r *http.Request) (resp *types.FileUploadResponse, err error) {
-	// 保存文件信息到数据库
-	_, err = l.svcCtx.RepositoryPoolModel.InsertWithId(l.ctx, &model.RepositoryPool{
-		Identity: 0,
-		Hash:     "md5Str",
-		Name:     "fileHeader.Filename",
-		Ext:      "path.Ext(fileHeader.Filename)",
-		Size:     1,
-		Path:     "fileUrl",
-	})
-	if err != nil {
-		zap.S().Error("保存文件信息失败: %s", err)
-	}
-
-	hash, err := l.svcCtx.RepositoryPoolModel.CountByHash(l.ctx, "md5Str")
-	if err != nil {
-		zap.S().Error("查询文件MD5失败, err: %s", err)
-	}
-	zap.S().Infof("hash--->", hash)
-
-	byHash, err := l.svcCtx.RepositoryPoolModel.FindRepositoryPoolByHash(l.ctx, "md5Str")
-	if err != nil {
-		zap.S().Error("查询文件MD5失败, err: %s", err)
-	}
-	zap.S().Infof("byHash--->", byHash)
-	return nil, err
 }

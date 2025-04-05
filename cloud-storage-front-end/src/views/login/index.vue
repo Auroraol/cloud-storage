@@ -10,7 +10,7 @@ import Owl from "./components/Owl.vue"
 import { useFocus } from "./hooks/useFocus"
 import SvgIcon from "@/components/SvgIcon/index.vue"
 
-import { registerApi } from "@/api/user"
+import { registerApi, sendSmsCodeApi } from "@/api/user"
 import { type LoginRequestData, type RegisterRequestData } from "@/api/user/types/login"
 
 import { ElMessage } from "element-plus"
@@ -40,13 +40,15 @@ const countdown = ref(0)
 /** 账号密码登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
   name: "",
-  password: ""
+  password: "",
+  isPhone: false
 })
 
 /** 手机号登录表单数据 */
 const phoneFormData = reactive({
   mobile: "",
-  code: ""
+  code: "",
+  isPhone: true
 })
 
 /** 账号密码登录表单校验规则 */
@@ -112,8 +114,7 @@ const handlePhoneLogin = async () => {
     loading.value = true
     try {
       // Pinia
-      useUserPinia.login(loginFormData)
-      await phoneLoginApi(phoneFormData)
+      await useUserPinia.login(phoneFormData)
       // 如果选择记住手机号，可以在这里保存手机号
       if (rememberPhone.value) {
         localStorage.setItem("rememberedPhone", phoneFormData.mobile)
@@ -132,9 +133,48 @@ const handlePhoneLogin = async () => {
 /** 发送验证码 */
 const handleSendCode = async () => {
   try {
-    await phoneFormRef.value?.validateField("mobile")
-    sendCodeLoading.value = true
-    await sendSmsCodeApi(phoneFormData.mobile)
+    // 判断是登录还是注册场景
+    if (registerDialogVisible.value && registerActiveTab.value === "phone") {
+      // 注册场景下的手机号验证
+      await registerPhoneFormRef.value?.validateField("mobile")
+
+      // 检查手机号是否为空或格式是否正确
+      if (!registerPhoneFormData.mobile) {
+        ElMessage.error("请输入手机号")
+        return
+      }
+
+      // 检查手机号格式
+      if (!/^1[3-9]\d{9}$/.test(registerPhoneFormData.mobile)) {
+        ElMessage.error("请输入正确的手机号格式")
+        return
+      }
+
+      sendCodeLoading.value = true
+      await sendSmsCodeApi({ mobile: registerPhoneFormData.mobile })
+      ElMessage.success("验证码发送成功，请注意查收")
+    } else {
+      // 登录场景下的手机号验证
+      await phoneFormRef.value?.validateField("mobile")
+
+      // 检查手机号是否为空或格式是否正确
+      if (!phoneFormData.mobile) {
+        ElMessage.error("请输入手机号")
+        return
+      }
+
+      // 检查手机号格式
+      if (!/^1[3-9]\d{9}$/.test(phoneFormData.mobile)) {
+        ElMessage.error("请输入正确的手机号格式")
+        return
+      }
+
+      sendCodeLoading.value = true
+      await sendSmsCodeApi({ mobile: phoneFormData.mobile })
+      ElMessage.success("验证码发送成功，请注意查收")
+    }
+
+    // 开始倒计时
     countdown.value = 60
     const timer = setInterval(() => {
       countdown.value--
@@ -144,6 +184,18 @@ const handleSendCode = async () => {
     }, 1000)
   } catch (error) {
     console.error("发送验证码失败", error)
+    // 显示更友好的错误信息
+    const err = error as any
+    if (err.response) {
+      // 请求成功发出且服务器也响应了状态码，但状态码超出了2xx的范围
+      ElMessage.error(`发送失败: ${err.response.data?.message || err.message || "服务器错误"}`)
+    } else if (err.request) {
+      // 请求已经成功发起，但没有收到响应
+      ElMessage.error("网络异常，请检查您的网络连接")
+    } else {
+      // 发送请求时出了点问题
+      ElMessage.error(`发送失败: ${err.message || "未知错误"}`)
+    }
   } finally {
     sendCodeLoading.value = false
   }
@@ -252,7 +304,8 @@ const handleRegister = async () => {
         // 注册成功后，直接跳转登录
         const loginData: LoginRequestData = {
           name: registerFormData.name,
-          password: registerFormData.password
+          password: registerFormData.password,
+          isPhone: false
         }
         await useUserPinia.login(loginData)
         router.push({ path: "/" })
@@ -275,6 +328,15 @@ const handleRegister = async () => {
         }
         await registerApi(data)
         ElMessage.success("注册成功")
+
+        // 注册成功后，使用手机号登录
+        const loginData: LoginRequestData = {
+          mobile: registerPhoneFormData.mobile,
+          code: registerPhoneFormData.code,
+          isPhone: true
+        }
+        await useUserPinia.login(loginData)
+        router.push({ path: "/" })
         registerDialogVisible.value = false
       } catch (error) {
         console.error("注册失败:", error)
@@ -414,7 +476,7 @@ const handleRegister = async () => {
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane label="手机注册" name="phone">
+      <!-- <el-tab-pane label="手机注册" name="phone">
         <el-form
           ref="registerPhoneFormRef"
           :model="registerPhoneFormData"
@@ -439,7 +501,7 @@ const handleRegister = async () => {
             <el-input v-model="registerPhoneFormData.password" type="password" placeholder="请输入密码" show-password />
           </el-form-item>
         </el-form>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
 
     <template #footer>

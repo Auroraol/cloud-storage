@@ -2,6 +2,7 @@ package svc
 
 import (
 	"github.com/Auroraol/cloud-storage/common/logx"
+	"github.com/Auroraol/cloud-storage/common/sms"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
 	"github.com/Auroraol/cloud-storage/upload_service/rpc/client/uploadservicerpc"
 	"github.com/Auroraol/cloud-storage/user_center/api/internal/config"
@@ -19,6 +20,7 @@ type ServiceContext struct {
 	UploadServiceRpc    uploadservicerpc.UploadServiceRpc
 	UserCenterRpc       userservicerpc.UserServiceRpc
 	AuditLogServiceRpc  auditservicerpc.AuditServiceRpc
+	Sms                 sms.SmsClient
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -34,6 +36,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 
+	SmsClient, err := sms.NewClient(c.Sms)
+	if err != nil {
+		zap.S().Errorf("创建SMS客户端失败: %s", err.Error())
+		panic(err)
+	}
+
 	return &ServiceContext{
 		Config:              c,
 		UserModel:           model.NewUserModel(mysqlConn),
@@ -44,5 +52,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			zrpc.MustNewClient(c.UserCenterRpcConf)),
 		AuditLogServiceRpc: auditservicerpc.NewAuditServiceRpc(
 			zrpc.MustNewClient(c.AuditServiceRpcConf)),
+		Sms: SmsClient,
 	}
 }

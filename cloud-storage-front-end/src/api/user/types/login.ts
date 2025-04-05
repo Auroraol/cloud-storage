@@ -1,8 +1,14 @@
 export interface LoginRequestData {
   /** admin 或 editor */
-  name: string
+  name?: string
   /** 密码 */
-  password: string
+  password?: string
+  /** 是否为手机号登录 */
+  isPhone: boolean
+  /** 手机号 */
+  mobile?: string
+  /** 验证码 */
+  code?: string
 }
 
 export interface PhoneLoginRequestData {
@@ -10,6 +16,11 @@ export interface PhoneLoginRequestData {
   mobile: string
   /** 验证码 */
   code: string
+}
+
+export interface SendSmsCodeRequestData {
+  /** 手机号 */
+  mobile: string
 }
 
 export type LoginCodeResponseData = ApiResponseData<string>

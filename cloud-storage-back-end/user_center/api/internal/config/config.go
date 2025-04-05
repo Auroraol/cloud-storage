@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/orm"
+	"github.com/Auroraol/cloud-storage/common/sms"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -20,4 +21,5 @@ type Config struct {
 	UserCenterRpcConf    zrpc.RpcClientConf
 	AuditServiceRpcConf  zrpc.RpcClientConf
 	LogConfig            logx.LogConfig
+	Sms                  sms.SmsConfig
 }

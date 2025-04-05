@@ -5,6 +5,10 @@ import { Bell } from "@element-plus/icons-vue"
 import NotifyList from "./NotifyList.vue"
 import { type ListItem, notifyData, messageData, todoData } from "./data"
 
+defineOptions({
+  name: "Notify"
+})
+
 type TabName = "通知" | "消息" | "待办"
 
 interface DataItem {
@@ -85,10 +89,46 @@ const handleHistory = () => {
 <style lang="scss" scoped>
 .notify {
   margin-right: 10px;
+  cursor: pointer;
+
+  :deep(.el-badge__content) {
+    border: none;
+  }
+
+  :deep(.el-icon) {
+    color: var(--el-text-color-primary);
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
 }
+
 .notify-history {
   text-align: center;
   padding-top: 12px;
   border-top: 1px solid var(--el-border-color);
+
+  :deep(.el-button) {
+    font-size: 13px;
+
+    &:hover {
+      color: var(--el-color-primary-light-3);
+    }
+  }
+}
+
+:deep(.el-tabs__nav) {
+  width: 100%;
+}
+
+:deep(.el-tabs__item) {
+  text-align: center;
+}
+
+:deep(.el-scrollbar) {
+  height: 400px;
+  max-height: 400px;
 }
 </style>
