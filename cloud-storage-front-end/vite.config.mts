@@ -9,9 +9,9 @@ import electron from "vite-electron-plugin"
 import { loadViteEnv } from "vite-electron-plugin/plugin"
 import { rmSync } from "fs"
 import pkg from "./package.json"
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
+// import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 import AutoImport from "unplugin-auto-import/vite"
-import Components from "unplugin-vue-components/vite"
+// import Components from "unplugin-vue-components/vite"
 import { VueHooksPlusResolver } from "@vue-hooks-plus/resolvers"
 import { loadEnv } from "vite" // 导入 loadEnv 函数
 
@@ -77,7 +77,19 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       chunkSizeWarningLimit: 2048,
       /** 禁用 gzip 压缩大小报告 */
       reportCompressedSize: false,
+      outDir: "dist",
+      emptyOutDir: true,
+      minify: "terser",
+      terserOptions: {
+        compress: {
+          drop_console: false,
+          drop_debugger: true
+        }
+      },
       rollupOptions: {
+        input: {
+          index: resolve(__dirname, "index.html")
+        },
         output: {
           /**
            * 分块策略

@@ -44,7 +44,7 @@ AuditServiceRpcConf:
 LogConfig:
   LogLevel: "debug"          # 日志级别: debug, info, warn, error
   LogFormat: "json"          # 日志格式: json
-  LogPath: "./"  # 日志文件路径
+  LogPath: "./log/"  # 日志文件路径
   LogFileName: "user_center.log" # 日志文件名
   LogFileMaxSize: 10         # 单个日志文件最大大小(MB)
   LogFileMaxBackups: 10      # 日志备份文件最多数量
@@ -55,8 +55,8 @@ LogConfig:
 
 SMS:
   RegionID: "cn-hangzhou"
-  AccessKeyID: "LTAI5tPvLYjKCJ1BfpvzmdGS"       # 阿里云AccessKeyID
-  AccessKeySecret: "QCLFnix1sgaJ7cYU2PsQRyeXbdZz8v" # 阿里云AccessKeySecret
-  SignName: "悦读博客"                        # 短信签名
+  AccessKeyID: "LTAI5tPvKCJ1BfpvzmdGS"       # 阿里云AccessKeyID
+  AccessKeySecret: "QCLFnixJ7cYU2PsQRyeXbdZz8v" # 阿里云AccessKeySecret
+  SignName: "sss"                        # 短信签名
   TemplateCode: "SMS_465388108"           # 短信模板代码
   ExpiredAt: 300  # 验证码有效期，单位秒

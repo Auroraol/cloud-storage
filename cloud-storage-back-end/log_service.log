@@ -506,3 +506,49 @@
 {"level":"REQUESTS","time":"2025-04-04 22:06:19","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
 {"level":"REQUESTS","time":"2025-04-04 22:07:14","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
 {"level":"REQUESTS","time":"2025-04-04 22:07:17","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/logfiles]"}
+{"level":"REQUESTS","time":"2025-04-05 23:29:50","caller":"api/logservice.go:29","msg":"Starting server at 0.0.0.0:1007..."}
+{"level":"REQUESTS","time":"2025-04-05 23:31:09","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/get]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:10","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:10","caller":"ssh/connecthandler.go:25","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:10","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:11","caller":"ssh/connectlogic.go:87","msg":"SSH信息保存失败，可能是记录已存在: rpc error: code = Unknown desc = Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:14","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/logfiles]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:19","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:25","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:31","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/monitor/realtime]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:31","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:34","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-04-05 23:42:43","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/operation]"}
+{"level":"REQUESTS","time":"2025-04-05 23:42:46","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/get]"}
+{"level":"REQUESTS","time":"2025-04-05 23:42:58","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-04-05 23:42:58","caller":"ssh/connecthandler.go:25","msg":"req: {Host:127.0.0.1 Port:22 User: Password: PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-04-05 23:44:33","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-04-05 23:44:33","caller":"ssh/connecthandler.go:25","msg":"req: {Host:127.0.0.1 Port:22 User: Password: PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-04-05 23:44:41","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/connect]"}
+{"level":"REQUESTS","time":"2025-04-05 23:44:41","caller":"ssh/connecthandler.go:25","msg":"req: {Host:127.0.0.1 Port:22 User:root Password:1234456 PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-04-05 23:44:41","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:44:41","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:02","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:02","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:05","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:05","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:09","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:09","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:13","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:13","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:51","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:51","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:53","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:53","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:45:58","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:45:58","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:47:23","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:47:23","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:47:28","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:47:28","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:47:30","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:47:30","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:47:41","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:47:41","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"REQUESTS","time":"2025-04-05 23:47:43","caller":"logx/logger.go:321","msg":"localhost:1007 [/log_service/v1/ssh/readlog]"}
+{"level":"ERROR","time":"2025-04-05 23:47:43","caller":"ssh/getlogfileslogic.go:50","msg":"获取日志文件列表失败: 获取日志文件列表失败: can not establish a connection to 127.0.0.1:22: dial tcp 127.0.0.1:22: connectex: No connection could be made because the target machine actively refused it."}

@@ -22,7 +22,7 @@ CacheRedis:
 LogConfig:
   LogLevel: "debug"          # 日志级别: debug, info, warn, error
   LogFormat: "json"          # 日志格式: json
-  LogPath: "./"  # 日志文件路径
+  LogPath: "./log/"  # 日志文件路径
   LogFileName: "user_center.log" # 日志文件名
   LogFileMaxSize: 10         # 单个日志文件最大大小(MB)
   LogFileMaxBackups: 10      # 日志备份文件最多数量

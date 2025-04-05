@@ -91,3 +91,15 @@
 {"level":"REQUESTS","time":"2025-04-05 14:59:10","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
 {"level":"REQUESTS","time":"2025-04-05 17:04:26","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
 {"level":"REQUESTS","time":"2025-04-05 17:10:43","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-05 23:24:49","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-05 23:29:07","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-05 23:29:53","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-05 23:31:02","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-04-05 23:31:11","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:57","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/create]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:03","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/create]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:05","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:09","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:23","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/create]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:26","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-05 23:45:18","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}

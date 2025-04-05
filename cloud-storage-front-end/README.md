@@ -2,9 +2,6 @@
 
 🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element Plus` + `TypeScript`
 
-- src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite)
-- 注意: **Electron23 开始不再支持 win7/8/8.1**
-
 ## 运行项目
 
 ```bash
@@ -14,7 +11,7 @@
 3. pnpm 版本 8.x 或最新版
 
 # 克隆项目
-git clone https://github.com/un-pany/cloud-storage.git
+git clone https://github.com/Auroraol/cloud-storage/tree/main/cloud-storage-front-end
 
 # 进入项目目录
 cd cloud-storage
@@ -24,14 +21,9 @@ pnpm i
 
 # 启动服务
 pnpm dev
-
-# 升级所有依赖
-pnpm up --latest
 ```
 
 ## 打包
-
-打包配置，请参考文档 [electron-builder](https://www.electron.build/)
 
 ```bash
 
@@ -54,12 +46,6 @@ pnpm build:win-x64
 pnpm build:win-x32
 ```
 
-## 代码格式检查
-
-```bash
-pnpm lint
-```
-
 ## 目录结构
 
 ```tree
@@ -76,22 +62,6 @@ pnpm lint
 ├── static              静态资源
 ├   ├── icons           系统图标
 ```
-
-## Git 提交规范
-
-- `feat` 增加新的业务功能
-- `fix` 修复业务问题/BUG
-- `perf` 优化性能
-- `style` 更改代码风格, 不影响运行结果
-- `refactor` 重构代码
-- `revert` 撤销更改
-- `test` 测试相关, 不涉及业务代码的更改
-- `docs` 文档和注释相关
-- `chore` 更新依赖/修改脚手架配置等琐事
-- `workflow` 工作流改进
-- `ci` 持续集成相关
-- `types` 类型定义文件更改
-- `wip` 开发中
 
 ## 站在巨人的肩膀上
 
