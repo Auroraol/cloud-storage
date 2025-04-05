@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/upload_service/model"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/internal/config"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/rpc/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"go.uber.org/zap"
 )

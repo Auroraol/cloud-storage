@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/common/orm"
-	"github.com/Auroraol/cloud-storage/common/sms"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/orm"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/sms"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"

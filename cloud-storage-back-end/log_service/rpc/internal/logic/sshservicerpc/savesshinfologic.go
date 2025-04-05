@@ -3,11 +3,11 @@ package sshservicerpclogic
 import (
 	"context"
 
-	"github.com/Auroraol/cloud-storage/log_service/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/model"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

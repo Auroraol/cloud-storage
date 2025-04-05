@@ -1,4 +1,4 @@
-module github.com/Auroraol/cloud-storage
+module github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end
 
 go 1.23.1
 

@@ -11,8 +11,8 @@ import (
 	"strings"
 	stdtime "time"
 
-	sshx "github.com/Auroraol/cloud-storage/common/ssh"
-	"github.com/Auroraol/cloud-storage/common/time"
+	sshx "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/ssh"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
 )
 
 // SSHService SSH服务接口

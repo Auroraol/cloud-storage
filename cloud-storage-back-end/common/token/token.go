@@ -2,7 +2,7 @@ package token
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/time"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
 
 	"encoding/json"
 	"github.com/golang-jwt/jwt/v4"

@@ -4,14 +4,14 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/store/oss"
-	"github.com/Auroraol/cloud-storage/common/token"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/store/oss"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/token"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/client/auditservicerpc"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

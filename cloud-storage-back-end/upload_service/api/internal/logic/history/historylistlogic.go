@@ -2,13 +2,13 @@ package history
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/token"
 	"go.uber.org/zap"
 	"strconv"
 
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

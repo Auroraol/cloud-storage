@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/config"
-	userrepositoryrpcServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/userrepositoryrpc"
-	userservicerpcServer "github.com/Auroraol/cloud-storage/user_center/rpc/internal/server/userservicerpc"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/config"
+	userrepositoryrpcServer "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/server/userrepositoryrpc"
+	userservicerpcServer "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/server/userservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

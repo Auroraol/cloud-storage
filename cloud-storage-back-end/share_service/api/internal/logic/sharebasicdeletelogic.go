@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/token"
-	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/token"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/api/internal/types"
 	"go.uber.org/zap"
 	"strconv"
 

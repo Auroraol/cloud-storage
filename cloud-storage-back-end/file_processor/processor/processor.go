@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/mq/pulsar"
 	"go.uber.org/zap"
 )
 

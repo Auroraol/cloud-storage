@@ -3,19 +3,19 @@ package logic
 import (
 	"context"
 	"errors"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/client/uploadservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/rpc/client/uploadservicerpc"
 	"strconv"
 
-	"github.com/Auroraol/cloud-storage/common/cache"
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/cache"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/client/userrepositoryrpc"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/share_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

@@ -2,11 +2,11 @@ package oauth
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/token"
-	"github.com/Auroraol/cloud-storage/common/utils"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/token"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/utils"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
 	"go.uber.org/zap"
 )

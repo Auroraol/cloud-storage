@@ -2,10 +2,10 @@ package auditservicerpclogic
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/time"
-	"github.com/Auroraol/cloud-storage/log_service/model"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/pb"
 	"go.uber.org/zap"
 
 	"github.com/zeromicro/go-zero/core/logx"

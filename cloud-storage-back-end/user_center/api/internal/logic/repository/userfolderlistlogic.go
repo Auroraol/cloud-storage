@@ -4,12 +4,12 @@ import (
 	"context"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/time"
-	"github.com/Auroraol/cloud-storage/common/token"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/token"
 
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

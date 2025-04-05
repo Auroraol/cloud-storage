@@ -6,11 +6,11 @@ package handler
 import (
 	"net/http"
 
-	oauth "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/oauth"
-	recycle "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/recycle"
-	repository "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/repository"
-	user "github.com/Auroraol/cloud-storage/user_center/api/internal/handler/user"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
+	oauth "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/handler/oauth"
+	recycle "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/handler/recycle"
+	repository "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/handler/repository"
+	user "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/handler/user"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

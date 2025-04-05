@@ -7,9 +7,9 @@ package server
 import (
 	"context"
 
-	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/logic/userservicerpc"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/logic/userservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/pb"
 )
 
 type UserServiceRpcServer struct {

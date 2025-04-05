@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/config"
-	auditservicerpcServer "github.com/Auroraol/cloud-storage/log_service/rpc/internal/server/auditservicerpc"
-	sshservicerpcServer "github.com/Auroraol/cloud-storage/log_service/rpc/internal/server/sshservicerpc"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/config"
+	auditservicerpcServer "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/server/auditservicerpc"
+	sshservicerpcServer "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/server/sshservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/pb"
 	"go.uber.org/zap"
 
 	"github.com/zeromicro/go-zero/core/conf"

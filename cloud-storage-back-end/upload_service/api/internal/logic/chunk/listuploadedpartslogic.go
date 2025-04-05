@@ -4,10 +4,10 @@ import (
 	"context"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/store/oss"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/store/oss"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/types"
 	ossSDK "github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/zeromicro/go-zero/core/logx"
 )

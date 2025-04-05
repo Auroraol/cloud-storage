@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
-	"github.com/Auroraol/cloud-storage/file_processor/processor"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/mq/pulsar"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/file_processor/processor"
 	pulsarClient "github.com/apache/pulsar-client-go/pulsar"
 	"github.com/zeromicro/go-zero/core/conf"
 	"go.uber.org/zap"

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Auroraol/cloud-storage/upload_service/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/model"
 	"github.com/Masterminds/squirrel"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"

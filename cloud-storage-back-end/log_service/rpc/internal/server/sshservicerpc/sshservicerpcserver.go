@@ -7,9 +7,9 @@ package server
 import (
 	"context"
 
-	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/logic/sshservicerpc"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/logic/sshservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/pb"
 )
 
 type SshServiceRpcServer struct {

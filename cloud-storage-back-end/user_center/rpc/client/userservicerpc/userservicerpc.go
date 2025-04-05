@@ -7,7 +7,7 @@ package userservicerpc
 import (
 	"context"
 
-	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

@@ -7,12 +7,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Auroraol/cloud-storage/common/tool"
-	"github.com/Auroraol/cloud-storage/user_center/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/tool"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/model"
 	"github.com/pkg/errors"
 
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

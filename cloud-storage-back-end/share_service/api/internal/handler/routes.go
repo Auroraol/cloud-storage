@@ -6,7 +6,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Auroraol/cloud-storage/share_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

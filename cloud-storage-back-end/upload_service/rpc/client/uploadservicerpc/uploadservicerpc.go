@@ -7,7 +7,7 @@ package uploadservicerpc
 import (
 	"context"
 
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/rpc/pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

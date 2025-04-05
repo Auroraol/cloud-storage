@@ -6,10 +6,10 @@ package handler
 import (
 	"net/http"
 
-	audit "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/audit"
-	monitor "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/monitor"
-	ssh "github.com/Auroraol/cloud-storage/log_service/api/internal/handler/ssh"
-	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
+	audit "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/audit"
+	monitor "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/monitor"
+	ssh "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/ssh"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

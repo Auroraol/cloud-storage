@@ -3,7 +3,7 @@ package main
 //
 //import (
 //	"fmt"
-//	"github.com/Auroraol/cloud-storage/common/logx"
+//	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
 //	"github.com/gin-gonic/gin"
 //
 //	"go.uber.org/zap"

@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/pb"
 	"strconv"
 	"strings"
 
-	"github.com/Auroraol/cloud-storage/common/time"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )

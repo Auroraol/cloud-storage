@@ -1,12 +1,12 @@
 package svc
 
 import (
-	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/common/orm"
-	"github.com/Auroraol/cloud-storage/share_service/api/internal/config"
-	"github.com/Auroraol/cloud-storage/share_service/model"
-	"github.com/Auroraol/cloud-storage/upload_service/rpc/client/uploadservicerpc"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userrepositoryrpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/orm"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/api/internal/config"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/share_service/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/rpc/client/uploadservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/client/userrepositoryrpc"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"

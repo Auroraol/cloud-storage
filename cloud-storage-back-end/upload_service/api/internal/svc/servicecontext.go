@@ -1,11 +1,11 @@
 package svc
 
 import (
-	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/config"
-	"github.com/Auroraol/cloud-storage/upload_service/model"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/client/userservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/rpc/client/auditservicerpc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/config"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/model"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/client/userservicerpc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
 	"go.uber.org/zap"

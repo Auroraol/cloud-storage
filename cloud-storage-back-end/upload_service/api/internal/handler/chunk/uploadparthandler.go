@@ -1,17 +1,17 @@
 package chunk
 
 import (
-	"github.com/Auroraol/cloud-storage/common/logx"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/logx"
 	"go.uber.org/zap"
 	"mime/multipart"
 	"net/http"
 
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/chunk"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/logic/chunk"
 
-	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
 
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

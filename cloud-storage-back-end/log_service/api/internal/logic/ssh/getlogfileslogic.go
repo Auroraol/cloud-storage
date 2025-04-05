@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/log_service/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/log_service/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

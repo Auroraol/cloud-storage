@@ -2,11 +2,11 @@ package userservicerpclogic
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/user_center/rpc/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

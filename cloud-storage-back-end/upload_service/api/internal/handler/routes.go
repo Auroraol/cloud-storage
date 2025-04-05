@@ -6,9 +6,9 @@ package handler
 import (
 	"net/http"
 
-	chunk "github.com/Auroraol/cloud-storage/upload_service/api/internal/handler/chunk"
-	history "github.com/Auroraol/cloud-storage/upload_service/api/internal/handler/history"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
+	chunk "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/handler/chunk"
+	history "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/handler/history"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

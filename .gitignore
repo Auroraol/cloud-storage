@@ -1,3 +1,8 @@
 #... existing code ...
 .env 
 .env.example
+etcd-v3.5.17-windows-amd64/default.etcd/member/wal/0000000000000000-0000000000000000.wal
+etcd-v3.5.17-windows-amd64/default.etcd/member/snap/db
+etcd-v3.5.17-windows-amd64/default.etcd/member/snap/db
+etcd-v3.5.17-windows-amd64/default.etcd/member/wal/0.tmp
+etcd-v3.5.17-windows-amd64/default.etcd/member/wal/0000000000000000-0000000000000000.wal

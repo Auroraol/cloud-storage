@@ -4,9 +4,9 @@ import (
 	"flag"
 	"go.uber.org/zap"
 
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/config"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/handler"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/config"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/handler"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

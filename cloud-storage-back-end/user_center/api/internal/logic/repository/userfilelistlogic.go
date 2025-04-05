@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
-	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/common/token"
-	uploadServicePb "github.com/Auroraol/cloud-storage/upload_service/rpc/pb"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/svc"
-	"github.com/Auroraol/cloud-storage/user_center/api/internal/types"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/response"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/token"
+	uploadServicePb "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/upload_service/rpc/pb"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/svc"
+	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/user_center/api/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
 	"go.uber.org/zap"
 )

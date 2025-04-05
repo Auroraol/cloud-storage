@@ -36,7 +36,7 @@ require (
 ### 1. 初始化 Pulsar 管理器
 
 ```go
-import "github.com/Auroraol/cloud-storage/common/mq/pulsar"
+import "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/mq/pulsar"
 
 // 创建 Pulsar 管理器
 manager, err := pulsar.NewPulsarManager(pulsar.Config{
