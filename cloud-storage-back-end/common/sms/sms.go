@@ -57,7 +57,7 @@ func NewClient(config SmsConfig) (SmsClient, error) {
 	smsCache, err := collection.NewCache(time.Duration(config.ExpiredAt))
 	if err != nil {
 		zap.S().Errorf("创建SMS缓存失败: %s", err.Error())
-		panic(err)
+		return SmsClient{}, err
 	}
 	return SmsClient{
 		config: config,

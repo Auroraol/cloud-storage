@@ -39,7 +39,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	SmsClient, err := sms.NewClient(c.Sms)
 	if err != nil {
 		zap.S().Errorf("创建SMS客户端失败: %s", err.Error())
-		panic(err)
 	}
 
 	return &ServiceContext{
