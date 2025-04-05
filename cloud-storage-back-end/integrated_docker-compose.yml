@@ -31,41 +31,6 @@ services:
     networks:
       - cloud-network
 
-  # 监控系统 - Prometheus
-  prometheus:
-    image: prom/prometheus:v2.37.0
-    container_name: prometheus
-    restart: always
-    ports:
-      - "9091:9090"  # 修改宿主机端口避免与原有服务冲突
-    volumes:
-      - /opt/project/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - /opt/project/prometheus/data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-    networks:
-      - cloud-network
-
-  # 监控系统 - Grafana
-  grafana:
-    image: grafana/grafana:9.1.0
-    container_name: grafana
-    restart: always
-    ports:
-      - "3001:3000"  # 修改宿主机端口避免与原有服务冲突
-    volumes:
-      - /opt/project/grafana/data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    depends_on:
-      - prometheus
-    networks:
-      - cloud-network
-
   # 分布式配置服务
   etcd:
     image: bitnami/etcd:3.5.5
@@ -91,6 +56,8 @@ services:
       - mysql
       - redis
       - etcd
+    volumes:
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -110,6 +77,8 @@ services:
       - redis
       - etcd
       - user-center
+    volumes:
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -125,6 +94,8 @@ services:
       - redis
       - etcd
       - user-center
+    volumes:
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -139,6 +110,8 @@ services:
       - mysql
       - redis
       - etcd
+    volumes:
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 

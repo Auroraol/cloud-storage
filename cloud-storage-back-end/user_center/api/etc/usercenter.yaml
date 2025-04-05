@@ -52,3 +52,11 @@ LogConfig:
   LogCompress: false         # 是否压缩日志
   LogStdout: true            # 是否同时输出到控制台
   SeparateLevel: false
+
+SMS:
+  RegionID: "cn-hangzhou"
+  AccessKeyID: "LTAI5tPvLYjKCJ1BfpvzmdGS"       # 阿里云AccessKeyID
+  AccessKeySecret: "QCLFnix1sgaJ7cYU2PsQRyeXbdZz8v" # 阿里云AccessKeySecret
+  SignName: "悦读博客"                        # 短信签名
+  TemplateCode: "SMS_465388108"           # 短信模板代码
+  ExpiredAt: 300  # 验证码有效期，单位秒

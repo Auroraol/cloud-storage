@@ -230,3 +230,8 @@
 {"level":"ERROR","time":"2025-04-05 01:26:18","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
 {"level":"ERROR","time":"2025-04-05 01:47:16","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
 {"level":"ERROR","time":"2025-04-05 02:02:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-05 14:59:25","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-04-05 15:02:02","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Canceled desc = context canceled"}
+{"level":"ERROR","time":"2025-04-05 15:02:02","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Canceled desc = context canceled"}
+{"level":"REQUESTS","time":"2025-04-05 17:11:21","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-04-05 20:17:37","caller":"oauth/loginlogic.go:34","msg":"从数据库中查询当前用户 err:%scontext deadline exceeded"}

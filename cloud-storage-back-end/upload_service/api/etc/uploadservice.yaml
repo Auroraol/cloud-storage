@@ -51,14 +51,14 @@ LogConfig:
   SeparateLevel: false       # 是否将不同级别的日志分开存储到不同文件
 
 # 生产者Pulsar配置
-PubConfig:
-  Enabled: true
-  URL: "pulsar://101.37.165.220:6650"
-  Topic: "file-processed"
-  BatchingEnabled: true
-  BatchingMaxMessages: 100
-  BatchingMaxPublishDelay: 10
-  CompressionType: "LZ4"
-  SendTimeout: 30
-  BlockIfQueueFull: true
-  MaxPendingMessages: 1000
+#PubConfig:
+#  Enabled: true
+#  URL: "pulsar://101.37.165.220:6650"
+#  Topic: "file-processed"
+#  BatchingEnabled: true
+#  BatchingMaxMessages: 100
+#  BatchingMaxPublishDelay: 10
+#  CompressionType: "LZ4"
+#  SendTimeout: 30
+#  BlockIfQueueFull: true
+#  MaxPendingMessages: 1000

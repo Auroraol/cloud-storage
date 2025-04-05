@@ -36,56 +36,6 @@ services:
     networks:
       - cloud-network
 
-  pulsar:
-    image: apachepulsar/pulsar:latest
-    container_name: pulsar
-    restart: always
-    command: bin/pulsar standalone
-    ports:
-      - "6650:6650"  # Pulsar Broker
-      - "8080:8080"  # Pulsar Web UI
-    volumes:
-      - /opt/project/pulsar_data:/pulsar/data
-    environment:
-      - PULSAR_MEM="-Xmx512m -Xms512m"
-    networks:
-      - cloud-network
-
-  # 添加Prometheus监控
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    restart: always
-    ports:
-      - "9090:9090"
-    volumes:
-      - /opt/project/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - /opt/project/prometheus/data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-    networks:
-      - cloud-network
-    
-  # 添加Grafana仪表盘
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    volumes:
-      - /opt/project/grafana/data:/var/lib/grafana
-    depends_on:
-      - prometheus
-    networks:
-      - cloud-network
-
   etcd:
     image: bitnami/etcd:latest
     container_name: etcd
@@ -110,7 +60,6 @@ services:
     restart: always
     ports:
       - "1004:1004"
-      - "4004:4004"  # 为Prometheus监控暴露端口
     depends_on:
       - mysql
       - redis
@@ -118,7 +67,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./logs:/app/logs
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -130,7 +79,6 @@ services:
     restart: always
     ports:
       - "1005:1005"
-      - "4005:4005"  # 为Prometheus监控暴露端口
     depends_on:
       - mysql
       - redis
@@ -143,7 +91,7 @@ services:
       - OSS_BUCKET_NAME=${OSS_BUCKET_NAME}
       - OSS_ENDPOINT=${OSS_ENDPOINT}
     volumes:
-      - ./logs:/app/logs
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -155,7 +103,6 @@ services:
     restart: always
     ports:
       - "1006:1006"
-      - "4006:4006"  # 为Prometheus监控暴露端口
     depends_on:
       - mysql
       - redis
@@ -163,7 +110,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./logs:/app/logs
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -175,14 +122,13 @@ services:
     restart: always
     ports:
       - "1007:1007"
-      - "4007:4007"  # 为Prometheus监控暴露端口
     depends_on:
       - mysql
       - etcd
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./logs:/app/logs
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 
@@ -197,7 +143,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./logs:/app/logs
+      - /opt/project/logs:/app/logs
     networks:
       - cloud-network
 

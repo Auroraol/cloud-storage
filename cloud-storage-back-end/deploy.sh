@@ -90,6 +90,9 @@ create_directories() {
     mkdir -p /opt/project/prometheus/data
     mkdir -p /opt/project/grafana/data
     
+    # 添加应用服务日志目录
+    mkdir -p /opt/project/logs
+    
     # 创建一个临时的Redis配置文件，如果没有的话
     if [ ! -f "/opt/project/redis/conf/redis.conf" ]; then
         print_warning "未找到Redis配置文件，创建默认配置..."

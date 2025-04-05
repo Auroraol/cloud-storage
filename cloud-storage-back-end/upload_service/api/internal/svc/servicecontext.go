@@ -2,7 +2,6 @@ package svc
 
 import (
 	"github.com/Auroraol/cloud-storage/common/logx"
-	"github.com/Auroraol/cloud-storage/common/mq/pulsar"
 	"github.com/Auroraol/cloud-storage/log_service/rpc/client/auditservicerpc"
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/config"
 	"github.com/Auroraol/cloud-storage/upload_service/model"
@@ -19,8 +18,8 @@ type ServiceContext struct {
 	//RedisClient         *redis.Redis
 	UploadHistoryModel model.UploadHistoryModel
 	AuditLogServiceRpc auditservicerpc.AuditServiceRpc
-	PulsarManager      *pulsar.PulsarManager
-	FilePublisher      *pulsar.Publisher
+	//PulsarManager      *pulsar.PulsarManager
+	//FilePublisher      *pulsar.Publisher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -35,28 +34,28 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 
-	// 初始化 Pulsar 管理器和发布者
-	var pulsarManager *pulsar.PulsarManager
-	var filePublisher *pulsar.Publisher
-
-	if c.PubConfig.Enabled {
-		var err error
-		pulsarManager, err = pulsar.NewPulsarManager(pulsar.Config{
-			URL: c.PubConfig.URL,
-		})
-		if err != nil {
-			zap.S().Errorf("Pulsar 管理器初始化失败: %s", err)
-		} else {
-			// 创建文件上传消息的发布者
-			filePublisher, err = pulsar.NewPublisher(pulsarManager, pulsar.PubConfig{
-				Topic:           "file-uploaded",
-				BatchingEnabled: true,
-			})
-			if err != nil {
-				zap.S().Errorf("Pulsar 发布者初始化失败: %s", err)
-			}
-		}
-	}
+	//// 初始化 Pulsar 管理器和发布者
+	//var pulsarManager *pulsar.PulsarManager
+	//var filePublisher *pulsar.Publisher
+	//
+	//if c.PubConfig.Enabled {
+	//	var err error
+	//	pulsarManager, err = pulsar.NewPulsarManager(pulsar.Config{
+	//		URL: c.PubConfig.URL,
+	//	})
+	//	if err != nil {
+	//		zap.S().Errorf("Pulsar 管理器初始化失败: %s", err)
+	//	} else {
+	//		// 创建文件上传消息的发布者
+	//		filePublisher, err = pulsar.NewPublisher(pulsarManager, pulsar.PubConfig{
+	//			Topic:           "file-uploaded",
+	//			BatchingEnabled: true,
+	//		})
+	//		if err != nil {
+	//			zap.S().Errorf("Pulsar 发布者初始化失败: %s", err)
+	//		}
+	//	}
+	//}
 
 	return &ServiceContext{
 		Config:              c,
@@ -64,7 +63,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		RepositoryPoolModel: model.NewRepositoryPoolModel(conn, c.CacheRedis),
 		UploadHistoryModel:  model.NewUploadHistoryModel(conn, c.CacheRedis),
 		AuditLogServiceRpc:  auditservicerpc.NewAuditServiceRpc(zrpc.MustNewClient(c.AuditServiceRpcConf)),
-		PulsarManager:       pulsarManager,
-		FilePublisher:       filePublisher,
+		//PulsarManager:       pulsarManager,
+		//FilePublisher:       filePublisher,
 	}
 }

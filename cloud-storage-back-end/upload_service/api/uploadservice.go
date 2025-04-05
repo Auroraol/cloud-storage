@@ -28,15 +28,15 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	// 确保在服务关闭时关闭 Pulsar 连接
-	defer func() {
-		if ctx.PulsarManager != nil {
-			ctx.PulsarManager.Close()
-			zap.S().Info("Pulsar 连接已关闭")
-		}
-		if ctx.FilePublisher != nil {
-			ctx.FilePublisher.Close()
-		}
-	}()
+	//defer func() {
+	//	if ctx.PulsarManager != nil {
+	//		ctx.PulsarManager.Close()
+	//		zap.S().Info("Pulsar 连接已关闭")
+	//	}
+	//	if ctx.FilePublisher != nil {
+	//		ctx.FilePublisher.Close()
+	//	}
+	//}()
 
 	zap.S().Infof("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

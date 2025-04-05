@@ -1,6 +1,6 @@
 {
   "name": "cloud-storage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cloud Storage",
   "main": "dist/index.js",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "env": {
     "host": "127.0.0.1",
-    "port": 13333
+    "port": 13334
   },
   "scripts": {
     "set-utf-8": "node -e \" process.platform === 'win32' && require('child_process').exec('chcp 65001'); \"",

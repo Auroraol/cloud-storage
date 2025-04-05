@@ -34,6 +34,7 @@ pnpm up --latest
 打包配置，请参考文档 [electron-builder](https://www.electron.build/)
 
 ```bash
+
 # 根据当前系统环境构建
 pnpm build
 
