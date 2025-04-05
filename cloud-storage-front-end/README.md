@@ -14,7 +14,7 @@
 git clone https://github.com/Auroraol/cloud-storage/tree/main/cloud-storage-front-end
 
 # 进入项目目录
-cd cloud-storage
+cd cloud-storage-front-end
 
 # 安装依赖
 pnpm i
