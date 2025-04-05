@@ -1,9 +1,9 @@
-package Chunk
+package chunk
 
 import (
 	"github.com/Auroraol/cloud-storage/common/logx"
 	"github.com/Auroraol/cloud-storage/common/response"
-	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/Chunk"
+	"github.com/Auroraol/cloud-storage/upload_service/api/internal/logic/chunk"
 	"net/http"
 
 	"github.com/Auroraol/cloud-storage/upload_service/api/internal/svc"
@@ -21,7 +21,7 @@ func InitiateMultipartUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc
 			return
 		}
 
-		l := Chunk.NewInitiateMultipartUploadLogic(r.Context(), svcCtx)
+		l := chunk.NewInitiateMultipartUploadLogic(r.Context(), svcCtx)
 		resp, err := l.InitiateMultipartUpload(&req)
 		response.HttpResult(r, w, resp, err)
 	}
