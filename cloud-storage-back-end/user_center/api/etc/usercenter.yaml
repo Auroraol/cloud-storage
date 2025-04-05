@@ -55,8 +55,8 @@ LogConfig:
 
 SMS:
   RegionID: "cn-hangzhou"
-  AccessKeyID: "xxx"       # 阿里云AccessKeyID
-  AccessKeySecret: "xxxx" # 阿里云AccessKeySecret
+  AccessKeyID: "${ALIYUN_ACCESS_KEY_ID}"       # 阿里云AccessKeyID
+  AccessKeySecret: "${ALIYUN_ACCESS_KEY_SECRET}" # 阿里云AccessKeySecret
   SignName: "sss"                        # 短信签名
   TemplateCode: "SMS_465388108"           # 短信模板代码
   ExpiredAt: 300  # 验证码有效期，单位秒
