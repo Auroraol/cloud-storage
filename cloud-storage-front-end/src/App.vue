@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from "vue"
-import { ElNotification } from "element-plus"
+// import { ElNotification } from "element-plus"
 import { useGreyAndColorWeakness } from "@/hooks/useGreyAndColorWeakness"
 import zhCn from "element-plus/es/locale/lang/zh-cn" // Element Plus 中文包
 import IpcDict from "@/constants/ipc-dict"

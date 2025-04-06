@@ -1,1 +1,14 @@
 {"level":"REQUESTS","time":"2025-04-06 00:02:45","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"REQUESTS","time":"2025-04-06 21:46:29","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-04-06 22:18:21","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:18:41","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Canceled desc = context canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vcontext canceled"}
+{"level":"ERROR","time":"2025-04-06 22:19:26","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:20:53","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:34:36","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}

@@ -1,1 +1,4 @@
 {"level":"REQUESTS","time":"2025-04-05 23:50:58","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-06 21:46:03","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-06 21:46:52","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-06 22:34:46","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}

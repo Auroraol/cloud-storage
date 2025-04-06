@@ -1,2 +1,11 @@
 {"level":"REQUESTS","time":"2025-04-06 02:18:32","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
 {"level":"REQUESTS","time":"2025-04-06 02:19:51","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-06 21:45:34","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-06 21:45:36","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-06 21:46:42","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-04-06 21:47:36","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-06 22:18:21","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:18:41","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:19:26","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:20:53","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-06 22:34:36","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}

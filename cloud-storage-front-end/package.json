@@ -14,7 +14,7 @@
     "set-utf-8": "node -e \" process.platform === 'win32' && require('child_process').exec('chcp 65001'); \"",
     "dev": "node -e \"try { require('child_process').exec('chcp 65001', () => { require('vite').createServer({mode: 'development'}).then(server => server.listen()); }); } catch(e) { console.error('Vite 启动错误:', e); }\"",
     "dev-old": "pnpm set-utf-8 && vite --mode development",
-    "prod": "pnpm set-utf-8 && vite --mode production",
+    "prod": "node -e \"try { require('child_process').exec('chcp 65001', () => { require('vite').createServer({mode: 'production'}).then(server => server.listen()); }); } catch(e) { console.error('Vite 启动错误:', e); }\"",
     "build": "vite build && electron-builder",
     "build:dir": "vite build && electron-builder --dir",
     "build:linux": "vite build && electron-builder --linux",
@@ -48,7 +48,7 @@
         "url": ""
       }
     ],
-    "asar": false,
+    "asar": true,
     "electronDist": "./node_modules/electron/dist",
     "nsis": {
       "oneClick": false,

@@ -1,0 +1,31 @@
+serverAddr = "101.37.165.220" # 阿里云IP
+serverPort = 7000
+auth.token = "lfj@1665834268"
+[[proxies]]
+name = "http_user_center"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1004
+remotePort = 1004
+
+[[proxies]]
+name = "http_file_upload"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1005
+remotePort  = 1005
+
+[[proxies]]
+name = "http_share"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1006
+remotePort  = 1006
+
+
+[[proxies]]
+name = "http_log_service"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1007
+remotePort  = 1007
