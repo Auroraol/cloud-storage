@@ -16,7 +16,7 @@ go微服务后端部署难度过大.  所以最后实现的将是：在任意一
 
 ## 3. 配置文档
 
-
+[cloud-storage/frp内网穿透/0.6以上文档.md at main · Auroraol/cloud-storage](https://github.com/Auroraol/cloud-storage/blob/main/frp内网穿透/0.6以上文档.md)
 
 ## 4. 实现
 
