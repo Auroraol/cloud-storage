@@ -238,7 +238,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted, computed, onUnmounted, nextTick } from "vue"
-import { ElMessage } from "element-plus"
+import { ElMessage, ElInput } from "element-plus"
 import type { UploadRequestOptions, UploadRawFile } from "element-plus"
 import Icon from "@/components/FileIcon/Icon.vue"
 import { debounce } from "lodash-es"
@@ -268,7 +268,7 @@ const userStore = useUserStore()
 const capacity = computed(() => userStore.capacity)
 
 // 添加 ref 用于获取输入框元素
-const renameInput = ref<HTMLInputElement>()
+const renameInput = ref<InstanceType<typeof ElInput> | null>(null)
 
 // 添加上传进度区域的引用
 const uploadProgressRef = ref<HTMLElement>()
@@ -823,15 +823,15 @@ const handleSearch = debounce(async () => {
 
   loading.value = true
   try {
-    // 调用原始文件列表API后在前端过滤
-    // 注意：这是前端实现的临时方案，后续应改为调用后端搜索API
+    // 调用搜索API
     const parentId = currentPath.value[currentPath.value.length - 1]
-    const response = await userFileApi.getFileAndFolderList({
-      id: parentId,
+    const response = await userFileApi.getSearch({
+      parent_id: parentId, // 使用parent_id替代id，符合接口定义
+      keyword: keyword,
       page: 1, // 搜索时获取较多数据
       size: 100 // 获取更多条目便于搜索
     })
-
+    console.log("搜索结果:", response.data)
     // 在前端过滤符合搜索条件的文件
     const filteredList = response.data.list.filter((item) => item.name.toLowerCase().includes(keyword.toLowerCase()))
 
@@ -841,7 +841,9 @@ const handleSearch = debounce(async () => {
         // 文件夹的 RepositoryId 为 0
         if (!item.repository_id) {
           // 文件夹
-          const folderSize = await getFolderSize(item.id)
+          const folderSize = await userFileApi.getFolderSize({
+            id: item.id
+          })
           return {
             id: item.id,
             filename: item.name,
@@ -874,11 +876,11 @@ const handleSearch = debounce(async () => {
     total.value = filesAndFolders.length
 
     // 显示搜索结果提示
-    if (filesAndFolders.length === 0) {
-      ElMessage.info(`没有找到名称包含"${keyword}"的文件`)
-    } else {
-      ElMessage.success(`搜索到 ${filesAndFolders.length} 个结果`)
-    }
+    // if (filesAndFolders.length === 0) {
+    //   ElMessage.info(`没有找到名称包含"${keyword}"的文件`)
+    // } else {
+    //   ElMessage.success(`搜索到 ${filesAndFolders.length} 个结果`)
+    // }
   } catch (error) {
     console.error("搜索文件失败:", error)
     ElMessage.error("搜索文件失败")
@@ -1054,10 +1056,12 @@ const openRenameDialog = () => {
   // 使用 nextTick 确保对话框完全渲染后再聚焦
   nextTick(() => {
     // 获取 el-input 组件的输入框元素并聚焦
-    const input = renameInput.value?.$el.querySelector("input")
-    if (input) {
-      input.focus()
-      input.select() // 可选：自动选中所有文本
+    if (renameInput.value && renameInput.value.$el) {
+      const input = renameInput.value.$el.querySelector("input")
+      if (input) {
+        input.focus()
+        input.select() // 可选：自动选中所有文本
+      }
     }
   })
 

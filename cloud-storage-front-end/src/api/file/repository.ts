@@ -112,5 +112,17 @@ export const userFileApi = {
       },
       true
     )
+  },
+
+  // 获取搜索
+  getSearch(data: Repository.UserSearchRequestData) {
+    return request<Repository.UserSearchResponseData>(
+      `${prefix}/user_center/v1/user/file/search`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
   }
 }

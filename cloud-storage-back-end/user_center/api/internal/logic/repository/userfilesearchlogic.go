@@ -48,7 +48,9 @@ func (l *UserFileSearchLogic) UserFileSearch(req *types.UserFileSearchRequest) (
 		return nil, response.NewErrCode(response.CREDENTIALS_INVALID)
 	}
 
-	// 执行搜索
+	// 执行搜索 - 支持递归搜索子文件夹
+	// 如果 parentId 为 0，则搜索所有目录
+	// 如果 parentId 不为 0，则搜索指定目录及其所有子目录
 	searchResults, err := l.svcCtx.UserRepositoryModel.SearchFilesByKeywordInPage(
 		l.ctx,
 		req.ParentId,
@@ -62,7 +64,7 @@ func (l *UserFileSearchLogic) UserFileSearch(req *types.UserFileSearchRequest) (
 		return nil, response.NewErrMsg("搜索文件失败")
 	}
 
-	// 获取总数
+	// 获取总数 - 同样支持递归统计子文件夹中的匹配项
 	total, err := l.svcCtx.UserRepositoryModel.CountSearchResultsByKeyword(
 		l.ctx,
 		req.ParentId,
@@ -71,6 +73,7 @@ func (l *UserFileSearchLogic) UserFileSearch(req *types.UserFileSearchRequest) (
 	)
 	if err != nil {
 		zap.S().Errorf("统计搜索结果失败: %v", err)
+		return nil, response.NewErrMsg("统计搜索结果失败")
 	}
 
 	// 组装返回结果

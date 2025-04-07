@@ -386,16 +386,49 @@ func (m *defaultUserRepositoryModel) CountTotalDeletedByUserId(ctx context.Conte
 func (m *defaultUserRepositoryModel) SearchFilesByKeywordInPage(ctx context.Context, parentId int64, userId int64, keyword string, startIndex int64, pageSize int64) ([]*UserRepository, error) {
 	var resp []*UserRepository
 	rowBuilder := m.RowBuilder()
-	// 在指定目录下搜索
-	query, values, err := rowBuilder.
-		Where("parent_id = ?", parentId).
-		Where("user_id = ?", userId).
-		Where("status = ?", 0).                // 只搜索正常状态的文件和文件夹
-		Where("name LIKE ?", "%"+keyword+"%"). // 使用LIKE进行模糊匹配
-		OrderBy("repository_id").              // 按repository_id排序，文件夹在前，文件在后
-		Offset(uint64(startIndex)).
-		Limit(uint64(pageSize)).
-		ToSql()
+
+	var query string
+	var values []interface{}
+	var err error
+
+	if parentId == 0 {
+		// 全局搜索：在所有目录下搜索
+		query, values, err = rowBuilder.
+			Where("user_id = ?", userId).
+			Where("status = ?", 0).                // 只搜索正常状态的文件和文件夹
+			Where("name LIKE ?", "%"+keyword+"%"). // 使用LIKE进行模糊匹配
+			OrderBy("repository_id").              // 按repository_id排序，文件夹在前，文件在后
+			Offset(uint64(startIndex)).
+			Limit(uint64(pageSize)).
+			ToSql()
+	} else {
+		// 在指定目录及其所有子目录下搜索
+		// 首先获取指定目录的所有子目录ID
+		var folderIds []int64
+		folderIds = append(folderIds, parentId)
+
+		// 递归查找所有子文件夹
+		subFolders, err := m.findAllSubFolders(ctx, parentId, userId)
+		if err != nil && !errors.Is(err, model.ErrNotFound) {
+			return nil, err
+		}
+
+		for _, folder := range subFolders {
+			folderIds = append(folderIds, int64(folder.Id))
+		}
+
+		// 在这些文件夹中搜索
+		query, values, err = rowBuilder.
+			Where("user_id = ?", userId).
+			Where("status = ?", 0).                     // 只搜索正常状态的文件和文件夹
+			Where("name LIKE ?", "%"+keyword+"%").      // 使用LIKE进行模糊匹配
+			Where(squirrel.Eq{"parent_id": folderIds}). // 在指定的文件夹列表中搜索
+			OrderBy("repository_id").                   // 按repository_id排序，文件夹在前，文件在后
+			Offset(uint64(startIndex)).
+			Limit(uint64(pageSize)).
+			ToSql()
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -411,15 +444,76 @@ func (m *defaultUserRepositoryModel) SearchFilesByKeywordInPage(ctx context.Cont
 	}
 }
 
+// 递归查找所有子文件夹
+func (m *defaultUserRepositoryModel) findAllSubFolders(ctx context.Context, parentId int64, userId int64) ([]*UserRepository, error) {
+	var allFolders []*UserRepository
+
+	// 查找直接子文件夹
+	folders, err := m.FindAllFolderByParentId(ctx, parentId, userId)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			return allFolders, nil // 没有子文件夹，返回空列表
+		}
+		return nil, err
+	}
+
+	allFolders = append(allFolders, folders...)
+
+	// 递归查找每个子文件夹的子文件夹
+	for _, folder := range folders {
+		subFolders, err := m.findAllSubFolders(ctx, int64(folder.Id), userId)
+		if err != nil && !errors.Is(err, model.ErrNotFound) {
+			return nil, err
+		}
+		allFolders = append(allFolders, subFolders...)
+	}
+
+	return allFolders, nil
+}
+
 // 统计搜索结果总数
 func (m *defaultUserRepositoryModel) CountSearchResultsByKeyword(ctx context.Context, parentId int64, userId int64, keyword string) (int64, error) {
 	countBuilder := m.CountBuilder("id")
-	query, values, err := countBuilder.
-		Where("parent_id = ?", parentId).
-		Where("user_id = ?", userId).
-		Where("status = ?", 0).                // 只统计正常状态的文件和文件夹
-		Where("name LIKE ?", "%"+keyword+"%"). // 使用LIKE进行模糊匹配
-		ToSql()
+
+	var query string
+	var values []interface{}
+	var err error
+
+	if parentId == 0 {
+		// 全局搜索：统计所有目录下的结果
+		query, values, err = countBuilder.
+			Where("user_id = ?", userId).
+			Where("status = ?", 0).                // 只统计正常状态的文件和文件夹
+			Where("name LIKE ?", "%"+keyword+"%"). // 使用LIKE进行模糊匹配
+			ToSql()
+	} else {
+		// 在指定目录及其所有子目录下统计
+		// 首先获取指定目录的所有子目录ID
+		var folderIds []int64
+		folderIds = append(folderIds, parentId)
+
+		// 递归查找所有子文件夹
+		subFolders, err := m.findAllSubFolders(ctx, parentId, userId)
+		if err != nil && !errors.Is(err, model.ErrNotFound) {
+			return 0, err
+		}
+
+		for _, folder := range subFolders {
+			folderIds = append(folderIds, int64(folder.Id))
+		}
+
+		// 在这些文件夹中统计
+		query, values, err = countBuilder.
+			Where("user_id = ?", userId).
+			Where("status = ?", 0).                     // 只统计正常状态的文件和文件夹
+			Where("name LIKE ?", "%"+keyword+"%").      // 使用LIKE进行模糊匹配
+			Where(squirrel.Eq{"parent_id": folderIds}). // 在指定的文件夹列表中统计
+			ToSql()
+	}
+
+	if err != nil {
+		return 0, err
+	}
 
 	var resp int64
 	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)

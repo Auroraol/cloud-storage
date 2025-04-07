@@ -12,3 +12,39 @@
 {"level":"ERROR","time":"2025-04-06 22:19:26","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
 {"level":"ERROR","time":"2025-04-06 22:20:53","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
 {"level":"ERROR","time":"2025-04-06 22:34:36","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-07 22:41:09","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-04-07 22:41:15","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:42:43","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:42:47","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:48:49","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:48:51","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-04-07 22:48:54","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:49:00","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:49:06","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:50:35","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:50:37","caller":"repository/userfoldersizelogic.go:42","msg":"该文件夹下搜索文件夹失败！"}
+{"level":"ERROR","time":"2025-04-07 22:50:57","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:51:13","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:52:24","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:52:28","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:53:37","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:53:52","caller":"repository/userfilesearchlogic.go:61","msg":"搜索文件失败: context deadline exceeded"}
+{"level":"ERROR","time":"2025-04-07 22:54:00","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:54:02","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:54:10","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:54:56","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:55:04","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:55:09","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:55:17","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:58:24","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:58:36","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-07 22:59:04","caller":"api/usercenter.go:29","msg":"Starting server at %s:%d...0.0.0.01004"}
+{"level":"ERROR","time":"2025-04-07 22:59:31","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:59:39","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 22:59:48","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:00:05","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:00:10","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:00:11","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:01:22","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:01:24","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:02:01","caller":"repository/userfoldersizelogic.go:49","msg":"获取文件信息失败 err:%vrpc error: code = Unknown desc = sql: no rows in result set"}

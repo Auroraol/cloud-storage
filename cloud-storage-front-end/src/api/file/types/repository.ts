@@ -101,3 +101,16 @@ export interface GetFolderListParams {
   id: number
   keyword?: string
 }
+
+// 搜索
+export interface UserSearchRequestData {
+  parent_id: number
+  keyword: string
+  page: number
+  size: number
+}
+
+export type UserSearchResponseData = ApiResponseData<{
+  list: UserFile[]
+  count: number
+}>
