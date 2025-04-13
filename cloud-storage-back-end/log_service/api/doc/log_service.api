@@ -11,6 +11,7 @@ info (
 import (
 	"proto/audit.api"
 	"proto/log.api"
+	"proto/local.api"
 )
 
 //============================> log_service v1 <============================
@@ -67,6 +68,30 @@ service log_service {
 	@doc "分页获得操作日志"
 	@handler operation
 	post /operation (GetOperationLogReq) returns (GetOperationLogRes)
+}
+
+//need login
+@server (
+	prefix: log_service/v1
+	group:  local
+	jwt:    JwtAuth
+)
+service log_service {
+	@doc "获取本地日志文件列表"
+	@handler GetLocalLogFilesHandler
+	post /local/files (GetLocalLogFilesReq) returns (GetLocalLogFilesRes)
+
+	@doc "读取本地日志文件"
+	@handler ReadLocalLogFileHandler
+	post /local/read (ReadLocalLogFileReq) returns (ReadLocalLogFileRes)
+
+	@doc "获取本地文件内容"
+	@handler GetLocalFileContentHandler
+	post /local/content (GetLocalFileContentReq) returns (GetLocalFileContentRes)
+
+	@doc "本地日志监控"
+	@handler LocalLogMonitorHandler
+	post /local/monitor (LocalRealTimeMonitorReq) returns (LocalRealTimeMonitorRes)
 }
 
 // goctl api go --api *.api --dir ./..

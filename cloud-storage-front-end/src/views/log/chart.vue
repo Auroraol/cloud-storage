@@ -85,7 +85,16 @@
 
     <div class="filter-container">
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="主机" prop="host">
+        <!-- 添加模式切换 -->
+        <el-form-item>
+          <el-radio-group v-model="mode" @change="handleModeChange">
+            <el-radio-button label="ssh">SSH模式</el-radio-button>
+            <el-radio-button label="local">本地模式</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+
+        <!-- SSH模式下的主机选择 -->
+        <el-form-item label="主机" prop="host" v-if="mode === 'ssh'">
           <el-select
             v-model="currentHost"
             placeholder="选择主机"
@@ -97,6 +106,7 @@
           </el-select>
           <el-button type="primary" icon="Plus" circle size="small" @click="showSSHDialog" style="margin-left: 10px" />
         </el-form-item>
+
         <el-form-item label="数据文件" prop="dataFile">
           <el-input v-model="queryParams.dataFile" placeholder="选择数据文件" readonly style="width: 300px">
             <template #append>
@@ -128,8 +138,10 @@
                 </el-radio-group>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="startMonitor">开始监控</el-button>
-                <el-button @click="stopMonitor">停止监控</el-button>
+                <el-button type="primary" @click="startMonitor" :disabled="isMonitoring">开始监控</el-button>
+                <el-button @click="stopMonitor" :type="isMonitoring ? 'primary' : 'default'" :disabled="!isMonitoring"
+                  >停止监控</el-button
+                >
               </el-form-item>
             </el-form>
           </div>
@@ -159,19 +171,6 @@
 
           <!-- 历史图表 -->
           <div ref="historyChart" class="chart-view" />
-
-          <!-- 分页区域 -->
-          <div class="pagination-container" v-if="historyData.length > 0">
-            <el-pagination
-              v-model:current-page="historyPage.current"
-              v-model:page-size="historyPage.size"
-              :page-sizes="[10, 20, 50, 100]"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="historyPage.total"
-              @size-change="handleHistorySizeChange"
-              @current-change="handleHistoryPageChange"
-            />
-          </div>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -188,15 +187,17 @@ import {
   connectSSHApi,
   getHostsApi,
   getLogFilesApi,
-  getSSHConnectionsApi
+  getSSHConnectionsApi,
+  getLocalLogFilesApi,
+  getLocalLogMetricsApi
 } from "@/api/log/frontend"
 import type { RealtimeMonitorParams, FrontHistoryAnalysisParams, ChartMetric } from "@/api/log/types/frontend"
-import { useUserStoreHook } from "@/store/modules/user"
+import { useUserStore } from "@/store/modules/user"
 import { Document, Folder } from "@element-plus/icons-vue"
 import dayjs from "dayjs"
 
 // 用户存储
-const userStore = useUserStoreHook()
+const userStore = useUserStore()
 
 // SSH连接表单
 const sshDialogVisible = ref(false)
@@ -228,13 +229,67 @@ const queryParams = reactive({
   host: ""
 })
 
-// 历史数据分页
+// 历史数据
 const historyData = ref<any[]>([])
-const historyPage = reactive({
-  current: 1,
-  size: 20,
-  total: 0
-})
+
+// 添加模式状态
+const mode = ref<"ssh" | "local">("local")
+
+// 添加监控状态
+const isMonitoring = ref(false)
+
+// 处理模式切换
+const handleModeChange = async () => {
+  // 重置查询参数
+  currentHost.value = ""
+  queryParams.dataFile = ""
+  fileBrowser.files = []
+  fileBrowser.selectedFile = ""
+  fileBrowser.currentPath = mode.value === "local" ? "" : "/opt"
+
+  // 根据新模式初始化数据
+  await initData()
+}
+
+// 初始化数据
+const initData = async () => {
+  if (mode.value === "ssh") {
+    // 只有在userStore中没有SSH连接信息时才从接口获取
+    if (!userStore.sshConnections || userStore.sshConnections.length === 0) {
+      await getSSHConnectionsApi()
+    }
+
+    // 刷新主机列表
+    await refreshHosts()
+
+    // 如果有当前SSH主机，则自动选择
+    if (userStore.currentSSHHost) {
+      currentHost.value = userStore.currentSSHHost
+      await handleHostChange(userStore.currentSSHHost)
+    }
+  } else {
+    // 获取本地日志文件列表
+    await loadLocalFiles()
+  }
+}
+
+// 获取本地日志文件列表
+const loadLocalFiles = async () => {
+  try {
+    fileBrowser.loading = true
+    const response = await getLocalLogFilesApi(fileBrowser.currentPath)
+    if (!response || !response.data.files) {
+      throw new Error("获取本地日志文件列表失败：返回数据格式错误")
+    }
+    fileBrowser.files = response.data.files.filter((file) => !file.isDir).map((file) => file.path)
+    fileBrowser.total = fileBrowser.files.length
+  } catch (error) {
+    console.error("获取本地日志文件列表失败:", error)
+    fileBrowser.files = []
+  } finally {
+    fileBrowser.loading = false
+  }
+}
 
 // 显示SSH连接对话框
 const showSSHDialog = () => {
@@ -243,180 +298,132 @@ const showSSHDialog = () => {
 
 // 显示文件选择对话框
 const showFileDialog = () => {
+  if (mode.value === "ssh") {
+    if (!currentHost.value) {
+      ElMessage.warning("请先选择主机")
+      return
+    }
+  }
+
+  fileDialogVisible.value = true
+  if (mode.value === "local") {
+    // 本地模式下重置当前路径
+    fileBrowser.currentPath = ""
+    loadLocalFiles()
+  } else {
+    // SSH模式下使用默认路径
+    fileBrowser.currentPath = "/opt"
+    loadFiles()
+  }
+}
+
+// 加载文件列表
+const loadFiles = async () => {
+  if (mode.value === "local") {
+    await loadLocalFiles()
+    return
+  }
+
   if (!currentHost.value) {
     ElMessage.warning("请先选择主机")
     return
   }
 
-  fileDialogVisible.value = true
-  loadFiles()
-}
-
-// 加载文件列表
-const loadFiles = async () => {
-  if (!currentHost.value) return
-
   try {
     fileBrowser.loading = true
-    const response = await getLogFilesApi(currentHost.value, fileBrowser.currentPath)
-
-    // 处理分页
-    const startIndex = (fileBrowser.currentPage - 1) * fileBrowser.pageSize
-    const endIndex = startIndex + fileBrowser.pageSize
-
-    fileBrowser.files = response.slice(startIndex, endIndex)
-    fileBrowser.total = response.length
+    const files = await getLogFilesApi(currentHost.value, fileBrowser.currentPath)
+    fileBrowser.files = files
+    fileBrowser.total = files.length
   } catch (error) {
-    ElMessage.error(`获取文件列表失败: ${error instanceof Error ? error.message : String(error)}`)
+    console.error("获取文件列表失败:", error)
+    ElMessage.error("获取文件列表失败")
   } finally {
     fileBrowser.loading = false
   }
 }
 
-// 判断是否是目录
-const isDirectory = (file: string) => {
-  return !file.includes(".")
+// 判断是否为目录
+const isDirectory = (name: string) => {
+  return !name.includes(".")
 }
 
-// 获取文件行的类名
-const getFileRowClass = (row: { row: string; rowIndex: number }) => {
-  const fullPath = fileBrowser.currentPath + row.row
-  return fullPath === fileBrowser.selectedFile ? "selected-file-row" : ""
+// 获取文件行样式
+const getFileRowClass = ({ row }: { row: string }) => {
+  return isDirectory(row) ? "directory-row" : ""
 }
 
-// 选择文件
-const selectFile = (file: string) => {
-  fileBrowser.selectedFile = file
+// 处理文件行点击
+const handleFileRowClick = (row: string) => {
+  if (isDirectory(row)) {
+    fileBrowser.currentPath = `${fileBrowser.currentPath}/${row}`
+    loadFiles()
+  } else {
+    handleFileClick(row)
+  }
 }
 
 // 处理文件点击
 const handleFileClick = (file: string) => {
-  // 判断是否是目录
-  if (isDirectory(file)) {
-    // 如果是目录，进入该目录
-    fileBrowser.currentPath = fileBrowser.currentPath + file
-    fileBrowser.currentPage = 1
-    loadFiles()
-  } else {
-    // 如果是文件，选中该文件
-    selectFile(file)
-  }
+  fileBrowser.selectedFile = file
+  queryParams.dataFile = file
+  realtimeConfig.dataFile = file
+  historyConfig.dataFile = file
+}
+
+// 选择文件
+const selectFile = (file: string) => {
+  handleFileClick(file)
 }
 
 // 确认选择文件
 const confirmSelectFile = () => {
   if (fileBrowser.selectedFile) {
-    queryParams.dataFile = fileBrowser.selectedFile
-    // 同步更新配置中的dataFile
-    realtimeConfig.dataFile = fileBrowser.selectedFile
-    historyConfig.dataFile = fileBrowser.selectedFile
     fileDialogVisible.value = false
-    ElMessage.success(`已选择文件: ${fileBrowser.selectedFile}`)
-  } else {
-    ElMessage.warning("请选择一个文件")
   }
 }
 
-// 处理文件分页大小变化
+// 处理文件大小变化
 const handleFileSizeChange = (size: number) => {
   fileBrowser.pageSize = size
   loadFiles()
 }
 
-// 处理文件分页页码变化
+// 处理文件页码变化
 const handleFilePageChange = (page: number) => {
   fileBrowser.currentPage = page
   loadFiles()
 }
 
-// 处理历史数据分页大小变化
-const handleHistorySizeChange = (size: number) => {
-  historyPage.size = size
-  displayHistoryData()
-}
-
-// 处理历史数据分页页码变化
-const handleHistoryPageChange = (page: number) => {
-  historyPage.current = page
-  displayHistoryData()
-}
-
-// 显示历史数据（分页）
-const displayHistoryData = () => {
-  if (!historyChartInstance || !historyData.value.length) {
-    console.log("无法显示历史数据：图表实例不存在或没有数据")
+// 处理主机变更
+const handleHostChange = async (host: string) => {
+  if (!host) {
+    fileBrowser.files = []
     return
   }
 
   try {
-    // 根据当前页和页大小计算要显示的数据
-    const start = (historyPage.current - 1) * historyPage.size
-    const end = Math.min(start + historyPage.size, historyData.value.length)
+    // 设置当前SSH主机
+    userStore.setCurrentSSHHost(host)
 
-    // 获取当前页的数据
-    const currentPageData = historyData.value.slice(start, end)
-
-    // 重新渲染图表
-    const newSeries = currentPageData.map((item: any) => {
-      // 确保数据点格式正确
-      const formattedData = Array.isArray(item.data)
-        ? item.data
-            .map((point: any) => {
-              // 如果数据点是数组格式 [timestamp, value]
-              if (Array.isArray(point)) {
-                // 确保时间戳是毫秒格式
-                const timestamp = Number(point[0])
-                // 检查时间戳是否为0或接近0的值
-                if (timestamp === 0 || timestamp < 1000000) {
-                  console.error("分页中检测到无效时间戳:", timestamp)
-                  return null // 返回null以便后续过滤
-                }
-                // 检查时间戳是否是秒格式（10位数字）
-                const timestampMs = timestamp < 10000000000 ? timestamp * 1000 : timestamp
-                return [timestampMs, Number(point[1])]
-              }
-              // 如果数据点是对象格式 {time: timestamp, value: value}
-              else if (point && typeof point === "object" && "time" in point && "value" in point) {
-                // 确保时间戳是毫秒格式
-                const timestamp = Number(point.time)
-                // 检查时间戳是否为0或接近0的值
-                if (timestamp === 0 || timestamp < 1000000) {
-                  console.error("分页中检测到无效时间戳(对象):", timestamp)
-                  return null // 返回null以便后续过滤
-                }
-                // 检查时间戳是否是秒格式（10位数字）
-                const timestampMs = timestamp < 10000000000 ? timestamp * 1000 : timestamp
-                return [timestampMs, Number(point.value)]
-              }
-              return point
-            })
-            .filter((point) => point !== null) // 过滤掉无效的时间戳
-        : []
-
-      return {
-        name: item.name,
-        type: "line",
-        smooth: true,
-        showSymbol: true,
-        symbolSize: 8,
-        lineStyle: {
-          width: 2
-        },
-        data: formattedData
-      }
-    })
-
-    // 更新图表
-    historyChartInstance.setOption({
-      series: newSeries
-    })
-
-    console.log(
-      `显示第 ${historyPage.current} 页数据，共 ${historyPage.total} 条，当前页显示 ${currentPageData.length} 条`
-    )
+    // 获取日志文件列表
+    fileBrowser.files = await getLogFilesApi(host, fileBrowser.currentPath)
+    fileBrowser.total = fileBrowser.files.length
   } catch (error) {
-    console.error("显示历史数据失败:", error)
-    ElMessage.error("显示历史数据失败")
+    console.error("获取日志文件列表失败:", error)
+    ElMessage.error("获取日志文件列表失败")
+  }
+}
+
+// 刷新主机列表
+const refreshHosts = async () => {
+  try {
+    // 获取主机列表
+    const hostList = await getHostsApi()
+
+    // 去重处理
+    hosts.value = [...new Set(hostList)]
+  } catch (error) {
+    console.error("获取主机列表失败:", error)
   }
 }
 
@@ -435,37 +442,17 @@ const handleSSHConnect = async () => {
     // 刷新主机列表
     await refreshHosts()
 
-    // 设置当前主机
+    // 设置为当前选中的主机
     currentHost.value = sshForm.host
+
+    // 获取该主机的日志文件列表
+    await handleHostChange(sshForm.host)
 
     sshDialogVisible.value = false
   } catch (error) {
     ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
     sshConnecting.value = false
-  }
-}
-
-// 刷新主机列表
-const refreshHosts = async () => {
-  try {
-    hosts.value = await getHostsApi()
-  } catch (error) {
-    console.error("获取主机列表失败:", error)
-  }
-}
-
-// 主机变更处理
-const handleHostChange = (host: string) => {
-  if (host) {
-    userStore.setCurrentSSHHost(host)
-    queryParams.host = host
-    // 清空已选文件
-    queryParams.dataFile = ""
-    fileBrowser.selectedFile = ""
-    // 同步清空配置中的dataFile
-    realtimeConfig.dataFile = ""
-    historyConfig.dataFile = ""
   }
 }
 
@@ -484,8 +471,7 @@ const metricOptions: ChartMetric[] = [
   { label: "错误数", value: "errors" },
   { label: "debug_logs", value: "debug_logs" },
   { label: "info_logs", value: "info_logs" },
-  { label: "warn_logs", value: "warn_logs" },
-  { label: "error_logs", value: "error_logs" }
+  { label: "warn_logs", value: "warn_logs" }
 ]
 
 // 实时监控配置
@@ -497,6 +483,7 @@ const realtimeConfig = reactive<RealtimeMonitorParams>({
 
 // 历史分析配置
 const historyConfig = reactive<FrontHistoryAnalysisParams>({
+  host: "",
   dataFile: "",
   timeRange: [null, null]
 })
@@ -532,22 +519,6 @@ onUnmounted(() => {
   historyChartInstance?.dispose()
 })
 
-// 初始化数据
-const initData = async () => {
-  // 只有在userStore中没有SSH连接信息时才从接口获取
-  if (!userStore.sshConnections || userStore.sshConnections.length === 0) {
-    await getSSHConnectionsApi()
-  }
-
-  await refreshHosts()
-
-  // 如果有当前SSH主机，则自动选择
-  if (userStore.currentSSHHost) {
-    currentHost.value = userStore.currentSSHHost
-    queryParams.host = userStore.currentSSHHost
-  }
-}
-
 // 窗口大小变化时重绘图表
 const handleResize = () => {
   realtimeChartInstance?.resize()
@@ -556,14 +527,14 @@ const handleResize = () => {
 
 // 开始实时监控
 const startMonitor = async () => {
-  if (!currentHost.value) {
-    ElMessage.warning("请先连接主机")
-    showSSHDialog()
-    return
+  if (mode.value === "ssh") {
+    if (!currentHost.value) {
+      showSSHDialog()
+      return
+    }
   }
 
   if (!queryParams.dataFile) {
-    // ElMessage.warning("请选择数据文件")
     showFileDialog()
     return
   }
@@ -575,6 +546,7 @@ const startMonitor = async () => {
 
   stopMonitor()
   await updateRealtimeChart()
+  isMonitoring.value = true
 
   monitorTimer = window.setInterval(async () => {
     await updateRealtimeChart()
@@ -587,28 +559,7 @@ const stopMonitor = () => {
     clearInterval(monitorTimer)
     monitorTimer = null
   }
-}
-
-// 生成模拟数据用于测试
-const generateMockData = () => {
-  const now = Date.now()
-  // 生成过去一小时的数据点，每5分钟一个点
-  const mockSeries = realtimeConfig.metrics.map((metric) => {
-    const data: [number, number][] = []
-    for (let i = 12; i >= 0; i--) {
-      const timestamp = now - i * 5 * 60 * 1000 // 每5分钟一个点
-      const value = Math.floor(Math.random() * 100) // 随机值
-      data.push([timestamp, value])
-    }
-
-    return {
-      name: metric,
-      type: "line",
-      data: data
-    }
-  })
-
-  return { series: mockSeries }
+  isMonitoring.value = false
 }
 
 // 更新实时图表
@@ -631,29 +582,33 @@ const updateRealtimeChart = async () => {
     }
 
     console.log("请求实时监控数据，参数:", JSON.stringify(realtimeConfig))
-    const data = await getRealtimeMetricsApi(realtimeConfig)
+    let data
+
+    if (mode.value === "local") {
+      // 本地模式使用本地日志分析API
+      data = await getLocalLogMetricsApi({
+        dataFile: realtimeConfig.dataFile,
+        metrics: realtimeConfig.metrics,
+        timeRange: realtimeConfig.timeRange
+      })
+    } else {
+      // SSH模式使用远程日志分析API
+      data = await getRealtimeMetricsApi(realtimeConfig)
+    }
+
     console.log("获取到实时监控数据:", data)
 
     // 检查返回的数据
     if (!data || !data.series) {
       console.error("实时监控API返回的数据格式不正确:", data)
       ElMessage.warning("获取实时监控数据失败，返回数据格式不正确")
-
-      // 使用模拟数据进行测试
-      console.log("使用模拟数据进行测试")
-      const mockData = generateMockData()
-      renderRealtimeChart(mockData)
       return
     }
 
     // 检查是否有数据
     if (data.series.length === 0) {
       console.warn("实时监控API返回的数据为空")
-      ElMessage.info("当前没有实时监控数据，显示模拟数据")
-
-      // 使用模拟数据进行测试
-      const mockData = generateMockData()
-      renderRealtimeChart(mockData)
+      ElMessage.info("当前没有实时监控数据")
       return
     }
 
@@ -662,11 +617,6 @@ const updateRealtimeChart = async () => {
   } catch (error) {
     console.error("更新实时图表失败:", error)
     ElMessage.error(`更新实时图表失败: ${error instanceof Error ? error.message : String(error)}`)
-
-    // 出错时也使用模拟数据
-    console.log("出错时使用模拟数据")
-    const mockData = generateMockData()
-    renderRealtimeChart(mockData)
   }
 }
 
@@ -713,15 +663,18 @@ const renderRealtimeChart = (data: any) => {
           return [timestamp, point[1]]
         })
 
-      // 为每个系列创建不同的渐变色
-      const colorList = [
-        ["#1890FF", "#91d5ff"],
-        ["#2FC25B", "#8effa0"],
-        ["#FACC14", "#ffe58f"],
-        ["#722ED1", "#d3adf7"],
-        ["#F5222D", "#ffa39e"]
-      ]
-      const colorIndex = index % colorList.length
+      // 为错误日志设置固定的红色渐变
+      const isErrorLog = series.name.toLowerCase().includes("error")
+      const colorList = isErrorLog
+        ? [["#f56c6c", "#ffa39e"]] // 错误日志使用红色渐变
+        : [
+            ["#1890FF", "#91d5ff"],
+            ["#2FC25B", "#8effa0"],
+            ["#FACC14", "#ffe58f"],
+            ["#722ED1", "#d3adf7"],
+            ["#F5222D", "#ffa39e"]
+          ]
+      const colorIndex = isErrorLog ? 0 : index % colorList.length
       const gradientColor = new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: colorList[colorIndex][0] },
         { offset: 1, color: colorList[colorIndex][1] }
@@ -864,14 +817,15 @@ const renderRealtimeChart = (data: any) => {
 
 // 查询历史数据
 const queryHistory = async () => {
-  if (!currentHost.value) {
-    ElMessage.warning("请先连接主机")
-    showSSHDialog()
-    return
+  if (mode.value === "ssh") {
+    if (!currentHost.value) {
+      ElMessage.warning("请先连接主机")
+      showSSHDialog()
+      return
+    }
   }
 
   if (!queryParams.dataFile) {
-    // ElMessage.warning("请选择数据文件")
     showFileDialog()
     return
   }
@@ -884,11 +838,18 @@ const queryHistory = async () => {
   try {
     // 确保dataFile是最新的
     historyConfig.dataFile = queryParams.dataFile
-    const data = await getHistoryMetricsApi(historyConfig)
+
+    // 构建请求参数
+    const params = {
+      ...historyConfig,
+      host: mode.value === "ssh" ? currentHost.value || "" : ""
+    }
+
+    const data = await getHistoryMetricsApi(params)
+    console.log("historyData", data)
 
     // 检查数据结构
     if (!data || !data.series || !Array.isArray(data.series) || data.series.length === 0) {
-      ElMessage.warning("未获取到有效的历史数据")
       return
     }
 
@@ -912,12 +873,8 @@ const queryHistory = async () => {
       })
     }
 
-    // console.log("预处理后的数据:", data)
-
     // 保存原始数据
     historyData.value = data.series || []
-    historyPage.total = data.total || historyData.value.length
-    historyPage.current = 1
 
     // 渲染图表
     renderHistoryChart(data)
@@ -1023,15 +980,18 @@ const renderHistoryChart = (data: any) => {
             .filter((point) => point !== null) // 过滤掉无效的时间戳
         : []
 
-      // 为每个系列创建不同的渐变色
-      const colorList = [
-        ["#1890FF", "#91d5ff"],
-        ["#2FC25B", "#8effa0"],
-        ["#FACC14", "#ffe58f"],
-        ["#722ED1", "#d3adf7"],
-        ["#F5222D", "#ffa39e"]
-      ]
-      const colorIndex = index % colorList.length
+      // 为错误日志设置固定的红色渐变
+      const isErrorLog = item.name.toLowerCase().includes("error")
+      const colorList = isErrorLog
+        ? [["#f56c6c", "#ffa39e"]] // 错误日志使用红色渐变
+        : [
+            ["#1890FF", "#91d5ff"],
+            ["#2FC25B", "#8effa0"],
+            ["#FACC14", "#ffe58f"],
+            ["#722ED1", "#d3adf7"],
+            ["#F5222D", "#ffa39e"]
+          ]
+      const colorIndex = isErrorLog ? 0 : index % colorList.length
       const gradientColor = new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: colorList[colorIndex][0] },
         { offset: 1, color: colorList[colorIndex][1] }
@@ -1086,7 +1046,9 @@ const renderHistoryChart = (data: any) => {
       const endTime = new Date(historyConfig.timeRange[1]).getTime()
       const diffHours = (endTime - startTime) / (1000 * 60 * 60)
 
-      if (diffHours <= 24) {
+      if (diffHours <= 1) {
+        return "HH:mm:ss" // 1小时内显示时:分:秒
+      } else if (diffHours <= 24) {
         return "HH:mm" // 24小时内显示时:分
       } else if (diffHours <= 24 * 7) {
         return "MM-DD HH:mm" // 一周内显示月-日 时:分
@@ -1138,7 +1100,7 @@ const renderHistoryChart = (data: any) => {
             show: false
           },
           axisLabel: {
-            formatter: function (value) {
+            formatter: function (value: number) {
               return dayjs(value).format(getTimeFormat())
             }
           },
@@ -1233,7 +1195,7 @@ const renderHistoryChart = (data: any) => {
 
         // 如果有数据，显示第一页
         if (historyData.value.length > 0) {
-          displayHistoryData()
+          // displayHistoryData()
         }
       } catch (error) {
         console.error("历史图表设置选项失败:", error)
@@ -1296,11 +1258,6 @@ watch(currentHost, (newHost) => {
     queryParams.host = newHost
   }
 })
-
-// 处理表格行点击
-const handleFileRowClick = (row: string) => {
-  handleFileClick(row)
-}
 </script>
 
 <style scoped>
@@ -1398,5 +1355,30 @@ const handleFileRowClick = (row: string) => {
 
 :deep(.selected-file-row td) {
   background-color: #f0f9eb !important;
+}
+
+.log-level-error {
+  color: #f56c6c !important;
+  background-color: rgba(245, 108, 108, 0.1) !important;
+}
+
+.log-level-warn {
+  color: #e6a23c !important;
+  background-color: rgba(230, 162, 60, 0.1) !important;
+}
+
+.log-level-info {
+  color: #409eff !important;
+  background-color: rgba(64, 158, 255, 0.1) !important;
+}
+
+.log-level-debug {
+  color: #67c23a !important;
+  background-color: rgba(103, 194, 58, 0.1) !important;
+}
+
+.log-level-trace {
+  color: #909399 !important;
+  background-color: rgba(144, 147, 153, 0.1) !important;
 }
 </style>

@@ -24,13 +24,13 @@ type (
 type (
 	 // 历史分析请求
 	 HistoryAnalysisReq  {
-		Host        string `json:"host"`        // 主机地址
+		Host        string `json:"host, omitempty"`        // 主机地址
 		LogFile     string `json:"log_file"`    // 日志文件名
 		StartTime   int64  `json:"start_time"`  // 开始时间
 		EndTime     int64  `json:"end_time"`    // 结束时间
-		Keywords    string `json:"keywords"`    // 关键字
-		Page        int    `json:"page"`        // 页码
-		PageSize    int    `json:"page_size"`   // 每页大小
+		Keywords    string `json:"keywords, omitempty"`    // 关键字
+//		Page        int    `json:"page,omitempty"`        // 页码(暂时不使用)
+//		PageSize    int    `json:"page_size,omitempty"`   // 每页大小(暂时不使用)
 	}
 
 	 // 历史分析响应

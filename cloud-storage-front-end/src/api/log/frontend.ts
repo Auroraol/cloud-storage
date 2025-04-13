@@ -1,5 +1,12 @@
 import { logApi } from "./index"
-import type { LogQueryParams, LogLine, RealtimeMonitorParams, FrontHistoryAnalysisParams } from "./types/frontend"
+import type {
+  LogQueryParams,
+  LogLine,
+  RealtimeMonitorParams,
+  FrontHistoryAnalysisParams,
+  LocalLogQueryParams,
+  LocalFileContentParams
+} from "./types/frontend"
 import type {
   ReadLogFileReq,
   RealTimeMonitorReq,
@@ -9,6 +16,7 @@ import type {
   DeleteSSHConnectReq
 } from "./types/log"
 import { useUserStoreHook } from "@/store/modules/user"
+import request from "@/utils/request"
 
 // 存储SSH连接状态
 let sshConnected = false
@@ -234,20 +242,20 @@ export const getRealtimeMetricsApi = async (params: RealtimeMonitorParams) => {
 // 获取历史分析数据
 export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) => {
   const userStore = useUserStoreHook()
-  const host = userStore.currentSSHHost || "localhost"
+  let host = params.host // 默认主机
 
   // 确保已连接
-  await ensureConnected(host)
+  if (host !== "") {
+    host = userStore.currentSSHHost
+    await ensureConnected(host)
+  }
 
   // 转换参数
-  const startTime = params.timeRange[0] ? new Date(params.timeRange[0]).getTime() : 0
-  const endTime = params.timeRange[1] ? new Date(params.timeRange[1]).getTime() : 0
-
+  const startTime = params.timeRange[0] ? new Date(params.timeRange[0]).getTime() / 1000 : 0
+  const endTime = params.timeRange[1] ? new Date(params.timeRange[1]).getTime() / 1000 : 0
   const apiParams: HistoryAnalysisReq = {
     host, // 使用当前连接的主机
     log_file: params.dataFile, // 默认日志文件，可以根据需要修改
-    page: 1,
-    page_size: 50,
     start_time: startTime,
     end_time: endTime,
     keywords: "" // 添加必需的 keywords 字段
@@ -270,4 +278,87 @@ export const getHistoryMetricsApi = async (params: FrontHistoryAnalysisParams) =
   })
 
   return { metrics, series, total, page, page_size, success }
+}
+
+// 获取本地日志文件列表
+export const getLocalLogFilesApi = async (path: string) => {
+  try {
+    console.log("正在获取本地日志文件列表，路径:", path)
+    const response = await logApi.getLocalLogFiles({ path })
+    console.log("获取本地日志文件列表响应:", response)
+
+    // if (!response) {
+    //   throw new Error("获取本地日志文件列表失败：响应为空")
+    // }
+
+    // if (!response.files) {
+    //   throw new Error("获取本地日志文件列表失败：响应数据格式错误")
+    // }
+
+    return response
+  } catch (error) {
+    console.error("获取本地日志文件列表失败:", error)
+    if (error instanceof Error) {
+      throw new Error(`获取本地日志文件列表失败: ${error.message}`)
+    }
+    throw new Error("获取本地日志文件列表失败: 未知错误")
+  }
+}
+
+// 读取本地日志文件
+export const readLocalLogFileApi = async (params: LocalLogQueryParams) => {
+  try {
+    const response = await logApi.readLocalLogFile(params)
+    return response
+  } catch (error) {
+    console.error("读取本地日志文件失败:", error)
+    throw error
+  }
+}
+
+// 获取本地文件内容
+export const getLocalFileContentApi = async (params: LocalFileContentParams) => {
+  try {
+    const response = await logApi.getLocalFileContent(params)
+    return response
+  } catch (error) {
+    console.error("获取本地文件内容失败:", error)
+    throw error
+  }
+}
+
+// 获取本地日志指标
+export const getLocalLogMetricsApi = async (params: { dataFile: string; metrics: string[]; timeRange: string }) => {
+  try {
+    console.log("正在获取本地日志指标，参数:", params)
+    // 转换参数
+    const timeRangeMap: Record<string, number> = {
+      "1h": 1,
+      "6h": 6,
+      "12h": 12,
+      "24h": 24
+    }
+
+    const apiParams: RealTimeMonitorReq = {
+      log_file: params.dataFile, // 默认日志文件，可以根据需要修改
+      time_range: timeRangeMap[params.timeRange] || 1,
+      monitor_items: params.metrics
+    }
+    const response = await logApi.getLocalLogMetrics(apiParams)
+    // 处理响应数据，转换为echarts需要的格式
+    const series = params.metrics.map((metric) => {
+      return {
+        name: metric,
+        type: "line",
+        data: (response.data.data || [])
+          .filter((item) => item.type === metric)
+          .map((item) => [item.timestamp, item.value])
+      }
+    })
+
+    return { series }
+  } catch (error) {
+    console.error("获取本地日志指标失败:", error)
+    throw error
+  }
 }

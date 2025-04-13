@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
+	"os"
 	"sort"
 	"strings"
+
+	"go.uber.org/zap"
 
 	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
 
@@ -34,33 +36,62 @@ func NewHistoryAnalysisLogicLogic(ctx context.Context, svcCtx *svc.ServiceContex
 
 func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnalysisReq) (resp *types.HistoryAnalysisRes, err error) {
 	// 参数校验
-	if req.Page <= 0 {
-		req.Page = 1
-	}
-	if req.PageSize <= 0 {
-		req.PageSize = 10
-	}
-
-	if req.Host == "" {
-		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "主机地址不能为空")
-	}
-
 	if req.LogFile == "" {
 		return nil, response.NewErrCodeMsg(response.DATA_PARAM_ERROR, "日志文件不能为空")
 	}
 
 	// 如果没有指定时间范围，默认为最近24小时
 	if req.StartTime <= 0 || req.EndTime <= 0 {
-		//req.EndTime = time.Now().Unix()
+		req.EndTime = time.LocalTimeNow().Unix()
 		req.StartTime = req.EndTime - 86400 // 24小时前
 	}
 
-	// 使用SSH服务读取日志文件
-	contents, _, err := l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
-	if err != nil {
-		// 如果读取失败，使用模拟数据
-		zap.S().Errorf("读取日志文件失败: %v", err)
-		return nil, response.NewErrMsg("读取日志文件失败")
+	var contents []string
+	var total int
+
+	// 检查是本地文件还是远程文件
+	if req.Host == "" {
+		// 本地文件处理
+		content, err := os.ReadFile(req.LogFile)
+		if err != nil {
+			zap.S().Errorf("读取本地日志文件失败: %v", err)
+			return nil, response.NewErrMsg("读取本地日志文件失败")
+		}
+
+		// 分割日志行
+		allLines := strings.Split(string(content), "\n")
+		total = len(allLines)
+
+		// 只有在传入分页参数时才进行分页
+		//if req.Page > 0 && req.PageSize > 0 {
+		//	// 分页处理
+		//	start := (req.Page - 1) * req.PageSize
+		//	end := start + req.PageSize
+		//	if start >= total {
+		//		contents = []string{}
+		//	} else {
+		//		if end > total {
+		//			end = total
+		//		}
+		//		contents = allLines[start:end]
+		//	}
+		//} else {
+		//	// 不进行分页，返回所有内容
+		contents = allLines
+		//}
+	} else {
+		// 远程文件处理
+		// 只有在传入分页参数时才进行分页
+		//if req.Page > 0 && req.PageSize > 0 {
+		//	contents, total, err = l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, req.Page, req.PageSize)
+		//} else {
+		// 不进行分页，返回所有内容
+		contents, total, err = l.svcCtx.SSHService.ReadLogFile(req.LogFile, req.Keywords, 1, total)
+		//}
+		if err != nil {
+			zap.S().Errorf("读取远程日志文件失败: %v", err)
+			return nil, response.NewErrMsg("读取远程日志文件失败")
+		}
 	}
 
 	// 创建一个map来存储按时间戳分组的日志条目
@@ -72,7 +103,17 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 		timestamp, level, message, fields, err := parseJSONLog(content)
 		if err != nil {
 			zap.S().Errorf("解析日志内容失败: %v", err)
-			return nil, response.NewErrMsg("解析日志内容失败")
+			continue // 跳过解析失败的日志行
+		}
+
+		// 检查时间戳是否在指定范围内
+		if timestamp < req.StartTime || timestamp > req.EndTime {
+			continue
+		}
+
+		// 检查关键词匹配
+		if req.Keywords != "" && !strings.Contains(strings.ToLower(message), strings.ToLower(req.Keywords)) {
+			continue
 		}
 
 		// JSON解析成功，如果有额外字段，将它们添加到消息中
@@ -121,11 +162,11 @@ func (l *HistoryAnalysisLogicLogic) HistoryAnalysisLogic(req *types.HistoryAnaly
 	})
 
 	return &types.HistoryAnalysisRes{
-		Data:     data,
-		Total:    len(data),
-		Page:     req.Page,
-		PageSize: req.PageSize,
-		Success:  true,
+		Data:  data,
+		Total: total,
+		//Page:     req.Page,
+		//PageSize: req.PageSize,
+		Success: true,
 	}, nil
 }
 
@@ -160,6 +201,7 @@ var levelMap = map[string]string{
 	"info":     "INFO",
 	"notice":   "INFO",
 	"critical": "CRITICAL",
+	"requests": "REQUESTS",
 }
 
 func parseLogLevel(s string) string {

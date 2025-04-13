@@ -178,7 +178,7 @@ func fileExist(path string) bool {
 var ErrRemoteFileExisted = errors.New("remote file already exist")
 
 // ErrLocalFileExisted 本地已经存在该文件
-var ErrLocalFileExisted = errors.New("local file already exist")
+var ErrLocalFileExisted = errors.New("local.api file already exist")
 
 // ErrSessionCanceled 会话因为上下文对象的取消而被取消
 var ErrSessionCanceled = errors.New("session canceled because context canceled")
@@ -267,7 +267,7 @@ func (s *sshClient) writeFile(sftpClient *sftp.Client, dest string, dataReader i
 	destTmp := s.generateTempFilename(dest)
 	written, err = s.writeToRemoteTmp(sftpClient, destTmp, dataReader)
 	if err != nil {
-		return 0, fmt.Errorf("transfer local file to remote failed: %w", err)
+		return 0, fmt.Errorf("transfer local.api file to remote failed: %w", err)
 	}
 	defer sftpClient.Remove(destTmp)
 
@@ -287,7 +287,7 @@ func (s *sshClient) transferFileFromRemote(sftpClient *sftp.Client, dest string,
 		if checkConsistency {
 			matched, err := s.checkFileConsistency(dest, src)
 			if err != nil {
-				return 0, fmt.Errorf("check local & remote file (existed) consistency failed: %w", err)
+				return 0, fmt.Errorf("check local.api & remote file (existed) consistency failed: %w", err)
 			}
 
 			if !matched {
@@ -301,7 +301,7 @@ func (s *sshClient) transferFileFromRemote(sftpClient *sftp.Client, dest string,
 	destTmp := s.generateTempFilename(dest)
 	written, err = s.transferToLocalTmp(sftpClient, destTmp, src)
 	if err != nil {
-		return 0, fmt.Errorf("transfer remote file to local failed: %w", err)
+		return 0, fmt.Errorf("transfer remote file to local.api failed: %w", err)
 	}
 	defer os.Remove(destTmp)
 
@@ -312,7 +312,7 @@ func (s *sshClient) transferFileFromRemote(sftpClient *sftp.Client, dest string,
 	if checkConsistency {
 		matched, err := s.checkFileConsistency(dest, src)
 		if err != nil {
-			return 0, fmt.Errorf("check local & remote file consistency failed: %w", err)
+			return 0, fmt.Errorf("check local.api & remote file consistency failed: %w", err)
 		}
 
 		if !matched {
@@ -328,7 +328,7 @@ func (s *sshClient) transferFile(sftpClient *sftp.Client, dest string, src strin
 		if checkConsistency {
 			matched, err := s.checkFileConsistency(src, dest)
 			if err != nil {
-				return 0, fmt.Errorf("check local & remote file (existed) consistency failed: %w", err)
+				return 0, fmt.Errorf("check local.api & remote file (existed) consistency failed: %w", err)
 			}
 
 			if !matched {
@@ -342,7 +342,7 @@ func (s *sshClient) transferFile(sftpClient *sftp.Client, dest string, src strin
 	destTmp := s.generateTempFilename(dest)
 	written, err = s.transferToRemoteTmp(sftpClient, destTmp, src)
 	if err != nil {
-		return 0, fmt.Errorf("transfer local file to remote failed: %w", err)
+		return 0, fmt.Errorf("transfer local.api file to remote failed: %w", err)
 	}
 	defer sftpClient.Remove(destTmp)
 
@@ -353,7 +353,7 @@ func (s *sshClient) transferFile(sftpClient *sftp.Client, dest string, src strin
 	if checkConsistency {
 		matched, err := s.checkFileConsistency(src, dest)
 		if err != nil {
-			return 0, fmt.Errorf("check local & remote file consistency failed: %w", err)
+			return 0, fmt.Errorf("check local.api & remote file consistency failed: %w", err)
 		}
 
 		if !matched {
@@ -487,7 +487,7 @@ func (s *sshClient) checkFileConsistency(src string, remoteDest string) (bool, e
 
 	remoteFinger := strings.SplitN(strings.TrimSpace(string(remoteFingerBytes)), " ", 2)
 	if s.logger.DebugEnabled() {
-		s.logger.Debugf("consistency: local=%s, remote=%s, matched=%v", localFinger, remoteFinger[0], strings.EqualFold(localFinger, remoteFinger[0]))
+		s.logger.Debugf("consistency: local.api=%s, remote=%s, matched=%v", localFinger, remoteFinger[0], strings.EqualFold(localFinger, remoteFinger[0]))
 	}
 
 	return strings.EqualFold(localFinger, remoteFinger[0]), nil
@@ -526,7 +526,7 @@ func (s *sshClient) transferToLocalTmp(client *sftp.Client, destTmp string, src 
 func (s *sshClient) transferToRemoteTmp(client *sftp.Client, destTmp string, src string) (int64, error) {
 	srcFile, err := os.Open(src)
 	if err != nil {
-		return 0, fmt.Errorf("open local file %s failed: %w", src, err)
+		return 0, fmt.Errorf("open local.api file %s failed: %w", src, err)
 	}
 	defer srcFile.Close()
 

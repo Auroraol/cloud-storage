@@ -1,4 +1,163 @@
+{"level":"REQUESTS","time":"2025-03-05 15:31:21","caller":"ssh/connecthandler.go:22","msg":"req: {Host:101.37.165.220 Port:22 User:root Password:-+66..[]l PrivateKeyPath:}"}
+{"level":"REQUESTS","time":"2025-03-05 16:40:38","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-05 17:04:25","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-05 17:18:09","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-05 17:22:30","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:30:48","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:04","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:09","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:10","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=2&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:12","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=3&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:44:12","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=4&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-05 17:51:23","caller":"logx/logger.go:252","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-06 10:13:06","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:16:50","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:19:20","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:19:35","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:21:38","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:31:09","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:41:29","caller":"rpc/logservice.go:37","msg":"Starting server at 0.0.0.0:2007..."}
+{"level":"REQUESTS","time":"2025-03-06 10:43:32","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-06 10:47:17","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:48:06","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:49:09","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:49:20","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:49:36","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:50:19","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:50:22","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:51:07","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-06 10:52:13","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:52:53","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"ERROR","time":"2025-03-06 10:54:14","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:54:33","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 10:54:45","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:54:57","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 10:55:07","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:56:48","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 10:57:05","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-06 11:04:59","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 11:13:54","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 11:19:35","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-06 11:24:07","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-03-06 11:29:49","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-06 16:21:50","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-03-06 16:23:28","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 16:23:30","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 16:32:02","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"ERROR","time":"2025-03-06 16:39:31","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"REQUESTS","time":"2025-03-06 16:49:04","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-03-06 16:50:33","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: context canceled"}
+{"level":"REQUESTS","time":"2025-03-16 23:00:44","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:01:06","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:01:18","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:48:26","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 21:41:34","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-18 21:42:35","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 22:10:00","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 22:21:09","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:23:26","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 22:23:31","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:23:38","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-03-18 22:24:49","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 22:50:25","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:03:49","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:04:13","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:04:43","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:08:22","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-18 23:59:28","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-03-18 23:59:48","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-03-18 23:59:52","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-03-18 23:59:55","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:21","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-19 00:05:09","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-19 00:07:43","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:27","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-03-19 00:14:22","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-03-19 00:14:26","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-03-19 20:45:56","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-04 21:05:20","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-04 21:05:27","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-04 21:07:12","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-04 21:07:16","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-04-04 21:49:52","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:50:07","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:52:27","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:52:47","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:53:25","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 21:59:45","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-04 22:03:28","caller":"sshservicerpc/savesshinfologic.go:39","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-04-04 22:07:22","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-04 22:07:50","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/detail?id=1894794766218956800&code=v1z5yg]"}
+{"level":"REQUESTS","time":"2025-04-05 14:59:10","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-05 17:04:26","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-05 17:10:43","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-05 23:24:49","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"REQUESTS","time":"2025-04-05 23:29:07","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-05 23:29:53","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
+{"level":"REQUESTS","time":"2025-04-05 23:31:02","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"ERROR","time":"2025-04-05 23:31:11","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-04-05 23:31:57","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/create]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:03","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/create]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:05","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:09","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:23","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/create]"}
+{"level":"REQUESTS","time":"2025-04-05 23:32:26","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-05 23:45:18","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
 {"level":"REQUESTS","time":"2025-04-05 23:50:58","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
 {"level":"REQUESTS","time":"2025-04-06 21:46:03","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
 {"level":"REQUESTS","time":"2025-04-06 21:46:52","caller":"api/shareservice.go:29","msg":"Starting server at 0.0.0.0:1006..."}
 {"level":"REQUESTS","time":"2025-04-06 22:34:46","caller":"logx/logger.go:321","msg":"localhost:1006 [/share_service/v1/share/basic/list?page=1&page_size=5]"}
+{"level":"REQUESTS","time":"2025-04-07 22:40:30","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-04-07 23:44:25","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"REQUESTS","time":"2025-04-13 19:59:24","caller":"rpc/logservice.go:38","msg":"Starting rpc server at 0.0.0.0:2007...\n"}
+{"level":"ERROR","time":"2025-04-13 20:15:57","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-127.0.0.1' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:43:31","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:46:34","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:46:40","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:46:48","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:48:39","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-127.0.0.1' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:49:02","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-127.0.0.1' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:49:11","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-127.0.0.1' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 21:51:39","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: operation was canceled"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: operation was canceled"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: operation was canceled"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: operation was canceled"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: context deadline exceeded"}
+{"level":"ERROR","time":"2025-04-13 22:03:40","caller":"sshservicerpc/getsshinfologic.go:33","msg":"查询 SSH 信息列表失败: FindAll failed: dial tcp 101.37.165.220:3306: i/o timeout"}
+{"level":"ERROR","time":"2025-04-13 22:46:47","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 22:55:33","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 22:57:09","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 22:58:20","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:03:03","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:04:44","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:07:24","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:08:48","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:10:12","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:11:05","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:11:50","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:57:39","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:57:46","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-13 23:58:43","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-14 00:40:33","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-14 00:51:40","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-14 00:55:39","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}
+{"level":"ERROR","time":"2025-04-14 01:00:02","caller":"sshservicerpc/savesshinfologic.go:40","msg":"保存ssh信息失败: Error 1062 (23000): Duplicate entry '1-101.37.165.220' for key 'ssh_info.idx_user_host'"}

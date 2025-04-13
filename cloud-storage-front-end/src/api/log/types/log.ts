@@ -15,7 +15,7 @@ export type SSHConnectResponseData = ApiResponseData<{
 
 // 实时监控请求
 export interface RealTimeMonitorReq {
-  host: string // 主机地址
+  host?: string // 主机地址
   log_file: string // 日志文件名
   monitor_items: string[] // 监控项（请求数、错误数、响应时间）
   time_range: number // 时间范围（1小时、6小时、12小时、24小时）
@@ -37,21 +37,17 @@ export interface MonitorData {
 
 // 历史分析请求
 export interface HistoryAnalysisReq {
-  host: string // 主机地址
+  host?: string // 主机地址
   log_file: string // 日志文件名
   start_time: number // 开始时间
   end_time: number // 结束时间
-  keywords: string // 关键字
-  page: number // 页码
-  page_size: number // 每页大小
+  keywords?: string // 关键字
 }
 
 // 历史分析响应
 export type HistoryAnalysisRes = ApiResponseData<{
   data: LogEntry[] // 日志条目
   total: number // 总数
-  page: number // 页码
-  page_size: number // 每页大小
   success: boolean // 是否成功
 }>
 

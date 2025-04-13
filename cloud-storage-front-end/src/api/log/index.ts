@@ -1,6 +1,7 @@
 import { request } from "@/utils/network/axios"
 import type * as log from "./types/log"
 import { RequestEnum } from "@/utils/network/httpEnum"
+import type * as frontend from "./types/frontend"
 
 const prefix = import.meta.env.VITE_APP_BASE_API
 
@@ -66,10 +67,22 @@ export const logApi = {
     )
   },
 
-  // 实时监控
+  // 实时监控(ssh)
   realTimeMonitor(data: log.RealTimeMonitorReq) {
     return request<log.RealTimeMonitorRes>(
       `${prefix}/log_service/v1/monitor/realtime`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
+  // 实时监控(本地)
+  getLocalLogMetrics(data: log.RealTimeMonitorReq) {
+    return request<log.RealTimeMonitorRes>(
+      `${prefix}/log_service/v1/local/monitor`,
       {
         method: RequestEnum.POST,
         data
@@ -82,6 +95,45 @@ export const logApi = {
   historyAnalysis(data: log.HistoryAnalysisReq) {
     return request<log.HistoryAnalysisRes>(
       `${prefix}/log_service/v1/monitor/history`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
+  // 获取本地日志文件列表
+  getLocalLogFiles(data: { path: string }) {
+    return request<frontend.LocalLogFilesRes>(
+      `${prefix}/log_service/v1/local/files`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
+  // 读取本地日志文件
+  readLocalLogFile(data: frontend.LocalLogQueryParams) {
+    return request<frontend.LocalLogReadRes>(
+      `${prefix}/log_service/v1/local/read`,
+      {
+        method: RequestEnum.POST,
+        data
+      },
+      true
+    )
+  },
+
+  // 获取本地文件内容
+  getLocalFileContent(data: frontend.LocalFileContentParams) {
+    return request<{
+      content: string
+      length: number
+    }>(
+      `${prefix}/log_service/v1/local/content`,
       {
         method: RequestEnum.POST,
         data

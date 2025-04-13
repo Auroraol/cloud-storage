@@ -1,3 +1,363 @@
+{"level":"REQUESTS","time":"2025-03-05 16:50:07","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-05 17:23:53","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:29:33","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:39:06","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:40:58","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:42:45","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-05 17:52:17","caller":"history/historylistlogic.go:39","msg":"获取历史记录失败 err:%vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-06 10:41:15","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:42:15","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:50:44","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-06 10:52:40","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-06 16:17:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-06 16:34:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-16 23:02:00","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:05:49","caller":"api/uploadservice.go:29","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:20:16","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-16 23:20:16","caller":"api/uploadservice.go:34","msg":"Pulsar 连接已关闭"}
+{"level":"REQUESTS","time":"2025-03-16 23:20:32","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 00:05:22","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 00:08:54","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:08:58","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:08:58","caller":"logic/fileuploadlogic.go:180","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-17 00:09:15","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:09:18","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 2310510870"}
+{"level":"REQUESTS","time":"2025-03-17 00:09:56","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:09:58","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '2310510870' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:10:21","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:10:22","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '2310510870' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:11:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:11:14","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 290825853"}
+{"level":"ERROR","time":"2025-03-17 00:11:14","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:21:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:21:54","caller":"logic/fileuploadlogic.go:190","msg":"更新用户存储容量失败, err: %srpc error: code = DeadlineExceeded desc = context deadline exceeded"}
+{"level":"ERROR","time":"2025-03-17 00:21:54","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:22:07","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:22:11","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"WARN","time":"2025-03-17 00:22:16","caller":"logic/fileuploadlogic.go:217","msg":"发送文件上传消息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-17 00:22:37","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:22:41","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"WARN","time":"2025-03-17 00:22:44","caller":"logic/fileuploadlogic.go:217","msg":"发送文件上传消息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-17 00:23:15","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:24:08","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:24:08","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:24:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:24:34","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:25:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:25:12","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:28:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:28:59","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:29:26","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:29:27","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:29:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:29:47","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:29:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:29:58","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:30:59","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:31:00","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:31:48","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:33:26","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:33:26","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:33:28","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:33:29","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:33:34","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:34:13","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:37:12","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:37:53","caller":"history/updatehistorylogic.go:62","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '18446744073709551615' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:39:36","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 00:39:42","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:39:51","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:39:57","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:40:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-17 00:40:02","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:40:07","caller":"logic/fileuploadlogic.go:180","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-17 00:40:08","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:40:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 00:40:15","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 4105114471"}
+{"level":"REQUESTS","time":"2025-03-17 00:41:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:41:35","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:41:41","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:41:41","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:42:50","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:42:51","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:43:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:43:52","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:44:08","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:44:08","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:44:22","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:08","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:09","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:46:10","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:46:18","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:47:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:47:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:47:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:48:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:48:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:48:18","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:48:24","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:48:30","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:50:05","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:50:05","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:50:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:51:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:51:14","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:52:27","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:52:37","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 00:56:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 00:56:31","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"ERROR","time":"2025-03-17 00:58:20","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:58:36","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"ERROR","time":"2025-03-17 00:59:21","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-03-17 00:59:56","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:00:46","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:02:15","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:02:17","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init]"}
+{"level":"REQUESTS","time":"2025-03-17 01:03:14","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:03:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"ERROR","time":"2025-03-17 01:03:35","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:13","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:14","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:17","caller":"Chunk/completemultipartuploadlogic.go:127","msg":"分片上传完成消息已发送: 2044011164"}
+{"level":"ERROR","time":"2025-03-17 01:04:17","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:04:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"ERROR","time":"2025-03-17 01:05:01","caller":"history/updatehistorylogic.go:61","msg":"更新失败 err:%vError 1062 (23000): Duplicate entry '0' for key 'upload_history.idx_repository_id_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:34","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:36","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-17 01:06:37","caller":"Chunk/completemultipartuploadlogic.go:99","msg":"保存文件信息失败, err: %sError 1062 (23000): Duplicate entry 'users/1/files/1-20050F92054.zip' for key 'repository_pool.idx_hash_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:37","caller":"Chunk/completemultipartuploadlogic.go:127","msg":"分片上传完成消息已发送: 4006380249"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:53","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-17 01:06:53","caller":"Chunk/completemultipartuploadlogic.go:99","msg":"保存文件信息失败, err: %sError 1062 (23000): Duplicate entry 'users/1/files/1-20050F92054.zip' for key 'repository_pool.idx_hash_unique'"}
+{"level":"REQUESTS","time":"2025-03-17 01:06:53","caller":"Chunk/completemultipartuploadlogic.go:127","msg":"分片上传完成消息已发送: 3863912652"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:20","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:23","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:23","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:24","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:26","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 268562288"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:36","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:12:36","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 3480278398"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:36","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:13:37","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 533114021"}
+{"level":"REQUESTS","time":"2025-03-17 01:18:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:18:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:19:01","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:19:02","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 3708895499"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:23","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:20:25","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 663771060"}
+{"level":"REQUESTS","time":"2025-03-17 01:22:57","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:01","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=1-20050F92054.zip&file_size=1120864&metadata=%7B%22type%22:%22application%2Fx-zip-compressed%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:03","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-17 01:23:05","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 2083863311"}
+{"level":"REQUESTS","time":"2025-03-18 21:40:07","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 21:42:30","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-18 21:44:26","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vdial tcp 101.37.165.220:6379: i/o timeout"}
+{"level":"REQUESTS","time":"2025-03-18 22:08:31","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=VALORANT+++2024_10_19+13_47_45.png&file_size=2013367&metadata=%7B%22type%22:%22image%2Fpng%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:08:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:08:39","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"REQUESTS","time":"2025-03-18 22:08:51","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 1355051977"}
+{"level":"REQUESTS","time":"2025-03-18 22:08:59","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:09:00","caller":"Chunk/completemultipartuploadlogic.go:67","msg":"完成分片上传失败 err:%soss: service returned error: StatusCode=404, ErrorCode=NoSuchUpload, ErrorMessage=\"The specified upload does not exist. The upload ID may be invalid, or the upload may have been aborted or completed.\", RequestId=67D97E746BDBB7353652DBB9, Ec=0042-00000203"}
+{"level":"REQUESTS","time":"2025-03-18 22:14:48","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:14:48","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:14:57","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:14:59","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:15:00","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 4212117034"}
+{"level":"ERROR","time":"2025-03-18 22:15:03","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-18 22:15:31","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:15:32","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:15:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:16:50","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:16:50","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:16:58","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:16:59","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:16:59","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 2128011081"}
+{"level":"ERROR","time":"2025-03-18 22:17:00","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:20:11","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:20:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:20:17","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:20:18","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:20:18","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 1886001990"}
+{"level":"ERROR","time":"2025-03-18 22:20:20","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:20:44","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:21:20","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:21:21","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:21:28","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:21:30","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:21:30","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 1538235526"}
+{"level":"ERROR","time":"2025-03-18 22:21:33","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:23:05","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:23:38","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:24:11","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:25:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:25:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:25:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:25:22","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:25:22","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 2764868246"}
+{"level":"ERROR","time":"2025-03-18 22:25:23","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:34:49","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:01","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:02","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:35:08","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:08","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 3763844023"}
+{"level":"ERROR","time":"2025-03-18 22:35:09","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:30","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:30","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:34","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:35:34","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:35:34","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 1954374745"}
+{"level":"ERROR","time":"2025-03-18 22:35:35","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:36:52","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-18 22:37:25","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:25","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-03-18 22:37:25","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:37:37","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:37:38","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:37:42","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:37:44","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:37:44","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 2098185909"}
+{"level":"ERROR","time":"2025-03-18 22:37:44","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:38:15","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-18 22:38:28","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/init?file_name=%E8%87%AA%E8%B4%AD%E8%92%B8%E6%B0%94%E5%8C%85%E6%9C%80%E6%96%B0-%E6%AD%BB%E5%BA%93%E6%B0%B4%E8%AF%B1%E6%83%91%EF%BC%8C%E5%85%A8%E8%BA%AB%E6%B6%82%E6%BB%A1%E7%B2%BE%E6%B2%B9%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%83%B8%E7%9C%9F%E7%9A%84%E5%A4%AA%E6%9C%89%E5%BC%B9%E6%80%A7%E4%BA%86%EF%BC%8C%E8%A2%AB%E4%B8%A4%E6%A0%B9%E6%89%8B%E6%8C%87%E6%8F%92%E5%88%B0%E9%AB%98%E6%BD%AE%E4%B8%80%E7%9B%B4%E5%96%B7%E6%B0%B4+-+91i%E5%90%83%E7%93%9C+-+Google+Chrome+2024-11-07+21-59-18.mp4&file_size=2799232&metadata=%7B%22type%22:%22video%2Fmp4%22%7D]"}
+{"level":"REQUESTS","time":"2025-03-18 22:38:29","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:38:33","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/multipart/complete]"}
+{"level":"ERROR","time":"2025-03-18 22:38:35","caller":"Chunk/completemultipartuploadlogic.go:107","msg":"保存文件信息失败, err: %sError 1406 (22001): Data too long for column 'path' at row 1"}
+{"level":"REQUESTS","time":"2025-03-18 22:38:35","caller":"Chunk/completemultipartuploadlogic.go:138","msg":"分片上传完成消息已发送: 1606485355"}
+{"level":"ERROR","time":"2025-03-18 22:38:37","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-03-18 22:42:45","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-18 22:42:56","caller":"logic/fileuploadlogic.go:180","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-18 22:43:09","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:43:15","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 3587144202"}
+{"level":"REQUESTS","time":"2025-03-18 22:44:17","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 22:44:24","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 704892516"}
+{"level":"REQUESTS","time":"2025-03-18 23:57:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-18 23:57:53","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 607752550"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:40","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:00:44","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 1871587533"}
+{"level":"REQUESTS","time":"2025-03-19 00:01:21","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:01:27","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 240494057"}
+{"level":"REQUESTS","time":"2025-03-19 00:04:09","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:04:16","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 2528249688"}
+{"level":"REQUESTS","time":"2025-03-19 00:05:30","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:05:36","caller":"logic/fileuploadlogic.go:219","msg":"文件上传消息已发送: 2783028271"}
+{"level":"REQUESTS","time":"2025-03-19 00:07:18","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:07:31","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:10:39","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-19 00:10:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:32","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"ERROR","time":"2025-03-19 00:12:48","caller":"logic/fileuploadlogic.go:181","msg":"保存文件信息失败, err: %scontext deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:12:57","caller":"logic/fileuploadlogic.go:220","msg":"文件上传消息已发送: 1956124122"}
+{"level":"REQUESTS","time":"2025-03-19 00:13:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-19 00:13:59","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"WARN","time":"2025-03-19 00:14:09","caller":"logic/fileuploadlogic.go:218","msg":"发送文件上传消息失败: context deadline exceeded"}
+{"level":"REQUESTS","time":"2025-03-19 20:45:16","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-03-19 20:46:43","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-19 20:46:43","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-20 00:05:22","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:05:22","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-20 00:10:16","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:10:16","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-03-20 00:17:24","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:17:24","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:37","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:45","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:20:56","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:21:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:21:06","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:21:54","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-20 00:29:43","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:06","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:30:54","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"ERROR","time":"2025-03-20 00:31:30","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:31:30","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-20 00:31:35","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:47","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:51","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url?repository_id=1758422647]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:52","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:53","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:32:57","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:03","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:03","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:04","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/upload]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:17","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:33:18","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:34:12","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:34:13","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:35:21","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:35:22","caller":"handler/filedownloadurlhandler.go:57","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"ERROR","time":"2025-03-20 00:44:47","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-03-20 00:44:47","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-03-20 00:44:53","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:44:55","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(2021级毕业设计开题报告（032141226+刘丰洁）.doc)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:10","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:10","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:19","caller":"logx/logger.go:321","msg":"localhost:1005 [/upload_service/v1/file/download/url]"}
+{"level":"REQUESTS","time":"2025-03-20 00:45:20","caller":"logic/filedownloadurllogic.go:64","msg":"用户(1)获取文件(屏幕截图 2025-01-15 203204.png)的下载链接"}
+{"level":"REQUESTS","time":"2025-04-04 21:02:49","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-04 21:05:46","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-04-04 21:05:46","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-04-04 21:08:45","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext deadline exceeded"}
+{"level":"ERROR","time":"2025-04-04 21:10:40","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:11:05","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:19:52","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:20:02","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:22:47","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:26:56","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:27:51","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:30:12","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:30:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 21:32:39","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 22:04:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-04 22:09:00","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-05 00:07:46","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-05 00:29:07","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 01:02:38","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 01:26:18","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 01:47:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 02:02:48","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-05 14:57:27","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-05 15:02:02","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vcontext canceled"}
+{"level":"REQUESTS","time":"2025-04-05 17:04:35","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-05 17:05:17","caller":"svc/servicecontext.go:56","msg":"Pulsar 发布者初始化失败: 创建生产者失败: connection error"}
+{"level":"REQUESTS","time":"2025-04-05 17:10:14","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 20:04:45","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:24:17","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:28:13","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:30:19","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:30:35","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:36:31","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:52:18","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:54:47","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:59:45","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 21:59:54","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 23:24:02","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"REQUESTS","time":"2025-04-05 23:29:32","caller":"api/uploadservice.go:41","msg":"Starting server at 0.0.0.0:1005...\n"}
+{"level":"ERROR","time":"2025-04-05 23:30:54","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 23:31:46","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 23:32:16","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 23:32:30","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 23:42:38","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 23:45:27","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-05 23:47:38","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
 {"level":"REQUESTS","time":"2025-04-06 02:18:32","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
 {"level":"REQUESTS","time":"2025-04-06 02:19:51","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
 {"level":"REQUESTS","time":"2025-04-06 21:45:34","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
@@ -43,3 +403,16 @@
 {"level":"ERROR","time":"2025-04-07 23:01:22","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
 {"level":"ERROR","time":"2025-04-07 23:01:24","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
 {"level":"ERROR","time":"2025-04-07 23:02:01","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-07 23:44:01","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"REQUESTS","time":"2025-04-13 20:03:27","caller":"rpc/uploadservice.go:37","msg":"Starting rpc server at 0.0.0.0:2005...\n"}
+{"level":"ERROR","time":"2025-04-13 20:15:56","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 21:51:28","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 21:58:00","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 21:58:47","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 22:08:50","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 22:14:07","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 22:55:27","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 23:11:37","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-13 23:14:40","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-14 00:14:27","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}
+{"level":"ERROR","time":"2025-04-14 01:38:55","caller":"uploadservicerpc/getrepositorypoolbyrepositoryidlogic.go:31","msg":"repositoryPoolInfo is nil, err: %vsql: no rows in result set"}

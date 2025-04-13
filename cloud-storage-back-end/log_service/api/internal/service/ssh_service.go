@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 	stdtime "time"
+
+	"go.uber.org/zap"
 
 	sshx "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/ssh"
 	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/common/time"
@@ -111,13 +112,20 @@ func (s *sshService) GetLogFiles(path string) ([]string, error) {
 		return nil, fmt.Errorf("未连接主机")
 	}
 
+	// 首先检查目录是否存在
+	checkDirCmd := fmt.Sprintf("test -d %s", path)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*stdtime.Second)
+	defer cancel()
+
+	_, err := s.client.Command(ctx, checkDirCmd)
+	if err != nil {
+		return nil, fmt.Errorf("目录不存在: %s", path)
+	}
+
 	// 构建命令
 	cmd := fmt.Sprintf("find %s -type f -name '*.log' | sort", path)
 
 	// 执行命令
-	ctx, cancel := context.WithTimeout(context.Background(), 30*stdtime.Second)
-	defer cancel()
-
 	output, err := s.client.Command(ctx, cmd)
 	if err != nil {
 		return nil, fmt.Errorf("获取日志文件列表失败: %v", err)

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	audit "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/audit"
+	local "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/local"
 	monitor "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/monitor"
 	ssh "github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/handler/ssh"
 	"github.com/Auroraol/cloud-storage/tree/main/cloud-storage-back-end/log_service/api/internal/svc"
@@ -22,6 +23,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/operation",
 				Handler: audit.OperationHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/log_service/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取本地文件内容
+				Method:  http.MethodPost,
+				Path:    "/local/content",
+				Handler: local.GetLocalFileContentHandler(serverCtx),
+			},
+			{
+				// 获取本地日志文件列表
+				Method:  http.MethodPost,
+				Path:    "/local/files",
+				Handler: local.GetLocalLogFilesHandler(serverCtx),
+			},
+			{
+				// 本地日志监控
+				Method:  http.MethodPost,
+				Path:    "/local/monitor",
+				Handler: local.LocalLogMonitorHandler(serverCtx),
+			},
+			{
+				// 读取本地日志文件
+				Method:  http.MethodPost,
+				Path:    "/local/read",
+				Handler: local.ReadLocalLogFileHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
@@ -62,7 +94,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ssh.DeleteSSHConnectHandler(serverCtx),
 			},
 			{
-				// 获取SSH连接信息
+				// 获取SSH连接信息列表
 				Method:  http.MethodPost,
 				Path:    "/ssh/get",
 				Handler: ssh.GetSSHConnectHandler(serverCtx),

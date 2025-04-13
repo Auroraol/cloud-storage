@@ -13,6 +13,34 @@ type DeleteSSHConnectRes struct {
 	SshId   int64  `json:"ssh_id"`
 }
 
+type FileStat struct {
+	TotalFiles     int   `json:"total_files"`
+	TotalDirs      int   `json:"total_dirs"`
+	TotalSize      int64 `json:"total_size"`
+	LogFileCount   int   `json:"log_file_count"`
+	RecentModified int   `json:"recent_modified"`
+}
+
+type GetLocalFileContentReq struct {
+	FilePath string `json:"file_path"`
+	Offset   int64  `json:"offset,optional"`
+	Limit    int64  `json:"limit,optional"`
+}
+
+type GetLocalFileContentRes struct {
+	Content string `json:"content"`
+	Length  int    `json:"length"`
+}
+
+type GetLocalLogFilesReq struct {
+	Path string `json:"path"` // 目录路径
+}
+
+type GetLocalLogFilesRes struct {
+	Files []LocalFileInfo `json:"files"`
+	Stat  FileStat        `json:"stat"`
+}
+
 type GetLogFilesReq struct {
 	Host string `json:"host"` // 主机地址
 	Path string `json:"path"` // 日志路径
@@ -40,13 +68,11 @@ type GetSSHConnectReq struct {
 }
 
 type HistoryAnalysisReq struct {
-	Host      string `json:"host"`       // 主机地址
-	LogFile   string `json:"log_file"`   // 日志文件名
-	StartTime int64  `json:"start_time"` // 开始时间
-	EndTime   int64  `json:"end_time"`   // 结束时间
-	Keywords  string `json:"keywords"`   // 关键字
-	Page      int    `json:"page"`       // 页码
-	PageSize  int    `json:"page_size"`  // 每页大小
+	Host      string `json:"host, omitempty"`     // 主机地址
+	LogFile   string `json:"log_file"`            // 日志文件名
+	StartTime int64  `json:"start_time"`          // 开始时间
+	EndTime   int64  `json:"end_time"`            // 结束时间
+	Keywords  string `json:"keywords, omitempty"` // 关键字
 }
 
 type HistoryAnalysisRes struct {
@@ -55,6 +81,42 @@ type HistoryAnalysisRes struct {
 	Page     int        `json:"page"`      // 页码
 	PageSize int        `json:"page_size"` // 每页大小
 	Success  bool       `json:"success"`   // 是否成功
+}
+
+type LocalFileInfo struct {
+	Path      string `json:"path"`
+	Name      string `json:"name"`
+	Size      int64  `json:"size"`
+	IsDir     bool   `json:"is_dir"`
+	ModTime   string `json:"mod_time"`
+	Extension string `json:"extension"`
+}
+
+type LocalLogEntry struct {
+	Timestamp string `json:"timestamp"`
+	Level     string `json:"level"`
+	Content   string `json:"content"`
+	Source    string `json:"source"`
+	LineNum   int    `json:"line_num"`
+}
+
+type LocalMonitorData struct {
+	Timestamp int64  `json:"timestamp"` // 时间戳
+	Value     int    `json:"value"`     // 数量
+	Type      string `json:"type"`      // 类型（请求数、错误数、响应时间）
+	Caller    string `json:"caller"`
+}
+
+type LocalRealTimeMonitorReq struct {
+	LogFile      string   `json:"log_file"`      // 日志文件名
+	MonitorItems []string `json:"monitor_items"` // 监控项（requests,errors,debug_logs,info_logs,warn_logs,error_logs）
+	TimeRange    int      `json:"time_range"`    // 时间范围（1小时、6小时、12小时、24小时）
+}
+
+type LocalRealTimeMonitorRes struct {
+	Data    []LocalMonitorData `json:"data"`    // 监控数据
+	Total   int                `json:"total"`   // 总数
+	Success bool               `json:"success"` // 是否成功
 }
 
 type LogEntry struct {
@@ -78,6 +140,20 @@ type OperationLog struct {
 	Flag      int    `json:"flag"`
 	FileName  string `json:"file_name"`
 	FileId    string `json:"file_id"`
+}
+
+type ReadLocalLogFileReq struct {
+	FilePath   string `json:"path"`                 // 文件路径
+	StartTime  string `json:"start_time,optional"`  // 开始时间，RFC3339格式
+	EndTime    string `json:"end_time,optional"`    // 结束时间，RFC3339格式
+	Level      string `json:"level,optional"`       // 日志级别
+	Keyword    string `json:"keyword,optional"`     // 关键词
+	MaxResults int    `json:"max_results,optional"` // 最大返回结果数
+}
+
+type ReadLocalLogFileRes struct {
+	Entries []LocalLogEntry `json:"entries"`
+	Total   int             `json:"total"`
 }
 
 type ReadLogFileReq struct {

@@ -27,7 +27,16 @@
     <div class="filter-container">
       <!-- 搜索条件区域 -->
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="主机" prop="host">
+        <!-- 添加模式切换 -->
+        <el-form-item>
+          <el-radio-group v-model="mode" @change="handleModeChange">
+            <el-radio-button label="ssh">SSH模式</el-radio-button>
+            <el-radio-button label="local">本地模式</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+
+        <!-- SSH模式下的主机选择 -->
+        <el-form-item label="主机" prop="host" v-if="mode === 'ssh'">
           <el-select
             v-model="queryParams.host"
             placeholder="请选择主机"
@@ -45,7 +54,9 @@
           </el-select>
           <el-button type="primary" icon="Plus" circle size="small" @click="showSSHDialog" style="margin-left: 10px" />
         </el-form-item>
-        <el-form-item label="路径" prop="path">
+
+        <!-- SSH模式下的路径选择 -->
+        <el-form-item label="路径" prop="path" v-if="mode === 'ssh'">
           <el-input
             v-model="queryParams.path"
             placeholder="请输入日志文件路径"
@@ -54,6 +65,7 @@
             @change="handlePathChange"
           />
         </el-form-item>
+
         <el-form-item label="日志文件" prop="logfile">
           <el-select v-model="queryParams.logfile" placeholder="请选择日志文件" clearable style="width: 200px">
             <el-option v-for="file in logFiles" :key="file" :label="file" :value="file" />
@@ -227,15 +239,17 @@ import {
   downloadLogApi,
   getHostsApi,
   getLogFilesApi,
-  connectSSHApi,
-  getSSHConnectionsApi
+  getSSHConnectionsApi,
+  getLocalLogFilesApi,
+  readLocalLogFileApi,
+  connectSSHApi
 } from "@/api/log/frontend"
 import type { LogQueryParams, LogLine, LogStats } from "@/api/log/types/frontend"
-import { useUserStoreHook } from "@/store/modules/user"
+import { useUserStore } from "@/store/modules/user"
 import { Document, Search, DocumentCopy, Refresh, Download } from "@element-plus/icons-vue"
 
 // 用户存储
-const userStore = useUserStoreHook()
+const userStore = useUserStore()
 
 // SSH连接表单
 const sshDialogVisible = ref(false)
@@ -247,63 +261,40 @@ const sshForm = reactive({
   password: ""
 })
 
-// 显示SSH连接对话框
-const showSSHDialog = () => {
-  sshDialogVisible.value = true
-}
+// 添加模式状态
+const mode = ref<"ssh" | "local">("local")
 
-// 处理SSH连接
-const handleSSHConnect = async () => {
-  if (!sshForm.host) {
-    ElMessage.warning("请输入主机地址")
-    return
+// 处理模式切换
+const handleModeChange = async () => {
+  // 重置查询参数
+  queryParams.host = ""
+  queryParams.path = ""
+  queryParams.logfile = ""
+  logFiles.value = []
+  logLines.value = []
+  stats.value = {
+    totalLines: 0,
+    matchLines: 0,
+    currentPage: 1,
+    totalPages: 1
   }
 
-  try {
-    sshConnecting.value = true
-    await connectSSHApi(sshForm.host, sshForm.port, sshForm.user, sshForm.password)
-    ElMessage.success("SSH连接成功")
-
-    // 刷新主机列表
-    await refreshHosts()
-
-    // 设置为当前选中的主机
-    queryParams.host = sshForm.host
-
-    // 获取该主机的日志文件列表
-    await handleHostChange(sshForm.host)
-
-    sshDialogVisible.value = false
-  } catch (error) {
-    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
-  } finally {
-    sshConnecting.value = false
-  }
+  // 根据新模式初始化数据
+  await initData()
 }
 
-// 处理主机双击事件
-const handleHostDblClick = async (host: string) => {
-  if (!host) return
-
+// 获取本地日志文件列表
+const getLocalLogFiles = async () => {
   try {
-    // 获取保存的连接信息
-    const savedConnection = userStore.getSSHConnection(host)
-
-    if (savedConnection) {
-      // 使用保存的连接信息连接
-      await connectSSHApi(savedConnection.host, savedConnection.port, savedConnection.user, savedConnection.password)
-      ElMessage.success("SSH连接成功")
-
-      // 设置为当前选中的主机
-      queryParams.host = host
-
-      // 获取该主机的日志文件列表
-      await handleHostChange(host)
-    } else {
-      ElMessage.warning("未找到该主机的连接信息")
+    const response = await getLocalLogFilesApi("")
+    console.log("response", response.data.files)
+    if (!response || !response.data.files) {
+      throw new Error("获取本地日志文件列表失败：返回数据格式错误")
     }
+    logFiles.value = response.data.files.filter((file) => !file.isDir).map((file) => file.path)
   } catch (error) {
-    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
+    console.error("获取本地日志文件列表失败:", error)
+    logFiles.value = []
   }
 }
 
@@ -339,6 +330,15 @@ const currentPageInput = ref(1)
 
 // 查询日志
 const handleQuery = async () => {
+  if (mode.value === "ssh") {
+    await handleSSHQuery()
+  } else {
+    await handleLocalQuery()
+  }
+}
+
+// SSH模式查询
+const handleSSHQuery = async () => {
   if (!queryParams.host) {
     ElMessage.warning("请选择主机")
     return
@@ -351,9 +351,73 @@ const handleQuery = async () => {
 
   try {
     loading.value = true
-    const res = await readLogApi(queryParams)
-    logLines.value = res.lines
-    stats.value = res.stats
+    const response = await readLogApi(queryParams)
+    logLines.value = response.lines
+    stats.value = response.stats
+  } catch (error) {
+    ElMessage.error("获取日志失败")
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 本地模式查询
+const handleLocalQuery = async () => {
+  if (!queryParams.logfile) {
+    ElMessage.warning("请选择日志文件")
+    return
+  }
+
+  try {
+    loading.value = true
+    const response = await readLocalLogFileApi({
+      path: queryParams.logfile,
+      keyword: queryParams.keyword,
+      maxResults: queryParams.pageSize
+    })
+
+    console.log("本地日志响应:", response)
+    console.log("响应数据类型:", typeof response)
+    console.log("响应数据结构:", Object.keys(response))
+    console.log("响应数据内容:", JSON.stringify(response, null, 2))
+
+    // 转换本地日志响应格式
+    if (response && response.data) {
+      const logData = response.data
+      console.log("日志数据:", logData)
+
+      if (Array.isArray(logData)) {
+        logLines.value = logData.map((line, index) => ({
+          number: (queryParams.page - 1) * queryParams.pageSize + index + 1,
+          content: line,
+          highlight: queryParams.keyword ? line.includes(queryParams.keyword) : false
+        }))
+        stats.value = {
+          totalLines: logData.length,
+          matchLines: logLines.value.filter((line) => line.highlight).length,
+          currentPage: queryParams.page,
+          totalPages: Math.ceil(logData.length / queryParams.pageSize)
+        }
+      } else if (typeof logData === "object" && Array.isArray(logData.entries)) {
+        // 处理 LogEntry 数组格式的响应
+        logLines.value = logData.entries.map((entry, index) => ({
+          number: (queryParams.page - 1) * queryParams.pageSize + index + 1,
+          content: entry.content,
+          highlight: queryParams.keyword ? entry.content.includes(queryParams.keyword) : false
+        }))
+        stats.value = {
+          totalLines: logData.total || logData.entries.length,
+          matchLines: logLines.value.filter((line) => line.highlight).length,
+          currentPage: queryParams.page,
+          totalPages: Math.ceil((logData.total || logData.entries.length) / queryParams.pageSize)
+        }
+      } else {
+        throw new Error(`返回数据格式错误: ${typeof logData}`)
+      }
+    } else {
+      throw new Error("返回数据格式错误: 缺少 data 字段")
+    }
   } catch (error) {
     ElMessage.error("获取日志失败")
     console.error(error)
@@ -383,7 +447,7 @@ const refreshHosts = async () => {
   }
 }
 
-// 主机变更
+// 处理主机变更
 const handleHostChange = async (host: string) => {
   if (!host) {
     logFiles.value = []
@@ -397,12 +461,13 @@ const handleHostChange = async (host: string) => {
     // 获取日志文件列表
     logFiles.value = await getLogFilesApi(host, queryParams.path)
   } catch (error) {
+    console.log("handleHostChange error", error)
     ElMessage.error("获取日志文件列表失败")
     console.error(error)
   }
 }
 
-// 路径变更
+// 处理路径变更
 const handlePathChange = async (path: string) => {
   if (!queryParams.host) {
     ElMessage.warning("请先选择主机")
@@ -411,6 +476,7 @@ const handlePathChange = async (path: string) => {
   try {
     logFiles.value = await getLogFilesApi(queryParams.host, path)
   } catch (error) {
+    console.log("handleHostChange error", error)
     ElMessage.error("获取日志文件列表失败")
     console.error(error)
   }
@@ -482,15 +548,45 @@ const handleSizeChange = () => {
 
 // 下载日志
 const handleDownload = async () => {
-  if (!queryParams.host || !queryParams.logfile) {
-    ElMessage.warning("请选择主机和日志文件")
+  if (!queryParams.logfile) {
+    ElMessage.warning("请选择日志文件")
     return
   }
 
   try {
     loading.value = true
-    const blob = await downloadLogApi(queryParams)
-    const url = window.URL.createObjectURL(blob)
+    let content
+
+    if (mode.value === "ssh") {
+      if (!queryParams.host) {
+        ElMessage.warning("请选择主机")
+        return
+      }
+      const blob = await downloadLogApi(queryParams)
+      content = blob
+    } else {
+      const response = await readLocalLogFileApi({
+        path: queryParams.logfile,
+        maxResults: 10000
+      })
+
+      if (response && response.data) {
+        const logData = response.data
+        let lines: string[] = []
+
+        if (Array.isArray(logData)) {
+          lines = logData
+        } else if (typeof logData === "object" && Array.isArray(logData.entries)) {
+          lines = logData.entries.map((entry) => entry.content)
+        }
+
+        content = new Blob([lines.join("\n")], { type: "text/plain" })
+      } else {
+        throw new Error("返回数据格式错误: 缺少 data 字段")
+      }
+    }
+
+    const url = window.URL.createObjectURL(content)
     const link = document.createElement("a")
     link.href = url
     link.download = `log-${new Date().getTime()}.txt`
@@ -533,18 +629,25 @@ watch(refreshRate, () => {
 
 // 初始化数据
 const initData = async () => {
-  // 只有在userStore中没有SSH连接信息时才从接口获取
-  if (!userStore.sshConnections || userStore.sshConnections.length === 0) {
-    await getSSHConnectionsApi()
-  }
+  if (mode.value === "ssh") {
+    console.log("initData")
+    // 只有在userStore中没有SSH连接信息时才从接口获取
+    console.log("userStore.sshConnections", userStore.sshConnections)
+    if (!userStore.sshConnections || userStore.sshConnections.length === 0) {
+      await getSSHConnectionsApi()
+    }
 
-  // 刷新主机列表
-  await refreshHosts()
+    // 刷新主机列表
+    await refreshHosts()
 
-  // 如果有当前SSH主机，则自动选择
-  if (userStore.currentSSHHost) {
-    queryParams.host = userStore.currentSSHHost
-    await handleHostChange(userStore.currentSSHHost)
+    // 如果有当前SSH主机，则自动选择
+    if (userStore.currentSSHHost) {
+      queryParams.host = userStore.currentSSHHost
+      await handleHostChange(userStore.currentSSHHost)
+    }
+  } else {
+    // 获取本地日志文件列表
+    await getLocalLogFiles()
   }
 
   // 初始化当前页输入框
@@ -597,6 +700,66 @@ const highlightContent = (content: string): string => {
     new RegExp(escapedKeyword, "gi"),
     (match) => `<span class="keyword-highlight">${match}</span>`
   )
+}
+
+// 显示SSH连接对话框
+const showSSHDialog = () => {
+  sshDialogVisible.value = true
+}
+
+// 处理SSH连接
+const handleSSHConnect = async () => {
+  if (!sshForm.host) {
+    ElMessage.warning("请输入主机地址")
+    return
+  }
+
+  try {
+    sshConnecting.value = true
+    await connectSSHApi(sshForm.host, sshForm.port, sshForm.user, sshForm.password)
+    ElMessage.success("SSH连接成功")
+
+    // 刷新主机列表
+    await refreshHosts()
+
+    // 设置为当前选中的主机
+    queryParams.host = sshForm.host
+
+    // 获取该主机的日志文件列表
+    await handleHostChange(sshForm.host)
+
+    sshDialogVisible.value = false
+  } catch (error) {
+    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
+  } finally {
+    sshConnecting.value = false
+  }
+}
+
+// 处理主机双击事件
+const handleHostDblClick = async (host: string) => {
+  if (!host) return
+
+  try {
+    // 获取保存的连接信息
+    const savedConnection = userStore.getSSHConnection(host)
+
+    if (savedConnection) {
+      // 使用保存的连接信息连接
+      await connectSSHApi(savedConnection.host, savedConnection.port, savedConnection.user, savedConnection.password)
+      ElMessage.success("SSH连接成功")
+
+      // 设置为当前选中的主机
+      queryParams.host = host
+
+      // 获取该主机的日志文件列表
+      await handleHostChange(host)
+    } else {
+      ElMessage.warning("未找到该主机的连接信息")
+    }
+  } catch (error) {
+    ElMessage.error(`SSH连接失败: ${error instanceof Error ? error.message : String(error)}`)
+  }
 }
 </script>
 
